@@ -1,0 +1,33 @@
+﻿.hero-container {
+	margin-top: -3.5rem;
+	background: radial-gradient(#412CB6, transparent);
+	background-blend-mode: difference;
+}
+
+.randbox-title h1 {
+	font-size: 5.25em;
+	font-weight: 700;
+	letter-spacing: 0.5rem;
+}
+
+.randbox-title .randbox-title-2 {
+	color: var(--randbox-secondary-colour)
+}
+
+.subtitle {
+	margin-top: 0.5rem;
+	font-weight: 500;
+	font-size: 2.25em;
+	letter-spacing: 0.1rem;
+}
+
+.btn-subscribe {
+	margin-top: 2rem;
+	max-width: 15rem;
+	background-color: var(--randbox-action-colour);
+	color: var(--randbox-primary-colour);
+	border-radius: 10px;
+	font-size: 1.4em;
+	font-weight: 700;
+	letter-spacing: 0.1rem;
+}

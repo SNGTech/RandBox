@@ -2,6 +2,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    background-color: var(--randbox-background-colour);
+    color: var(--randbox-primary-colour);
 }
 
 main {
