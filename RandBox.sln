@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandBox.Server", "RandBox\Server\RandBox.Server.csproj", "{785191F5-B6B9-49A6-A19F-D611EF279003}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandBox.Server", "RandBox\Server\RandBox.Server.csproj", "{785191F5-B6B9-49A6-A19F-D611EF279003}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandBox.Client", "RandBox\Client\RandBox.Client.csproj", "{7320D2C2-75C1-498F-8BEF-B1981368CEB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandBox.Client", "RandBox\Client\RandBox.Client.csproj", "{7320D2C2-75C1-498F-8BEF-B1981368CEB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandBox.Shared", "RandBox\Shared\RandBox.Shared.csproj", "{FA80B335-15F3-49E3-BF26-076CCE22D06C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandBox.Shared", "RandBox\Shared\RandBox.Shared.csproj", "{FA80B335-15F3-49E3-BF26-076CCE22D06C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

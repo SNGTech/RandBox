@@ -1,0 +1,47 @@
+﻿.navbar {
+	flex-basis: auto;
+	height: 4.5rem;
+	padding: 0px 1.5rem 0px 2em;
+}
+
+.randbox-title h1 {
+	font-size: 1.7em;
+	font-weight: 700
+}
+
+.randbox-title .randbox-title-2 {
+	color: var(--randbox-secondary-colour)
+}
+
+.navmenu {
+	gap: 0px 2.5rem;
+}
+
+.navmenu span {
+	font-size: 1em;
+	font-weight: 500;
+	letter-spacing: 0.1rem;
+	line-height: 2.5rem;
+}
+
+.register-spotlight {
+	/*width: 200px;
+	height: 100px;
+	transform: scale(200px, 100px);
+	position: absolute;
+	right: 0px;
+	top: 0;
+	background-image: url("images/neon_emphasis_register_button.png");
+	background-size: contain;
+	background-repeat: no-repeat;*/
+}
+
+.btn-register {
+	max-height: 2.5rem;
+	background-color: var(--randbox-action-colour);
+	color: var(--randbox-primary-colour);
+	border-radius: 10px;
+	font-size: 1em;
+	font-weight: 700;
+	letter-spacing: 0.1rem;
+}
