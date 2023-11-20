@@ -38,10 +38,15 @@
 	letter-spacing: 0.1rem;
 }
 
-
+.section-2 {
+	padding: 5rem 2.5rem 5rem 2.5rem;
+}
 
 .section-2-title {
 	max-width: 25rem;
+	font-weight: 700;
+	letter-spacing: 0.25rem;
+	line-height: 1.25em;
 }
 
 .section-2-title span {
@@ -49,5 +54,14 @@
 }
 
 .randbox-descriptor {
+	position: relative;
 	max-width: 29rem;
+}
+
+.randbox-descriptor .desc-1 {
+	left: 2rem;
+}
+
+.randbox-descriptor .desc-2 {
+	bottom: 10rem;
 }
