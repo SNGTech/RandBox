@@ -53,15 +53,38 @@
 	color: var(--randbox-secondary-colour);
 }
 
+section-2-content {
+	position: relative;
+}
+
+.randbox-mockup-box {
+	max-width: 35rem;
+	height: auto;
+	opacity: 65%;
+	-webkit-mask-image: linear-gradient(to top, transparent 10%, black );
+}
+
 .randbox-descriptor {
 	position: relative;
+	font-family: 'Inter', sans-serif;
 	max-width: 29rem;
 }
 
-.randbox-descriptor .desc-1 {
-	left: 2rem;
+.randbox-descriptor h4 {
+	font-weight: 700;
 }
 
-.randbox-descriptor .desc-2 {
-	bottom: 10rem;
+.randbox-descriptor p {
+	font-weight: normal;
+	font-size: 1.2em;
+}
+
+.desc-1 {
+	bottom: 15rem;
+	left: 7rem;
+}
+
+.desc-2 {
+	top: 8rem;
+	right: 8rem;
 }
