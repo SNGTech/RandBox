@@ -58,7 +58,7 @@ section-2-content {
 }
 
 .randbox-mockup-box {
-	max-width: 35rem;
+	max-width: 25rem;
 	height: auto;
 	opacity: 65%;
 	-webkit-mask-image: linear-gradient(to top, transparent 10%, black );
