@@ -13,6 +13,16 @@ html, body {
     font-family: 'Poppins', sans-serif;
 }
 
+/*@media (max-width: 1700px) {
+    html { font-size: 100%; }
+}
+
+@media (max-width: 2840px) {
+    html {
+        font-size: 120%;
+    }
+}*/
+
 h1:focus {
     outline: none;
 }

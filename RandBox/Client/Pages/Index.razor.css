@@ -39,7 +39,8 @@
 }
 
 .section-2 {
-	padding: 3.5rem 2.5rem 3.5rem 2.5rem;
+	padding: 3.5rem 2.5rem 3.0rem 2.5rem;
+	gap: 3rem;
 }
 
 .section-2-title {
@@ -87,4 +88,55 @@ section-2-content {
 .desc-2 {
 	top: 8rem;
 	right: 8rem;
+}
+
+
+.section-3 {
+	padding: 3.5rem 16.9rem 3.0rem 16.9rem;
+}
+
+.randbox-section-header {
+	gap: 1rem;
+}
+
+.randbox-section-header h2 {
+	font-weight: 700;
+	font-size: 2.25em;
+	letter-spacing: 0.25rem;
+}
+
+.randbox-section-header span {
+	color: var(--randbox-secondary-colour);
+}
+
+.randbox-section-header p {
+	font-family: Inter, sans-serif;
+	font-weight: normal;
+	font-size: 1.15em;
+	max-width: 38rem;
+}
+
+.product-card-showcase {
+	width: 15rem;
+	height: 22rem;
+	padding: 1em;
+	border: 1px solid #E2E2E234;
+	border-radius: 20px;
+	background: 
+		url("images/products/ruby_cocoa_kitkat.png"), 
+		linear-gradient(to top, black, transparent);
+}
+
+.product-card-showcase .randbox-badge {
+	width: fit-content;
+	height: fit-content;
+	padding: 0.15em 1em 0.15em 1em;
+	background-color: #D45A50;
+	border-radius: 20px;
+	font-weight: 700;
+}
+
+.product-card-showcase h3 {
+	font-weight: 700;
+	font-size: 1.5em;
 }
