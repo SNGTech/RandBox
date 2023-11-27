@@ -92,11 +92,12 @@ section-2-content {
 
 
 .section-3 {
-	padding: 3.5rem 16.9rem 3.0rem 16.9rem;
+	padding: 3.5rem 0rem 3.0rem 0rem;
 }
 
 .randbox-section-header {
 	gap: 1rem;
+	padding-left: 16rem;
 }
 
 .randbox-section-header h2 {
@@ -116,27 +117,38 @@ section-2-content {
 	max-width: 38rem;
 }
 
-.product-card-showcase {
-	width: 15rem;
-	height: 22rem;
-	padding: 1em;
-	border: 1px solid #E2E2E234;
-	border-radius: 20px;
-	background: 
-		url("images/products/ruby_cocoa_kitkat.png"), 
-		linear-gradient(to top, black, transparent);
+.product-carousel ul {
+	position: relative;
+	gap: 0rem 4rem;
 }
 
-.product-card-showcase .randbox-badge {
-	width: fit-content;
-	height: fit-content;
-	padding: 0.15em 1em 0.15em 1em;
-	background-color: #D45A50;
-	border-radius: 20px;
-	font-weight: 700;
+.product-carousel li {
+	z-index: 1;
 }
 
-.product-card-showcase h3 {
+.product-carousel li:first-child {
+	position: relative;
+	left: 160px;
+}
+
+.product-carousel li:last-child {
+	position: relative;
+	right: 160px;
+	z-index: 0;
+}
+
+.btn-browse {
+	padding: 0rem 1.15rem 0rem 1.15rem;
+	max-height: 2.5rem;
+	background-color: var(--randbox-action-colour);
+	color: var(--randbox-primary-colour);
+	border-radius: 15px;
+	font-size: 1.2em;
 	font-weight: 700;
-	font-size: 1.5em;
+	letter-spacing: 0.1rem;
+}
+
+
+.section-4 {
+	padding: 3.5rem 0rem 3.0rem 0rem;
 }

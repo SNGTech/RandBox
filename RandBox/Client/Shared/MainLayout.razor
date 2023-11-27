@@ -17,16 +17,9 @@
 
 @code {
 
-    IJSObjectReference? module;
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
             await JSRuntime.InvokeVoidAsync("changeOnScroll");
-    }    
-
-    public async Task ChangeOnScroll()
-    {
-        await module!.InvokeVoidAsync("changeOnScroll");
     }
 }
