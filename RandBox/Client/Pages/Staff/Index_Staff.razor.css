@@ -1,1 +1,269 @@
-﻿
+﻿body {
+	margin: 0;
+	font-family: 'Poppins', sans-serif;
+	background-color: #1a1a1a;
+	color: #e7e7e7;
+	line-height: 1.2;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+.header-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.welcome-text {
+	margin-right: 650px;
+	font-size: 30px;
+	text-align: center;
+	color: #fff;
+}
+
+.rand {
+	font-weight: bold;
+	font-size: 30px;
+	color: #2cb67d;
+	text-align: left;
+	margin-right: 0;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.box {
+	font-weight: bold;
+	font-size: 30px;
+	color: #e7e7e7;
+	text-align: left;
+	margin-right: 0;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.info-container {
+	display: flex;
+}
+
+.sub-info,
+.sales-info {
+	margin-top: 50px;
+	font-size: 25px;
+	text-align: center;
+}
+
+.sub-info {
+	margin-right: 150px;
+}
+
+.sales-info {
+	color: #e7e7e7;
+}
+
+.navbar {
+	position: relative;
+	margin-top: 15px;
+	width: 200px;
+	background-color: #333;
+	box-sizing: border-box;
+	flex-grow: 1;
+}
+
+.nav-item {
+	border-top: 1px solid #555;
+	border-bottom: 1px solid #555;
+	cursor: pointer;
+	font-size: 18px;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 18vh;
+	position: relative;
+}
+
+	.nav-item::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		border-left: 2px solid white;
+	}
+
+
+body {
+	margin: 0;
+	font-family: 'Poppins', sans-serif;
+	background-color: #1a1a1a;
+	color: #e7e7e7;
+	line-height: 1.2;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+.header-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.welcome-text {
+	margin-right: 650px;
+	font-size: 30px;
+	text-align: center;
+	color: #fff;
+}
+
+.rand {
+	font-weight: bold;
+	font-size: 30px;
+	color: #2cb67d;
+	text-align: left;
+	margin-right: 0;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.box {
+	font-weight: bold;
+	font-size: 30px;
+	color: #e7e7e7;
+	text-align: left;
+	margin-right: 0;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.info-container {
+	display: flex;
+}
+
+.sub-info,
+.sales-info {
+	margin-top: 50px;
+	font-size: 25px;
+	text-align: center;
+}
+
+.sub-info {
+	margin-right: 150px;
+}
+
+.sales-info {
+	color: #e7e7e7;
+}
+
+.navbar {
+	position: relative;
+	margin-top: 15px;
+	width: 200px;
+	background-color: #333;
+	box-sizing: border-box;
+	flex-grow: 1;
+}
+
+.nav-item {
+	border-top: 1px solid #555;
+	border-bottom: 1px solid #555;
+	cursor: pointer;
+	font-size: 18px;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 18vh;
+	position: relative;
+}
+
+	.nav-item::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		border-left: 2px solid white;
+	}
+
+.custom-shape {
+	position: absolute;
+	top: 50%;
+	right: 50px;
+	width: 120px;
+	height: 60px;
+	background-color: transparent;
+	border: 1px solid #fff;
+	border-radius: 5px;
+	clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+	.custom-shape.new-rectangle::before {
+		/* Create the green equilateral triangle */
+		content: "";
+		position: absolute;
+		top: 50%;
+		right: 0;
+		transform: translateY(-50%);
+		width: 0;
+		height: 0;
+		border-style: solid;
+		border-width: 10px 17.32px 10px 0;
+		border-color: transparent #2cb67d transparent transparent;
+	}
+
+
+
+.arrow::before {
+	/* Create the green equilateral triangle */
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: 0;
+	transform: translateY(-50%);
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 10px 17.32px 10px 0;
+	border-color: transparent #2cb67d transparent transparent;
+}
+
+.custom-shape:nth-child(2) {
+	right: calc(50px + 120px + 400px);
+}
+
+.custom-shape.new-rectangle {
+	/* Adjust the values as needed */
+	top: 750px; /* Adjust along the y-axis */
+	right: calc(50px + 120px + 400px);
+}
+
+.custom-shape::after {
+	content: "November";
+	position: absolute;
+	top: 50%;
+	left: 40%;
+	transform: translate(-50%, -50%);
+	color: #fff; /* Set the text color */
+}
+
+.top-graph-label {
+	position: absolute;
+	top: 52%;
+	left: 25%;
+	transform: translate(-50%, -50%);
+	color: #fff; /* Set the text color */
+	font-size: 18px; /* Set the font size */
+}
+
+.bottom-graph-label {
+	position: absolute;
+	top: 127%;
+	left: 27%;
+	transform: translate(-50%, -50%);
+	color: #fff; /* Set the text color */
+	font-size: 18px; /* Set the font size */
+}

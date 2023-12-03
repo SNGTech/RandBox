@@ -1,0 +1,16 @@
+﻿<div class="partner-card row d-flex justify-content-start align-content-between">
+	<img src="@($"images/categories/{CategoryRegistryName}.png")" />
+	<div class="info">
+		<p>@CategoryDesc</p>
+		<h3 class="m-0">@CategoryName</h3>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public string CategoryName { get; set; } = " ";
+	[Parameter]
+	public string CategoryDesc { get; set; } = " ";
+	[Parameter]
+	public string CategoryRegistryName { get; set; } = "";
+}

@@ -17,8 +17,7 @@ namespace RandBox.Server.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.0-rc.1.20417.2")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0-rc.1.20417.2");
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -88,7 +87,7 @@ namespace RandBox.Server.Data.Migrations
 
                     b.Property<string>("Data")
                         .HasMaxLength(50910)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
                         .HasMaxLength(50910);
 
                     b.Property<bool>("DataProtected")
