@@ -1,4 +1,6 @@
-﻿<header class="navbar d-flex justify-content-end align-items-center">
+﻿@inject NavigationManager Navigation
+
+<header class="navbar d-flex justify-content-end align-items-center">
 	<div class="randbox-title col d-flex">
 		<h1 class="randbox-title-1 m-0">rand</h1>
 		<h1 class="randbox-title-2 m-0">Box</h1>
@@ -10,12 +12,33 @@
 				<li>Products</li>
 				<li>Pricing</li>
 				<li>About Us</li>
-				<li>Log In</li>
 			</ul>
-			@* <div class="register-spotlight"></div> *@
-			<button class="btn btn-register">Register Here</button>
+			<AuthorizeView>
+				<NotAuthorized>
+					<ul class="m-0">
+						<li><a href="authentication/login" class="text-decoration-none">Log In</a></li>
+					</ul>
+					@* <div class="register-spotlight"></div> *@
+					<a class="btn btn-register" href="authentication/register">Register Here</a>
+				</NotAuthorized>
+				<Authorized>
+					<ul class="m-0">
+						<li>Your Cart</li>
+						<li>Purchases</li>
+						<li><a @onclick="Logout">Logout</a></li>
+					</ul>
+					<a><img src="images/pfp.png" class="rounded-circle" height="22"/></a>
+				</Authorized>
+			</AuthorizeView>
 		</nav>
 	</div>
 </header>
+
+@code {
+	protected void Logout()
+	{
+		Navigation.NavigateToLogout("authentication/logout");
+	}
+}
 
 

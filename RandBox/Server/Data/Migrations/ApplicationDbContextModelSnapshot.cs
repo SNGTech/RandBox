@@ -17,8 +17,9 @@ namespace RandBox.Server.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("ProductVersion", "5.0.0-rc.1.20417.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "5.0.0-rc.1.20417.2");
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
@@ -86,8 +87,9 @@ namespace RandBox.Server.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Data")
-                        .IsRequired()
+                        .HasMaxLength(50910)
                         .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50910);
 
                     b.Property<bool>("DataProtected")
                         .HasColumnType("bit");
@@ -296,7 +298,6 @@ namespace RandBox.Server.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
-
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
@@ -318,12 +319,6 @@ namespace RandBox.Server.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -369,6 +364,7 @@ namespace RandBox.Server.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("AspNetUserTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
