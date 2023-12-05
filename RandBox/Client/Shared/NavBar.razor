@@ -8,23 +8,23 @@
 	<div class="d-inline-block">
 		<nav>
 			<ul class="m-0">
-				<li>Home</li>
-				<li>Products</li>
-				<li>Pricing</li>
-				<li>About Us</li>
+				<li><a href="">Home</a></li>
+				<li><a href="products">Products</a></li>
+				<li><a href="pricing">Pricing</a></li>
+				<li><a href="about_us">About Us</a></li>
 			</ul>
 			<AuthorizeView>
 				<NotAuthorized>
 					<ul class="m-0 px-0">
-						<li><a href="authentication/login" class="text-decoration-none">Log In</a></li>
+						<li><a href="authentication/login">Log In</a></li>
 					</ul>
 					@* <div class="register-spotlight"></div> *@
 					<a class="btn btn-register" href="authentication/register">Register Here</a>
 				</NotAuthorized>
 				<Authorized>
 					<ul class="m-0 px-0">
-						<li>Your Cart</li>
-						<li>Purchases</li>
+						<li><a href="cart">Cart</a></li>
+						<li><a href="purchases">Purchases</a></li>
 						<li><a @onclick="Logout">Logout</a></li>
 					</ul>
 					<a><img src="images/pfp.png" class="rounded-circle" height="40"/></a>

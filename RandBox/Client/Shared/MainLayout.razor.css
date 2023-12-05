@@ -34,6 +34,10 @@ main {
         text-overflow: ellipsis;
     }
 
+footer {
+    background-color: #121212;
+}
+
 @media (max-width: 640.98px) {
     .top-row:not(.auth) {
         display: none;

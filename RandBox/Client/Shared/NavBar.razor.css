@@ -65,4 +65,6 @@ li {
 
 a {
 	color: var(--randbox-primary-colour);
+	text-decoration-line: none;
+	cursor: pointer;
 }
