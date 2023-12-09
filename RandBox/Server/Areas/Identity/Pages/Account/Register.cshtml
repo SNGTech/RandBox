@@ -1,21 +1,65 @@
 ﻿@page
 @model RegisterModel
+
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Registration";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1 class="text-center m-4">rand<span>Box</span> @ViewData["Title"]</h1>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="align-content-center">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
-            <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.FirstName" class="form-control" autocomplete="" aria-required="true" placeholder="firstname" />
+                        <label asp-for="Input.FirstName">First Name</label>
+                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating mb-3 col">
+                        <input asp-for="Input.LastName" class="form-control" autocomplete="" aria-required="true" placeholder="lastname" />
+                        <label asp-for="Input.LastName">Last Name</label>
+                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label asp-for="Input.Email">Email</label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.DateOfBirth" class="form-control" autocomplete="" aria-required="true" placeholder="01/01/1917" />
+                <label asp-for="Input.DateOfBirth">Date Of Birth</label>
+                <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Address" class="form-control" autocomplete="" aria-required="true" placeholder="address" />
+                        <label asp-for="Input.Address">Address</label>
+                        <span asp-validation-for="Input.Address" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">#</span>
+                        <div class="form-floating col">
+                            <input asp-for="Input.UnitNo" class="form-control" autocomplete="" aria-required="true" placeholder="01-01" />
+                            <label asp-for="Input.UnitNo">Unit No.</label>
+                            <span asp-validation-for="Input.UnitNo" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.PostalCode" class="form-control" autocomplete="username" aria-required="true" placeholder="000000" />
+                <label asp-for="Input.PostalCode">Postal Code</label>
+                <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
@@ -30,7 +74,7 @@
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>
-    <div class="col-md-6 col-md-offset-2">
+    @* <div class="col-md-6 col-md-offset-2">
         <section>
             <h3>Use another service to register.</h3>
             <hr />
@@ -59,7 +103,7 @@
                 }
             }
         </section>
-    </div>
+    </div> *@
 </div>
 
 @section Scripts {

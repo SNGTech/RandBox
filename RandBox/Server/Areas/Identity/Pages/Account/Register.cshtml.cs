@@ -71,6 +71,38 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            // randBox Field: FirstName
+            [Required(ErrorMessage = "First Name required")]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            // randBox Field: LastName
+            [Required(ErrorMessage = "Last Name required")]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
+            // randBox Field: Date of Birth
+            [Required(ErrorMessage = "Date of Birth required")]
+            [DataType(DataType.Date)]
+            [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+            [Display(Name = "Date of Birth")]
+            public System.DateTime DateOfBirth { get; set; }
+
+            // randBox Field: Address
+            [Required(ErrorMessage = "Address required")]
+            [Display(Name = "Address")]
+            public string Address { get; set; }
+
+            // randBox Field: Unit No
+            [Required(ErrorMessage = "Unit No. required")]
+            [Display(Name = "Unit No.")]
+            public string UnitNo { get; set; }
+
+            // randBox Field: Postal Code
+            [Required(ErrorMessage = "Postal code required")]
+            [Display(Name = "Postal Code")]
+            public string PostalCode { get; set; }
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.

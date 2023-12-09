@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Hosting
 @using Microsoft.AspNetCore.Mvc.ViewEngines
+@using RandBox.Client.Shared
 @inject IWebHostEnvironment Environment
 @inject ICompositeViewEngine Engine
 <!DOCTYPE html>
@@ -7,7 +8,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - RandBox.Server</title>
+    <title>randBox @ViewData["Title"]</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/Identity/lib/bootstrap/dist/css/bootstrap.css" />
@@ -22,7 +23,7 @@
     </environment>
 </head>
 <body>
-    <header>
+    @* <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" href="~/">RandBox.Server</a>
@@ -46,8 +47,10 @@
                     }
                 </div>
             </div>
-        </nav>
-    </header>
+        </nav> 
+    </header> *@
+
+    <NavBar></NavBar>
 
     <div class="container">
         <partial name="_CookieConsentPartial" optional />
@@ -55,7 +58,7 @@
             @RenderBody()
         </main>
     </div>
-    <footer class="footer border-top pl-3 text-muted">
+    @* <footer class="footer border-top pl-3 text-muted">
         <div class="container">
         &copy; 2023 - RandBox.Server
             @{
@@ -66,7 +69,7 @@
                 <a asp-area="" asp-page="/Privacy">Privacy</a>
             }
         </div>
-    </footer>
+    </footer> *@
 
     <environment include="Development">
         <script src="~/Identity/lib/jquery/dist/jquery.js"></script>
