@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+/*using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RandBox.Shared;
 
@@ -33,4 +33,4 @@ namespace RandBox.Server.Controllers
             .ToArray();
         }
     }
-}
+}*/

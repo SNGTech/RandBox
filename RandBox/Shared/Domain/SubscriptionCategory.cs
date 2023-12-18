@@ -1,13 +1,19 @@
-﻿namespace RandBox.Shared.Domain
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RandBox.Shared.Domain
 {
-	public class SubscriptionCategory
+    public class SubscriptionCategory
 	{
-		public int SubscriptionCategoryID { get; set; }
+        [Key]
+        public int SubscriptionCategoryID { get; set; }
 		public string? Description { get; set; }
         public int Duration { get; set; }
-		public decimal BaseMonthlyPrice { get; set; }
-		public decimal NewMonthlyPrice { get; set; }
-		public int CategoryID { get; set; }
+        [Column(TypeName = "decimal(5,2)")]
+        public decimal BaseMonthlyPrice { get; set; }
+        [Column(TypeName = "decimal(5,2)")]
+        public decimal NewMonthlyPrice { get; set; }
+		public int? CategoryID { get; set; }
         public virtual List<Category>? Categories { get; set; }
     }
 }

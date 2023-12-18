@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using RandBox.Server.Data.Configurations;
 using RandBox.Server.Models;
 using RandBox.Shared.Domain;
 
@@ -25,6 +26,11 @@ namespace RandBox.Server.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.ApplyConfiguration(new CustomerConfiguration());
+            builder.ApplyConfiguration(new CategoryConfiguration());
+            builder.ApplyConfiguration(new SubscriptionCategoryConfiguration());
+            builder.ApplyConfiguration(new SubscriptionPlanConfiguration());
         }
     }
 }
