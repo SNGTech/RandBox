@@ -12,7 +12,7 @@ namespace RandBox.Shared.Domain
 
         public string? Email { get; set; }
         public string? PasswordHash { get; set; }
-        public DateOnly DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string? ContactNumber { get; set; }
 
         
