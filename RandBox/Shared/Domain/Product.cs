@@ -17,12 +17,13 @@ namespace RandBox.Shared.Domain
 
         public string? ThumbnailURL { get; set; }
         public int? StockNo { get; set; }
+        [Column(TypeName = "decimal(5,2)")]
         public decimal OriginalPrice { get; set; }
         [Column(TypeName = "decimal(5,2)")]
-        public decimal Discounted { get; set; }
-        [Column(TypeName = "decimal(5,2)")]
-        public DateTime? ManufacturedDate { get; set; }
-        public DateTime? ExpiryDate { get; set; }
+        public decimal DiscountedPrice { get; set; }
+        
+        public DateTime ManufacturedDate { get; set; }
+        public DateTime ExpiryDate { get; set; }
         public int? CountryID { get; set; }
         public virtual List<Country>? Country { get; set; }
         public int? CategoryID { get; set; }
