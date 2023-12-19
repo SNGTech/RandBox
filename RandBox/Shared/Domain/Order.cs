@@ -10,7 +10,7 @@ namespace RandBox.Shared.Domain
     public class Order
     {
         [Key]
-        public int OrderId { get; set; }
+        public int OrderID { get; set; }
         public DateTime DateTimeCheckout { get; set; }
         public Boolean DeliveryStatus { get; set; }
         public int? CustomerID { get; set; }

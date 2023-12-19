@@ -22,6 +22,10 @@ namespace RandBox.Server.Data
         public DbSet<SubscriptionPlan> SubscriptionPlan { get; set; }
         public DbSet<SubscriptionCategory> SubscriptionCategory { get; set; }
         public DbSet<Category> Category { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderItem> OrderItem { get; set; }
+        public DbSet<Country> Country { get; set; }       
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -31,6 +35,14 @@ namespace RandBox.Server.Data
             builder.ApplyConfiguration(new CategoryConfiguration());
             builder.ApplyConfiguration(new SubscriptionCategoryConfiguration());
             builder.ApplyConfiguration(new SubscriptionPlanConfiguration());
+
+            builder.ApplyConfiguration(new StaffConfiguration());
+            builder.ApplyConfiguration(new OrderConfiguration());
+            builder.ApplyConfiguration(new ProductConfiguration());
+            builder.ApplyConfiguration(new OrderItemConfiguration());
+            builder.ApplyConfiguration(new CountryConfiguration());
+
+
         }
     }
 }
