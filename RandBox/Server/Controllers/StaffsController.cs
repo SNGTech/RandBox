@@ -105,6 +105,7 @@
             return NoContent();
         }
 
+
         //checks if (entity) already exists in (entity)repo in this case staff
         private async Task<bool> StaffExists(int id)
         {
@@ -112,6 +113,6 @@
             return staff != null;
         }
     }
-}
+    }
 
  
