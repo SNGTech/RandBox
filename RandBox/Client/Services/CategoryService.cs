@@ -47,7 +47,7 @@ namespace RandBox.Client.Services
 					throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
 				}
 			} 
-			catch (Exception e)
+			catch (Exception)
 			{
 				throw;
 			}

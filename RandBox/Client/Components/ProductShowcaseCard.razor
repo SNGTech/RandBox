@@ -1,16 +1,23 @@
 ﻿<div class="@ClassSize product-card-showcase row d-flex justify-content-start align-content-between">
 	<div class="gradient"></div>
-	<img src="@Product!.ThumbnailURL" />
+	<img src="@($"images/products/{ProductRegistryName}.png")" />
 	<div class="randbox-badge">Country</div>
 	<div class="info p-0">
-		<h3>@Product!.Name</h3>
-		<p class="m-0">@Product!.Description</p>
+		<h3>@ProductName</h3>
+		<p class="m-0">@ProductDesc</p>
 	</div>
-</div>	
+</div>
 
 @code {
 	[Parameter]
-	public Product? Product { get; set; }
-	[Parameter]
 	public string ClassSize { get; set; } = "";
+	[Parameter]
+	public string ProductName { get; set; } = " ";
+	[Parameter]
+	public string ProductDesc { get; set; } = " ";
+	[Parameter]
+	public string ProductRegistryName { get; set; } = "";
+	// TEMPORARY
+	[Parameter]
+	public string Country { get; set; } = "";
 }
