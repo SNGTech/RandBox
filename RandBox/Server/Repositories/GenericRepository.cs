@@ -36,10 +36,10 @@ namespace RandBox.Server.Repositories
 		}
 
 		// No tracking of saved changes since it is read-only
-		public async Task<IList<T>> GetAll(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
+		public async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
 		{
 			IQueryable<T> query = _dbSet;
-
+			
 			if (filter != null)
 			{
 				query = query.Where(filter);

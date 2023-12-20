@@ -1,16 +1,12 @@
 ﻿<div class="partner-card row d-flex justify-content-start align-content-between">
-	<img src="@($"images/categories/{CategoryRegistryName}.png")" />
+	<img src="@($"images/categories/{Category!.Name!.ToLower().Replace(' ', '_')}_cat.png")" />
 	<div class="info">
-		<p>@CategoryDesc</p>
-		<h3 class="m-0">@CategoryName</h3>
+		<p>@Category.Description</p>
+		<h3 class="m-0">@Category.Name</h3>
 	</div>
 </div>
 
 @code {
 	[Parameter]
-	public string CategoryName { get; set; } = " ";
-	[Parameter]
-	public string CategoryDesc { get; set; } = " ";
-	[Parameter]
-	public string CategoryRegistryName { get; set; } = "";
+	public Category? Category { get; set; }
 }

@@ -1,5 +1,7 @@
 ﻿@page "/"
 @inject NavigationManager Navigation
+@inject IGenericService<Category> CategoryService
+@inject IHttpClientFactory ClientFactory
 
 <PageTitle>randBox</PageTitle>
 
@@ -33,6 +35,7 @@
 		</section>
 </section>
 
+@* NEW FOR REFERENCE, PATRICK U ARE TO DELETE THIS AND UNCOMMENT THE COMMENTED SECTION AND FILL IN *@
 <section class="section-3 vh-100 row d-flex justify-content-center">
 	<div class="randbox-section-header row d-flex justify-content-start align-content-start">
 		<h2>No Two Unboxing The <span>Same</span></h2>
@@ -52,24 +55,58 @@
 	</div>
 </section>
 
-<section class="section-4 vh-100 row d-flex justify-content-center">
+@* <section class="section-3 vh-100 row d-flex justify-content-center">
 	<div class="randbox-section-header row d-flex justify-content-start align-content-start">
-		<h2><span>Multiple</span> Categories</h2>
-		<p>Our wide variety of categories ensures that theres always something for you!</p>
+		<h2>No Two Unboxing The <span>Same</span></h2>
+		<p>With over 100 items across more than 5 countries, every new unboxing is bound to be a never-seen before experience</p>
 	</div>
-	<div class="d-flex justify-content-center align-content-center">
-		<ul class="list-unstyled d-flex justify-content-evenly gap-5">
-			<li><CategoryCard CategoryName="Food" CategoryDesc="Experience local snacks and treats, all while helping to support local family owned businesses!" CategoryRegistryName="food_cat" /></li>
-			<li><CategoryCard CategoryName="Fashion" CategoryDesc="Dress up as people from all over the globe! From Kimonos to Hanboks, get a fresh look every month!" CategoryRegistryName="fashion_cat" /></li>
-			<li><CategoryCard CategoryName="Arts and Crafts" CategoryDesc="Unleash your artistic creativity with arts and crafts from all over the world!" CategoryRegistryName="artsncrafts_cat" /></li>
+	<div class="product-carousel col d-flex justify-content-center align-content-center">
+		<ul class="list-unstyled d-flex">
+			<li><ProductShowcaseCard ProductName="Kue Mangkok" ProductDesc="Traditional Steamed Cupcake" ProductRegistryName="kue_mangkok" ClassSize="card-small" /></li>
+			<li><ProductShowcaseCard ProductName="Zwiebelkuchen" ProductDesc="Traditional Onion Cake" ProductRegistryName="zwiebelkuchen" /></li>
+			<li><ProductShowcaseCard ProductName="Ruby-cocoa KitKat" ProductRegistryName="ruby_cocoa_kitkat" /></li>
+			<li><ProductShowcaseCard ProductName="Ramune Soda Candy" ProductRegistryName="ramune_soda_candy" /></li>
+			<li><ProductShowcaseCard ProductName="Dorayaki" ProductDesc="Unique Red Bean Pancake" ProductRegistryName="dorayaki" ClassSize="card-small" /></li>
 		</ul>
 	</div>
 	<div class="d-flex justify-content-center">
-		<button class="btn btn-browse" @onclick="NavigateToCategories">View Our Categories</button>
+		<button class="btn btn-browse" @onclick="NavigateToProducts">Browse More</button>
 	</div>
-</section>
+</section> *@
+
+@if (categories == null)
+{
+	<h2>>Loading Categories...</h2>
+}
+else {
+	<section class="section-4 vh-100 row d-flex justify-content-center">
+		<div class="randbox-section-header row d-flex justify-content-start align-content-start">
+			<h2><span>Multiple</span> Categories</h2>
+			<p>Our wide variety of categories ensures that theres always something for you!</p>
+		</div>
+		<div class="d-flex justify-content-center align-content-center">
+			<ul class="list-unstyled d-flex justify-content-evenly gap-5">
+				@foreach (var category in categories!.Take(3))
+				{
+					<li><CategoryCard Category="@category" /></li>
+				}
+			</ul>
+		</div>
+		<div class="d-flex justify-content-center">
+			<button class="btn btn-browse" @onclick="NavigateToCategories">View Our Categories</button>
+		</div>
+	</section>
+}
 
 @code {
+
+	private List<Category>? categories { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		categories = await CategoryService.GetAll();
+	}
+
 	protected void NavigateToPricing()
 	{
 		Navigation.NavigateTo("pricing");

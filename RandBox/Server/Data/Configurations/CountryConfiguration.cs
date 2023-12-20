@@ -14,21 +14,26 @@ namespace RandBox.Server.Data.Configurations
                     CountryID = 1,
                     Name = "Germany",
                     Description ="Bring the well-known festivities and nightlife of Germany to your own home!",
-                    BadgeColour="Yellow",
-                    DateTimeCreated = new DateTime(2023,2,21)
-                    
-
+                    BadgeColour= "#78A54E",
+                    DateTimeCreated = DateTime.Now
                 },
                 new Country
                 {
                     CountryID = 2,
                     Name = "Japan",
                     Description = "The land of the rising sun, experience the iconic cultures and long-standing traditions of Japan! ",
-                    BadgeColour = "Red",
-                    DateTimeCreated = new DateTime(2023,1,28)
-
-                }
-            );
+                    BadgeColour = "#D45A50",
+                    DateTimeCreated = DateTime.Now
+				},
+				new Country
+				{
+					CountryID = 3,
+					Name = "Indonesia",
+					Description = "With many diverse ethnic groups, experience the traditional tastes and cultures of the worlds largest island country.",
+					BadgeColour = "#D48250",
+					DateTimeCreated = DateTime.Now
+				}
+			);
         }
     }
 }

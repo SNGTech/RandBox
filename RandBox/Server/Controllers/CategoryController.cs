@@ -4,9 +4,9 @@ using RandBox.Server.Repositories.Contracts;
 using RandBox.Shared.Domain;
 
 namespace RandBox.Server.Controllers
-{
+{ 
+	[Route("api/[controller]")]
 	[ApiController]
-	[Route("[controller]")]
 	public class CategoryController : ControllerBase
 	{
 		private readonly IUnitOfWork _unitOfWork;
