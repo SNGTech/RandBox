@@ -18,7 +18,7 @@ namespace RandBox.Server.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        // get all Order
+        // Get all Order
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetAllOrder()
 
@@ -33,8 +33,7 @@ namespace RandBox.Server.Controllers
 
         }
 
-
-        //get Order by id
+        // Get Order by id
         [HttpGet("{id:int}")]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrder(int id)
         {
@@ -47,8 +46,6 @@ namespace RandBox.Server.Controllers
 
             return Ok(Order);
         }
-
-        
     }
 }
 
