@@ -21,11 +21,6 @@ namespace RandBox.Client.Services
 			throw new NotImplementedException();
 		}
 
-		public async Task<IEnumerable<Category>> DeleteRange(IEnumerable<Category> entities)
-		{
-			throw new NotImplementedException();
-		}
-
 		// Can be accessed Anonymously
 		public async Task<List<Category>> GetAll()
 		{
@@ -59,11 +54,6 @@ namespace RandBox.Client.Services
 		}
 
 		public async Task<Category> Insert(Category entity)
-		{
-			throw new NotImplementedException();
-		}
-
-		public async Task<IEnumerable<Category>> InsertRange(IEnumerable<Category> entities)
 		{
 			throw new NotImplementedException();
 		}

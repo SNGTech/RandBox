@@ -21,11 +21,6 @@ namespace RandBox.Client.Services
 			throw new NotImplementedException();
 		}
 
-		public async Task<IEnumerable<Product>> DeleteRange(IEnumerable<Product> entities)
-		{
-			throw new NotImplementedException();
-		}
-
 		public async Task<List<Product>> GetAll()
 		{
 			try
@@ -58,11 +53,6 @@ namespace RandBox.Client.Services
 		}
 
 		public async Task<Product> Insert(Product entity)
-		{
-			throw new NotImplementedException();
-		}
-
-		public async Task<IEnumerable<Product>> InsertRange(IEnumerable<Product> entities)
 		{
 			throw new NotImplementedException();
 		}

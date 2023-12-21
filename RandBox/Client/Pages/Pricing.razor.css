@@ -1,0 +1,127 @@
+﻿.gradient-backdrop {
+	width: 50%;
+	height: 30rem;
+	background-color: #3615ED;
+	filter: blur(200px);
+	position: absolute;
+	top: -50px;
+	z-index: -1;
+	opacity: 60%;
+}
+
+.randBox-title {
+	font-size: 2.45em;
+	font-weight: 700;
+	letter-spacing: 0.25rem;
+}
+
+	.randBox-title span {
+		color: var(--randbox-secondary-colour);
+	}
+
+.randBox-subtitle {
+	font-size: 1.50em;
+	letter-spacing: 0.25rem;
+	font-weight: 500;
+}
+
+.randBox-info {
+	font-size: 1.25em;
+	letter-spacing: 0.08rem;
+	font-weight: 500;
+}
+
+select {
+	padding: 0.5rem;
+	border: 1px solid #ececec40;
+	border-radius: 10px;
+	background-color: transparent;
+	color: #D4D4D4;
+	max-width: 15rem;
+	font-size: 1.2em;
+	cursor: pointer;
+}
+
+option {
+	background: transparent;
+}
+
+.subscription-content-section {
+	margin: 2.5rem 3.5rem 4.5rem 3.5rem;
+}
+
+.subscription-category-card {
+	max-width: 19.5rem;
+	min-height: 30rem;
+	padding: 2.5rem;
+	border: 1px solid #ececec40;
+	border-radius: 20px;
+
+	transition-property: background-color, transform, border-color, margin;
+	transition-duration: 400ms;
+	transition-timing-function: ease;
+}
+
+	.subscription-category-card:hover {
+		transform: scale(1.11);
+		margin: 0rem 1.15rem;
+		background-color: #020021;
+		border-color: #00000000;
+	}
+
+	.subscription-category-card .duration {
+		margin-top: 0.1rem;
+		margin-bottom: 0.5rem;
+		font-size: 1.5em;
+	}
+
+	.subscription-category-card .category {
+		margin-top: 0.4rem;
+		margin-bottom: 3.0rem;
+		font-size: 1.1em;
+		font-weight: 600;
+		font-size: 1.2em;
+		color: #717171;
+	}
+
+	.subscription-category-card .monthly-price {
+		margin-bottom: 1.8rem;
+		font-weight: 700;
+	}
+
+		.subscription-category-card .monthly-price span {
+			font-weight: 600;
+			font-size: 0.6em;
+			color: #717171;
+		}
+
+	.subscription-category-card .description {
+		font-family: Inter, sans-serif;
+		letter-spacing: 0.1rem;
+	}
+
+.btn-subscribe {
+	width: 100%;
+	margin-top: 0.8rem;
+	background-color: var(--randbox-action-colour);
+	color: var(--randbox-primary-colour);
+	border-radius: 10px;
+	font-size: 1.0em;
+	font-weight: 700;
+	letter-spacing: 0.1rem;
+	opacity: 0%;
+	transition: opacity 350ms ease;
+}
+
+.subscription-category-card:hover .btn-subscribe {
+	opacity: 100%
+}
+
+ol {
+	row-gap: 1.6rem;
+}
+
+li {
+	list-style: none;
+	width: max-content;
+}

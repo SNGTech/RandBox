@@ -76,7 +76,7 @@ namespace RandBox.Server.Data.Configurations
 					DiscountedPrice = 11.79m,
 					ManufacturedDate = new DateTime(2023, 11, 3),
 					ExpiryDate = new DateTime(2023, 12, 31),
-					CountryID = 3,
+					CountryID = 2,
 					CategoryID = 1
 				},
 				new Product

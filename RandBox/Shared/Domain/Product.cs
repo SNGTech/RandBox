@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RandBox.Shared.Domain
 {
@@ -25,8 +20,8 @@ namespace RandBox.Shared.Domain
         public DateTime ManufacturedDate { get; set; }
         public DateTime ExpiryDate { get; set; }
         public int? CountryID { get; set; }
-        public virtual List<Country>? Country { get; set; }
+        public virtual Country? Country { get; set; }
         public int? CategoryID { get; set; }
-        public virtual List<Category>? Category { get; set; }
+        public virtual Category? Category { get; set; }
     }
 }

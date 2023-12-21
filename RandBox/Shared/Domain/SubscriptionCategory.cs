@@ -14,6 +14,6 @@ namespace RandBox.Shared.Domain
         [Column(TypeName = "decimal(5,2)")]
         public decimal NewMonthlyPrice { get; set; }
 		public int? CategoryID { get; set; }
-        public virtual List<Category>? Categories { get; set; }
+        public virtual Category? Category { get; set; }
     }
 }

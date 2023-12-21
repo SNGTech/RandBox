@@ -22,6 +22,7 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 
 builder.Services.AddScoped<IGenericService<Category>, CategoryService>();
 builder.Services.AddScoped<IGenericService<Product>, ProductService>();
+builder.Services.AddScoped<ISubscriptionCategoryService, SubscriptionCategoryService>();
 
 builder.Services.AddApiAuthorization();
 

@@ -17,6 +17,9 @@ namespace RandBox.Server.Data
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            => optionsBuilder.LogTo(Console.WriteLine);
+
         public DbSet<Customer> Customer { get; set; }
         public DbSet<Staff> Staff { get; set; }
         public DbSet<SubscriptionPlan> SubscriptionPlan { get; set; }

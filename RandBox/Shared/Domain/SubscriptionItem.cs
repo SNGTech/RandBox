@@ -12,8 +12,8 @@ namespace RandBox.Shared.Domain
         public int Qty { get; set; }
         public int MonthOfYear { get; set; }
         public int ProductID { get; set; }
-        public virtual List<Product>? Products { get; set; }
+        public virtual Product? Product { get; set; }
         public int SubscriptionPlanID { get; set; }
-        public virtual List<SubscriptionPlan>? SubscriptionPlans { get; set; }
+        public virtual SubscriptionPlan? SubscriptionPlan { get; set; }
     }
 }

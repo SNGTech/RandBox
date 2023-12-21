@@ -20,10 +20,11 @@ namespace RandBox.Server.Controllers
 
         // Get all Product
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAllProduct()
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
 
         {
-            var Product = await _unitOfWork.ProductRepository.GetAll();
+            var Product = await _unitOfWork.ProductRepository.GetAll(
+                includes: q => q.Include(x => x.Category!).Include(x => x.Country!));
             if (Product == null)
             {
                 return NotFound();

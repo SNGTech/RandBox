@@ -4,6 +4,7 @@
     flex-direction: column;
     background-color: var(--randbox-background-colour);
     color: var(--randbox-primary-colour);
+    z-index: 0;
 }
 
 main {

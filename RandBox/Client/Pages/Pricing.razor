@@ -1,0 +1,63 @@
+﻿@page "/pricing"
+@inject IGenericService<Category> CategoryService
+@inject ISubscriptionCategoryService SubscriptionCategoryService
+
+<PageTitle>randBox - Pricing</PageTitle>
+
+@if(categories == null || subscriptionCategories == null)
+{
+    <h2>> Loading Product and Subscription Categories</h2>
+}
+else
+{
+    <div class="row d-flex justify-content-center text-center mt-5 position-relative">
+        <div class="gradient-backdrop"></div>
+        <h3 class="randBox-subtitle mb-5">Ready to Experience the Future of<br>Mystery Boxes?</h3>
+        <h2 class="randBox-title mb-5"><span>Subscribe</span> Now</h2>
+        <h5 class="randBox-info">Choose your preferred category. Then, hover over your preferred<br>Subscription Plan below to view more and subscribe</h5>
+    </div>
+
+    <section class="subscription-content-section row d-flex justify-content-center">
+        <select class="category-dropdown mb-5" @onchange="SelectedCategoryChanged">
+            <option value="" disabled>Select Category...</option>
+                @foreach (var category in categories!)
+                {
+                    <option value="@category.CategoryID">@category.Name</option>
+                }
+        </select>
+        <ol class="row d-flex justify-content-center g-0 flex-wrap">
+            @foreach(var subscriptionCategory in subscriptionCategories)
+            {
+                <li><div class="subscription-category-card">
+                    <h3 class="duration">@subscriptionCategory.Duration month@(subscriptionCategory.Duration > 1 ? "s" : "")</h3>
+                    <h4 class="category">@categories[productCategoryId - 1].Name</h4>
+                    <h2 class="monthly-price">$@subscriptionCategory.NewMonthlyPrice<span>/month</span></h2>
+                    <p class="description">@subscriptionCategory.Description</p>
+                    <button class="btn btn-subscribe">Subscribe</button>
+                </div></li>
+            }
+        </ol>
+    </section>
+}
+
+@code {
+    private List<Category>? categories;
+    private List<SubscriptionCategory>? subscriptionCategories;
+    private int productCategoryId = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await CategoryService.GetAll();
+        subscriptionCategories = await SubscriptionCategoryService.GetAllByProductCategoryId(productCategoryId);
+    }
+
+    private async Task SelectedCategoryChanged(ChangeEventArgs e)
+    {
+        if (e.Value != null)
+        {
+            productCategoryId = Int32.Parse(e.Value.ToString()!);
+
+            subscriptionCategories = await SubscriptionCategoryService.GetAllByProductCategoryId(productCategoryId);
+        }
+    }
+}

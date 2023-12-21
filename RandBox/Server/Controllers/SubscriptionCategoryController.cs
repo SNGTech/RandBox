@@ -27,7 +27,7 @@ namespace RandBox.Server.Controllers
 			return Ok(subscription_categories);
 		}
 
-		[HttpGet("{category_id:int}")]
+		[HttpGet("category/{category_id:int}")]
 		public async Task<ActionResult<IEnumerable<SubscriptionCategory>>> GetSubscriptionCategoriesByProductCategoriesId(int category_id)
 		{
 			var subscription_categories = await _unitOfWork.SubscriptionCategoryRepository.GetAll(q => q.CategoryID == category_id);
