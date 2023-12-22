@@ -1,16 +1,18 @@
 ﻿@page "/staff"
 @* @attribute [Authorize(Roles = "Staff")] *@
 
-<h4> Welcome Mr Lim</h4>
+<section class="m-4">
+    <h4 class="mb-4">Welcome Mr Lim</h4>
 
-<div class="container-row">
-    <div class="subContainer">
-        <div class="Info">Total Subscriptions</div>
-        <div class="Info-number">247</div>
-    </div>
+    <div class="col d-flex justify-content-between">
+        <div class="subContainer text-center">
+            <div class="info">Total Subscriptions</div>
+            <div class="info-number">247</div>
+        </div>
 
-    <div class="salesContainer">
-        <div class="Info">Total Sales</div>
-        <div class="Info-number">$1632.32</div>
+        <div class="salesContainer text-center">
+            <div class="info">Total Sales</div>
+            <div class="info-number">$1632.32</div>
+        </div>
     </div>
-</div>
+</section>
