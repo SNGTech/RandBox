@@ -45,7 +45,7 @@ namespace RandBox.Server.Data
             builder.ApplyConfiguration(new OrderItemConfiguration());
             builder.ApplyConfiguration(new CountryConfiguration());
 
-
+            builder.ApplyConfiguration(new RoleConfiguration());
         }
     }
 }

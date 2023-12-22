@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -30,13 +31,15 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +47,7 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -147,12 +151,38 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+                user.DateOfBirth = Input.DateOfBirth;
+                user.Address = Input.Address;
+                user.UnitNo = Input.UnitNo;
+                user.PostalCode = Input.PostalCode;
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
+                    // Add role to user based one Email Suffix
+                    var role = await GetRole(Input.Email);
+                    if (role != null)
+                    {
+                        IdentityResult roleResult = await _userManager.AddToRoleAsync(user, role.Name);
+                        if (roleResult.Succeeded)
+                        {
+                            _logger.LogInformation("Assigned {RoleName} Role to user.", role.Name);
+                        }
+                        else
+                        {
+                            _logger.LogWarning("Failed to assign {{RoleName}} Role to user!", role.Name);
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Failed to assign role to user: {RoleName} Role not found!", role.Name);
+                    }
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -175,7 +205,7 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
-                    }
+                    }   
                 }
                 foreach (var error in result.Errors)
                 {
@@ -208,6 +238,13 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
             return (IUserEmailStore<ApplicationUser>)_userStore;
+        }
+
+        // RandBox Roles Assignment
+        private async Task<IdentityRole> GetRole(string email)
+        {
+            var roleName = email.EndsWith("@randbox.sg") ? "Staff" : "Customer";
+            return await _roleManager.FindByNameAsync(roleName);
         }
     }
 }
