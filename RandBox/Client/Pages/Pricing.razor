@@ -1,4 +1,5 @@
 ﻿@page "/pricing"
+@inject NavigationManager Navigation
 @inject IGenericService<Category> CategoryService
 @inject ISubscriptionCategoryService SubscriptionCategoryService
 
@@ -33,7 +34,7 @@ else
                     <h4 class="category">@categories[productCategoryId - 1].Name</h4>
                     <h2 class="monthly-price">$@subscriptionCategory.NewMonthlyPrice<span>/month</span></h2>
                     <p class="description">@subscriptionCategory.Description</p>
-                    <button class="btn btn-subscribe">Subscribe</button>
+                        <button class="btn btn-subscribe" @onclick="@(() => NavigateToCheckout(subscriptionCategory.SubscriptionCategoryID))">Subscribe</button>
                 </div></li>
             }
         </ol>
@@ -59,5 +60,10 @@ else
 
             subscriptionCategories = await SubscriptionCategoryService.GetAllByProductCategoryId(productCategoryId);
         }
+    }
+
+    protected void NavigateToCheckout(int id)
+    {
+        Navigation.NavigateTo($"pricing/checkout/{id}");
     }
 }

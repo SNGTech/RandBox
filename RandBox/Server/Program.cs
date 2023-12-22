@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using RandBox.Server.Data;
 using RandBox.Server.Models;
 using Microsoft.AspNetCore.Identity;
 using RandBox.Server.Repositories.Contracts;
 using RandBox.Server.Repositories;
+using RandBox.Server.Services;
+using RandBox.Server.Services.Contracts;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,7 +38,10 @@ builder.Services.AddIdentityServer()
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 
+StripeConfiguration.ApiKey = "sk_test_51OPpJqKZqzi7Rqy6Q0lSWfKkH5qofg04MVGZxsD7DuYsNx0l3HOec4LqVFBFpNKRNEvqWiz0rx5guKunALmZNlnZ00XhJKPzX5";
+
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IStripeCustomerService, StripeCustomerService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -71,5 +76,6 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+
 
 app.Run();
