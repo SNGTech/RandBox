@@ -1,0 +1,63 @@
+﻿@page "/123"
+@inject NavigationManager Navigation
+@inject IGenericService<Category> CategoryService
+@inject IGenericService<Product> ProductService
+<h4>Store Management Page</h4>
+
+
+@if (products == null || categories == null)
+{
+    <h4>Loading Product and Categories</h4>
+}
+else
+{
+    <h3>Stock alerts</h3>
+    <h6 style="color: #f55353">Low stock!</h6>
+    <div class="product-carousel col d-flex align-content-center">
+        <ul class="list-unstyled d-flex">
+            @foreach (var product in products!)
+            {
+                if (product.StockNo < 200)
+                {
+                    
+                    var class_size = "";
+                    <li>
+                        <div>
+                            <ProductCard Product=@product ClassSize=@class_size />
+                        </div>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+}
+
+<h3 style="margin-top: 6em">Store Management</h3>
+<h2>All Products</h2>
+
+<div class="product-carousel row">
+    @foreach (var product in products!)
+    {
+        var class_size = "";
+        <div class="col-md-3 mb-3"> <!-- Adjust the column size as needed -->
+            <ProductCard Product=@product ClassSize=@class_size />
+        </div>
+    }
+</div>
+
+
+
+
+    
+
+
+@code {
+    private List<Category>? categories;
+    private List<Product>? products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await CategoryService.GetAll();
+        products = await ProductService.GetAll();
+    }
+}
