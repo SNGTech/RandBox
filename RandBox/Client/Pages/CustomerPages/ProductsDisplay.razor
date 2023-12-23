@@ -1,0 +1,42 @@
+﻿@page "/products"
+@inject NavigationManager Navigation
+@inject IGenericService<Category> CategoryService
+@inject IGenericService<Product> ProductService
+
+
+<div class="d-flex justify-content-center">
+    <h1>Our Products</h1>
+</div>
+
+<div class="d-flex justify-content-center" style="margin-bottom:2rem;">
+    <h5>View your loot pool here, or buy an item you just can't get enough of!</h5>
+</div>
+
+<div class="form-group" style="margin-top:3rem;margin-bottom:2rem;">
+    <input type="text" placeholder="Search for an item:">
+</div>
+
+
+
+
+<div class="product-carousel row">
+    @foreach (var product in products!)
+    {
+        var class_size = "";
+        <div class="col-md-3 mb-5">
+            <ProductDisplayCard Product=@product ClassSize=@class_size />
+        </div>
+    }
+</div>
+
+
+@code {
+    private List<Category>? categories;
+    private List<Product>? products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await CategoryService.GetAll();
+        products = await ProductService.GetAll();
+    }
+}

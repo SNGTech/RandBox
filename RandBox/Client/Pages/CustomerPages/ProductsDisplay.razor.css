@@ -1,0 +1,15 @@
+﻿.product-carousel ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+}
+
+.product-carousel li {
+    flex: 0 0 auto;
+}
+
+    .product-carousel li:not(:first-child) {
+        margin-left: 4rem;
+    }

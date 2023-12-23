@@ -1,0 +1,28 @@
+﻿<div class="@ClassSize product-card-showcase row d-flex justify-content-start align-content-between">
+    <div class="gradient"></div>
+    <img src="@Product!.ThumbnailURL" />
+    @if (@Product.Country == null)
+    {
+        <h2>Loading Country</h2>
+    }
+    else
+    {
+        <div class="randbox-badge" style="background-color: @Product.Country!.BadgeColour">@Product.Country!.Name</div>
+    }
+    <div class="info">
+        <h3 class="mb-4">@Product!.Name</h3>
+        <p>@Product.Description</p>
+
+        <div class="d-flex justify-content-between">
+            <p class="mb-0">@Product.Category!.Name</p>
+            <p class="mb-0">$@Product!.DiscountedPrice</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Product? Product { get; set; }
+    [Parameter]
+    public string ClassSize { get; set; } = "";
+}
