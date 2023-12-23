@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using RandBox.Server.Models;
+using RandBox.Server.Services;
+using RandBox.Server.Services.Contracts;
 
 namespace RandBox.Server.Areas.Identity.Pages.Account
 {
@@ -33,13 +36,16 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
 
+        private readonly IStripeCustomerService _stripeCustomerService;
+
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IStripeCustomerService stripeCustomerService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -48,6 +54,8 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+
+            _stripeCustomerService = stripeCustomerService;
         }
 
         /// <summary>
@@ -172,6 +180,12 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
                         if (roleResult.Succeeded)
                         {
                             _logger.LogInformation("Assigned {RoleName} Role to user.", role.Name);
+
+                            // Add Stripe Customer if Role is Customer
+                            if (role.Name == "Customer")
+                            {
+                                await _stripeCustomerService.CreateCustomerAsync(user);
+                            }
                         }
                         else
                         {
