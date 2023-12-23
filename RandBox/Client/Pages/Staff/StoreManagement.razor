@@ -2,7 +2,6 @@
 @inject NavigationManager Navigation
 @inject IGenericService<Category> CategoryService
 @inject IGenericService<Product> ProductService
-<h4>Store Management Page</h4>
 
 
 @if (products == null || categories == null)
@@ -11,8 +10,9 @@
 }
 else
 {
-    <h3>Stock alerts</h3>
-    <h6 style="color: #f55353">Low stock!</h6>
+    <div style="font-size:2rem;">Stock alerts</div>
+    <div style="color: #f55353; font-size:1.25rem;margin-bottom:2rem">Low stock!</div>
+
     <div class="product-carousel col d-flex align-content-center">
         <ul class="list-unstyled d-flex">
             @foreach (var product in products!)
@@ -32,8 +32,8 @@ else
     </div>
 }
 
-<h3 style="margin-top: 6em">Store Management</h3>
-<h2>All Products</h2>
+<div style="margin-top: 3.7em;font-size:2rem;">Store Management</div>
+<div style="font-size:1.25rem;margin-bottom:2rem">All Products</div>
 
 <div class="product-carousel row">
     @foreach (var product in products!)
