@@ -64,7 +64,7 @@ namespace RandBox.Server.Controllers.Stripe
 
             var options = new SubscriptionScheduleCreateOptions
             {
-                Customer = request.CustomerID,
+                Customer = request.CustID,
                 StartDate = DateTime.Now,
                 EndBehavior = "release",
                 Phases = new List<SubscriptionSchedulePhaseOptions>
@@ -91,7 +91,7 @@ namespace RandBox.Server.Controllers.Stripe
         public class PlanCreateRequest
         {
             [JsonProperty("custId")]
-            public string? CustomerID { get; set; }
+            public string? CustID { get; set; }
             [JsonProperty("planId")]
             public string? PlanID { get; set;}
             [JsonProperty("priceId")]

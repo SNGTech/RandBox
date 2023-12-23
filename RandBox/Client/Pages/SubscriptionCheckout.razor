@@ -1,9 +1,11 @@
 ﻿@page "/pricing/checkout/{id:int}"
 @inject IJSRuntime JSRuntime
+@inject IPaymentIntentService PaymentIntentService
+@inject ICustomerService CustomerService
 @* @attribute [Authorize] *@
 
 <section class="row d-flex justify-content-center align-items-center">
-    <form class="row d-flex justify-content-center w-50" id="payment-form">
+    <form class="row d-flex justify-content-center w-50" @onsubmit=Checkout id="payment-form">
         <div id="link-authentication-element">
             <!--Stripe.js injects the Link Element-->
         </div>
@@ -27,6 +29,14 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await JSRuntime.InvokeVoidAsync("SubscriptionCheckout.initialise", id);
+        var email = "test.sngtech@gmail.com";/* await CustomerService.GetCurrentCustomerEmail(); */
+        var response = await PaymentIntentService.CreatePaymentIntent(id, email);
+
+        await JSRuntime.InvokeVoidAsync("SubscriptionCheckout.initialise", response);
+    }
+
+    protected async Task Checkout(EventArgs e)
+    {
+        await JSRuntime.InvokeVoidAsync("SubscriptionCheckout.handleSubmit", e);
     }
 }

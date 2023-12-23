@@ -6,18 +6,20 @@ let plan;
 
 let elements;
 
-// Fetches a payment intent and captures the client secret
-SubscriptionCheckout.initialise = async function (plan_id) {
-    plan = { id: plan_id }
+let json;
 
-    // TODO: CONVERT THIS TO A SERVICE LAYER TO CALL IN RAZOR PAGE
+// Fetches a payment intent and captures the client secret
+SubscriptionCheckout.initialise = async function (json_payload) {
+
+    /*// TODO: CONVERT THIS TO A SERVICE LAYER TO CALL IN RAZOR PAGE
     const response = await fetch("/api/payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(plan),
-    });
+    });*/
+    json = await JSON.parse(json_payload)
 
-    const clientSecret  = (await response.json())['clientSecret'];
+    const clientSecret = json['clientSecret'];
     const appearance = {
         theme: 'stripe',
         variables: {
@@ -63,4 +65,15 @@ SubscriptionCheckout.initialise = async function (plan_id) {
     linkAuthenticationElement.mount("#link-authentication-element");
     addressElement.mount("#address-element")
     paymentElement.mount("#payment-element");
+}
+
+
+SubscriptionCheckout.handleSubmit = async function (e) {
+    const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+            // TODO: Change to checkout page
+            return_url: `${window.location.origin}/pricing`
+        },
+    });
 }
