@@ -1,4 +1,4 @@
-﻿@page "/123"
+﻿@page "/staff/store"
 @inject NavigationManager Navigation
 @inject IGenericService<Category> CategoryService
 @inject IGenericService<Product> ProductService
@@ -30,26 +30,21 @@ else
             }
         </ul>
     </div>
+
+    <div style="margin-top: 3.7em;font-size:2rem;">Store Management</div>
+    <div style="font-size:1.25rem;margin-bottom:2rem">All Products</div>
+
+    <div class="product-carousel row">
+        @foreach (var product in products!)
+        {
+            var class_size = "";
+            <div class="col-md-3 mb-3">
+                <!-- Adjust the column size as needed -->
+                <ProductCard Product=@product ClassSize=@class_size />
+            </div>
+        }
+    </div>
 }
-
-<div style="margin-top: 3.7em;font-size:2rem;">Store Management</div>
-<div style="font-size:1.25rem;margin-bottom:2rem">All Products</div>
-
-<div class="product-carousel row">
-    @foreach (var product in products!)
-    {
-        var class_size = "";
-        <div class="col-md-3 mb-3"> <!-- Adjust the column size as needed -->
-            <ProductCard Product=@product ClassSize=@class_size />
-        </div>
-    }
-</div>
-
-
-
-
-    
-
 
 @code {
     private List<Category>? categories;

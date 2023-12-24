@@ -1,0 +1,40 @@
+﻿.navbar {
+	position: sticky;
+	top: 0px;
+	max-width: 20rem;
+	background-color: #121212;
+	padding: 2rem 3rem;
+}
+
+.randbox-title h1 {
+	font-size: 1.5em;
+	font-weight: 700;
+	margin-right: auto;
+}
+
+	.randbox-title span {
+		color: var(--randbox-secondary-colour)
+	}
+
+ul {
+	display: inline-flex;
+	list-style: none;
+}
+
+li {
+	padding: 0;
+	font-size: 1em;
+	font-weight: 500;
+	letter-spacing: 0.1rem;
+}
+
+a {
+	color: var(--randbox-primary-colour);
+	text-decoration-line: none;
+	cursor: pointer;
+}
+
+.profile h4 {
+	font-size: 1.2em;
+	font-weight: 500;
+}

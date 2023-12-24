@@ -35,6 +35,10 @@ main {
         text-overflow: ellipsis;
     }
 
+.min-fill-height {
+    min-height: 91.4vh;
+}
+
 footer {
     background-color: #121212;
 }
