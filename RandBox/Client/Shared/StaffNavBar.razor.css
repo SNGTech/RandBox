@@ -1,9 +1,26 @@
 ﻿.navbar {
 	position: sticky;
 	top: 0px;
-	max-width: 20rem;
 	background-color: #121212;
+	transform: translateX(-18.25rem);
+	margin-right: -18.25rem;
+	transition-property: transform, margin;
+	transition-duration: 500ms;
+	transition-timing-function: ease;
+}
+
+	.navbar:hover {
+		transform: translateX(0);
+		margin-right: 0rem;
+	}
+
+.inner-navbar {
+	max-width: 20rem;
 	padding: 2rem 3rem;
+}
+
+.collapse-layer {
+	font-size: 1.5em;
 }
 
 .randbox-title h1 {
@@ -22,7 +39,7 @@ ul {
 }
 
 li {
-	padding: 0;
+	padding: 1rem;
 	font-size: 1em;
 	font-weight: 500;
 	letter-spacing: 0.1rem;
