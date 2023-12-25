@@ -8,7 +8,6 @@
     position: relative;
 }
 
-
 img {
     position: absolute;
     top: 0;
@@ -54,9 +53,4 @@ img {
     font-family: Inter, sans-serif;
     font-size: 0.9em;
     min-height: 1.5em;
-}
-
-.card-small {
-    transform: scale(0.85);
-    opacity: 20%;
 }

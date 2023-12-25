@@ -14,13 +14,19 @@
 		margin-right: 0rem;
 	}
 
+	.navbar:hover .collapse-layer i {
+		transform: rotate(-180deg);
+	}
+
 .inner-navbar {
 	max-width: 20rem;
 	padding: 2rem 3rem;
 }
 
-.collapse-layer {
+.collapse-layer i {
 	font-size: 1.5em;
+	transform: rotate(0deg);
+	transition: transform 200ms ease;
 }
 
 .randbox-title h1 {

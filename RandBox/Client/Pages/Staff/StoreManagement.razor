@@ -1,4 +1,5 @@
 ﻿@page "/staff/store"
+@using System.ComponentModel;
 @inject NavigationManager Navigation
 @inject IGenericService<Category> CategoryService
 @inject IGenericService<Product> ProductService
@@ -6,53 +7,106 @@
 
 @if (products == null || categories == null)
 {
-    <h4>Loading Product and Categories</h4>
+    <h4>Loading Store Manager</h4>
 }
 else
 {
-    <div style="font-size:2rem;">Stock alerts</div>
-    <div style="color: #f55353; font-size:1.25rem;margin-bottom:2rem">Low stock!</div>
+    <div class="px-3">
+        <h2 class="stock-title">Stock alerts</h2>
+        <h3 class="stock-alert"><i class="bi bi-exclamation-triangle-fill" /> You have some items with low and/or no stock!</h3>
 
-    <div class="product-carousel col d-flex align-content-center">
-        <ul class="list-unstyled d-flex">
-            @foreach (var product in products!)
-            {
-                if (product.StockNo < 200)
+        <div class="product-carousel">
+            <ul class="list-unstyled col d-flex justify-content-start">
+                @foreach (var product in products!)
                 {
-                    
-                    var class_size = "";
-                    <li>
-                        <div>
-                            <ProductCard Product=@product ClassSize=@class_size />
-                        </div>
-                    </li>
+                    if (product.StockNo < 300)
+                    {
+                        <li><ProductCard Product=@product /></li>
+                    }
                 }
-            }
-        </ul>
-    </div>
+            </ul>
+        </div>
 
-    <div style="margin-top: 3.7em;font-size:2rem;">Store Management</div>
-    <div style="font-size:1.25rem;margin-bottom:2rem">All Products</div>
+        <div class="title-bar col d-flex justify-content-start align-items-center">
+            <h2 class="page-title">Store Management</h2>
+            <select class="store-section-dropdown" @onchange="SelectedStoreSectionChanged">
+                <option value="" disabled>Select Store Section...</option>
+                <option value="@StoreSection.Products">Products</option>
+                <option value="@StoreSection.Categories">Categories</option>
+                <option value="@StoreSection.Countries">Countries</option>
+                <option value="@StoreSection.Plans">Subscription Plans</option>
+            </select>
+        </div>
 
-    <div class="product-carousel row">
-        @foreach (var product in products!)
+        @switch(storeSection)
         {
-            var class_size = "";
-            <div class="col-md-3 mb-3">
-                <!-- Adjust the column size as needed -->
-                <ProductCard Product=@product ClassSize=@class_size />
-            </div>
+            case StoreSection.Products:
+                @if (products == null)
+                {
+                    <h4>Loading Products</h4>
+                }
+                else
+                {
+                    <div class="info-bar col d-flex justify-content-start">
+                        <h3 class="page-info">All Products</h3>
+                    </div>
+                    <div class="product-carousel">
+                        <ul class="list-unstyled col d-flex flex-wrap">
+                            @foreach (var product in products!)
+                            {
+                                <li><ProductCard Product=@product /></li>
+                            }
+                        </ul>
+                    </div>
+                }
+                break;
+            default:
+                <h4 class="page-invalid">Invalid Store Section Selected. Please select a valid one.</h4>
+                break;
         }
     </div>
 }
 
 @code {
+    enum StoreSection
+    {
+        Products, 
+        Categories, 
+        Countries, 
+        Plans
+    };
+
+    private StoreSection storeSection { get; set; }
+
     private List<Category>? categories;
     private List<Product>? products;
 
     protected override async Task OnInitializedAsync()
     {
+        storeSection = StoreSection.Products;
+
         categories = await CategoryService.GetAll();
         products = await ProductService.GetAll();
+    }
+
+    private async Task LoadStore(StoreSection section)
+    {
+        switch(section)
+        {
+            case StoreSection.Products:
+                products = await ProductService.GetAll();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private async Task SelectedStoreSectionChanged(ChangeEventArgs e)
+    {
+        if (e.Value != null)
+        {
+            storeSection = Enum.Parse<StoreSection>(e.Value.ToString()!);
+            await LoadStore(storeSection);
+        }
     }
 }

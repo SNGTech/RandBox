@@ -1,15 +1,59 @@
-﻿.product-carousel ul {
-	list-style: none;
-	padding: 0;
-	display: flex;
-	justify-content: center;
-	gap: 4rem; 
+﻿.stock-title {
+	margin-top: 3.06rem;
+	font-size: 1.75em;
+	font-weight: 500;
 }
 
-.product-carousel li {
-	flex: 0 0 auto; 
+.stock-alert {
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+	font-size: 1.2em;
+	font-weight: 500;
+	color: #f55353;
 }
 
-.product-carousel li:not(:first-child) {
-	margin-left: 4rem; 
+.product-carousel ul {
+	gap: 3rem;
+	margin-bottom: 2.5rem;
+}
+
+.page-title {
+	margin: 0;
+	line-height: 4rem;
+	font-size: 1.75em;
+	font-weight: 500;
+}
+
+.page-info {
+	font-size: 1.65em;
+	font-weight: 500;
+}
+
+.title-bar {
+	margin-top: 3rem;
+	column-gap: 3rem;
+}
+
+.info-bar {
+	margin-top: 2rem;
+	margin-bottom: 2.5rem;
+}
+
+.store-section-dropdown {
+	padding: 0.5rem;
+	border: 1px solid #ececec40;
+	border-radius: 15px;
+	background-color: transparent;
+	color: #D4D4D4;
+	max-width: 15rem;
+	max-height: 2.8rem;
+	font-size: 1.2em;
+	cursor: pointer;
+}
+
+.page-invalid {
+	margin-top: 1.5rem;
+	font-size: 1.2em;
+	font-weight: 500;
+	color: #f55353
 }

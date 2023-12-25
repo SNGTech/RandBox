@@ -22,9 +22,8 @@
 <div class="product-carousel row">
     @foreach (var product in products!)
     {
-        var class_size = "";
         <div class="col-md-3 mb-5">
-            <ProductDisplayCard Product=@product ClassSize=@class_size />
+            <ProductDisplayCard Product=@product />
         </div>
     }
 </div>

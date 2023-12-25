@@ -1,4 +1,4 @@
-﻿<div class="@ClassSize product-card-showcase row d-flex justify-content-start align-content-between">
+﻿<div class="product-card-showcase row d-flex justify-content-start align-content-between">
     <div class="gradient"></div>
     <img src="@Product!.ThumbnailURL" />
     @if (@Product.Country == null)
@@ -23,6 +23,4 @@
 @code {
     [Parameter]
     public Product? Product { get; set; }
-    [Parameter]
-    public string ClassSize { get; set; } = "";
 }
