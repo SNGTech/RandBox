@@ -1,0 +1,21 @@
+﻿.page-info {
+	font-size: 1.65em;
+	font-weight: 500;
+}
+
+.info-bar {
+	margin-top: 2rem;
+	margin-bottom: 2.5rem;
+}
+
+.item-carousel ul {
+	gap: 3rem;
+}
+
+.randbox-badge {
+	width: fit-content;
+	height: fit-content;
+	padding: 0.35em 1.25em 0.35em 1.25em;
+	border-radius: 20px;
+	font-weight: 700;
+}

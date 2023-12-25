@@ -47,21 +47,21 @@ else
                 }
                 else
                 {
-                    <div class="info-bar col d-flex justify-content-start">
-                        <h3 class="page-info">All Products</h3>
-                    </div>
-                    <div class="product-carousel">
-                        <ul class="list-unstyled col d-flex flex-wrap">
-                            @foreach (var product in products!)
-                            {
-                                <li><ProductCard Product=@product /></li>
-                            }
-                        </ul>
-                    </div>
+                    <StoreManagerProductSection Products=@products/>
+                }
+                break;
+            case StoreSection.Categories:
+                @if (categories == null)
+                {
+                    <h4>Loading Categories</h4>
+                }
+                else
+                {
+                    <StoreManagerCategorySection Categories=@categories />
                 }
                 break;
             default:
-                <h4 class="page-invalid">Invalid Store Section Selected. Please select a valid one.</h4>
+                <h4 class="page-invalid"><i class="bi bi-cone-striped" /> Invalid Store Section Selected. Please select a valid one.</h4>
                 break;
         }
     </div>
@@ -70,9 +70,9 @@ else
 @code {
     enum StoreSection
     {
-        Products, 
+        Products,
         Categories, 
-        Countries, 
+        Countries,
         Plans
     };
 

@@ -1,0 +1,16 @@
+﻿<div class="info-bar col d-flex justify-content-start">
+    <h3 class="page-info">All Categories</h3>
+</div>
+<div class="item-carousel">
+    <ul class="list-unstyled col d-flex flex-wrap">
+        @foreach (var category in Categories!)
+        {
+            <li><div class="randbox-badge" style="background-color: @category!.BadgeColour">@category!.Name</div></li>
+        }
+    </ul>
+</div>
+
+@code {
+    [Parameter]
+    public List<Category>? Categories { get; set; }
+}

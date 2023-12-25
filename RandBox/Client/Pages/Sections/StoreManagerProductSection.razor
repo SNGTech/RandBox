@@ -1,0 +1,16 @@
+﻿<div class="info-bar col d-flex justify-content-start">
+    <h3 class="page-info">All Products</h3>
+</div>
+<div class="item-carousel">
+    <ul class="list-unstyled col d-flex flex-wrap">
+        @foreach (var product in Products!)
+        {
+            <li><ProductCard Product=@product /></li>
+        }
+    </ul>
+</div>
+
+@code {
+    [Parameter]
+    public List<Product>? Products { get; set; }
+}

@@ -24,19 +24,9 @@
 	font-weight: 500;
 }
 
-.page-info {
-	font-size: 1.65em;
-	font-weight: 500;
-}
-
 .title-bar {
 	margin-top: 3rem;
 	column-gap: 3rem;
-}
-
-.info-bar {
-	margin-top: 2rem;
-	margin-bottom: 2.5rem;
 }
 
 .store-section-dropdown {
