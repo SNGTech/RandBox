@@ -22,9 +22,14 @@
 <div class="product-carousel row">
     @foreach (var product in products!)
     {
-        <div class="col-md-3 mb-5">
-            <ProductDisplayCard Product=@product />
-        </div>
+        if(product == null){
+            <h4>Loading Products</h4>
+        }
+        else{
+            <div class="col-md-3 mb-5">
+                <ProductDisplayCard Product=@product />
+            </div>
+        }
     }
 </div>
 
