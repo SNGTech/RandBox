@@ -1,11 +1,18 @@
-﻿<div class="info-bar col d-flex justify-content-start">
-    <h3 class="page-info">All Categories</h3>
+﻿<div class="info-bar col d-flex justify-content-start align-items-center">
+    <h3 class="page-info m-0">All Categories</h3>
+    <div class="edit-options col d-flex">
+        <h4 class="option-btn add-btn m-0"><i class="bi bi-plus-circle" />&nbsp; Add Category</h4>
+        <h4 class="option-btn edit-btn m-0"><i class="bi bi-pencil" />&nbsp; Edit Category</h4>
+        <h4 class="option-btn delete-btn m-0"><i class="bi bi-dash-circle" />&nbsp; Delete Category</h4>
+    </div>
 </div>
 <div class="item-carousel">
     <ul class="list-unstyled col d-flex flex-wrap">
         @foreach (var category in Categories!)
         {
-            <li><div class="randbox-badge" style="background-color: @category!.BadgeColour">@category!.Name</div></li>
+            <li class="@(selected[category.] ? "selected" : "")"><div class="randbox-badge" style="background-color: @category!.BadgeColour" @onclick="SelectCategory">
+                    @category!.Name
+            </div></li>
         }
     </ul>
 </div>
@@ -13,4 +20,11 @@
 @code {
     [Parameter]
     public List<Category>? Categories { get; set; }
+
+    private List<string>? selected = new List<string>();
+
+    protected void SelectCategory(MouseEventArgs e)
+    {
+        Console.WriteLine(e.Button);
+    }
 }
