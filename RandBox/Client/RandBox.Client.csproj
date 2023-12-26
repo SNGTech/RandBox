@@ -8,7 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\Sections\StoreManagerCategorySection.razor" />
+    <Compile Remove="obj\**" />
+    <Content Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,7 +19,6 @@
     <None Remove="Components\ProductCard.razor.css" />
     <None Remove="Components\ProductDisplayCard.razor.css" />
     <None Remove="Pages\CustomerPages\ProductDescription.razor.css" />
-    <None Remove="Pages\Sections\StoreManagerCategorySection.razor.css" />
     <None Remove="Pages\Staff\StoreManagement.razor.css" />
   </ItemGroup>
 
