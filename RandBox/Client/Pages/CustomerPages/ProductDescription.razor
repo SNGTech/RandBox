@@ -1,0 +1,62 @@
+﻿
+@using System.ComponentModel;
+@page "/product-details/{ProductId:int}"
+@inject IGenericService<Product> ProductService
+
+
+
+<h2 class="text-center">Product Description</h2>
+
+
+
+
+<div class="row">
+    @* Left side: Product Image *@
+    <div class="col-md-6">
+        @if (product != null)
+        {
+            <div class="product-card-showcase row d-flex" style="margin-top:4rem;">
+                <div class="gradient" style="margin-top:3rem;"></div>
+                <img src="@product!.ThumbnailURL" class="img-fluid" />
+            </div>
+        }
+        else
+        {
+            <p>Loading product details...</p>
+        }
+    </div>
+
+    @* Right side: Product Details *@
+    <div class="col-md-6">
+        <div style="margin-left:1.5em;">
+            @if (product != null)
+            {
+                <p>Snacks</p>
+                <h4 style="margin-top:4rem;">@product!.Name</h4>
+                <h2>@product!.DiscountedPrice SGD </h2>
+                <p>Price</p><hr />
+                <p>Status: In Stock (@product.StockNo)    Country: @product?.Country?.Name</p>   
+                <p>@product!.Description</p><hr/>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@code {
+    [Parameter]
+    public int ProductId { get; set; }
+
+    private Product? product;
+    private Category? category;
+
+    protected override async Task OnInitializedAsync()
+    {
+        product = await ProductService.GetById(ProductId);
+       
+    }
+}
+ 

@@ -11,12 +11,14 @@
     <None Remove="Components\ProductCard - Copy.razor.css" />
     <None Remove="Components\ProductCard.razor.css" />
     <None Remove="Components\ProductDisplayCard.razor.css" />
+    <None Remove="Pages\CustomerPages\ProductDescription.razor.css" />
     <None Remove="Pages\Staff\StoreManagement.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Components\ProductCard.razor.css" />
     <Content Include="Components\ProductDisplayCard.razor.css" />
+    <Content Include="Pages\CustomerPages\ProductDescription.razor.css" />
     <Content Include="Pages\Staff\StoreManagement.razor.css" />
   </ItemGroup>
 

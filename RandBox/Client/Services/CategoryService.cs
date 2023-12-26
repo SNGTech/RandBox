@@ -48,12 +48,29 @@ namespace RandBox.Client.Services
 			}
 		}
 
-		public async Task<Category> GetById(int id)
-		{
-			throw new NotImplementedException();
-		}
+        public async Task<Category> GetById(int id)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/Category/{id}");
 
-		public async Task<Category> Insert(Category entity)
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<Category>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Category> Insert(Category entity)
 		{
 			throw new NotImplementedException();
 		}

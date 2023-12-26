@@ -18,6 +18,12 @@
 
 
 
+@if(products == null){
+    <h4>Loading Products</h4>
+}
+
+else
+{
 
 <div class="product-carousel row">
     @foreach (var product in products!)
@@ -27,6 +33,9 @@
         </div>
     }
 </div>
+
+}
+
 
 
 @code {
