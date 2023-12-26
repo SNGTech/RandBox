@@ -8,10 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Sections\StoreManagerCategorySection.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Components\ProductCard - Copy.razor.css" />
     <None Remove="Components\ProductCard.razor.css" />
     <None Remove="Components\ProductDisplayCard.razor.css" />
     <None Remove="Pages\CustomerPages\ProductDescription.razor.css" />
+    <None Remove="Pages\Sections\StoreManagerCategorySection.razor.css" />
     <None Remove="Pages\Staff\StoreManagement.razor.css" />
   </ItemGroup>
 

@@ -13,7 +13,7 @@
 </div>
 
 <div class="form-group" style="margin-top:3rem;margin-bottom:2rem;">
-    <input type="text" placeholder="Search for an item:">
+    <input type="text" placeholder="Search for an item:" @onchange="OnSearchInputChange">
 </div>
 
 
@@ -26,7 +26,7 @@ else
 {
 
 <div class="product-carousel row">
-    @foreach (var product in products!)
+    @foreach (var product in filteredProducts!)
     {
         <div class="col-md-3 mb-5">
             <ProductDisplayCard Product=@product />
@@ -41,10 +41,30 @@ else
 @code {
     private List<Category>? categories;
     private List<Product>? products;
+    private List<Product>? filteredProducts;
 
     protected override async Task OnInitializedAsync()
     {
         categories = await CategoryService.GetAll();
         products = await ProductService.GetAll();
+        filteredProducts = products;
     }
+
+
+
+    private void OnSearchInputChange(ChangeEventArgs e)
+    {
+        string searchTerm = e.Value.ToString().ToLower();
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+           
+            filteredProducts = products?.Where(p => p.Name.ToLower().Contains(searchTerm)).ToList();
+        }
+        else
+        {
+            
+            filteredProducts = products;
+        }
+    }
+
 }
