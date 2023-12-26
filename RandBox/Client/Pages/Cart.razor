@@ -1,0 +1,72 @@
+﻿@using System.ComponentModel;
+@page "/cart"
+@inject IGenericService<Product> ProductService
+
+
+
+<h1 class="text-center">Your Cart</h1>
+<h6 class="text-center">4 Items</h6>
+
+<div style="margin-top:3rem;">
+    <div class="d-flex justify-content-between">
+        <h4>Item</h4>
+        <h4>Price</h4>
+        <h4>Quantity</h4>
+        <h4>Total</h4>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between">
+        <div>
+            <h5>Ruby-coca KitKat</h5>
+            <h6>Category: Snacks</h6>
+        </div>
+        <h5>5.6</h5>
+        <h5>3</h5>
+        <h5>22.5</h5>
+    </div>
+    <hr />
+</div>
+
+
+
+<div class="container mt-5" style="margin-top:2rem; margin-bottom:2rem;">
+
+    <div class="d-flex justify-content-end">
+        <h6 style="margin-right: 7rem;">SubTotal:</h6>
+        <h6>$78.21</h6>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <h6 style="margin-right: 7rem;">Shipping Cost:</h6>
+        <h6>$5.87</h6>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <h6 style="margin-right: 7rem;">Discount:</h6>
+        <h6>$8.21</h6>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <h6 style="margin-right: 7rem;">Grand Total:</h6>
+        <h6>$75.87</h6>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+@code {
+    [Parameter]
+    public int ProductId { get; set; }
+
+    private Product? product;
+    private Category? category;
+
+
+}
