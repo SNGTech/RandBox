@@ -47,12 +47,30 @@ namespace RandBox.Client.Services
 			}
 		}
 
-		public async Task<Product> GetById(int id)
-		{
-			throw new NotImplementedException();
-		}
+        public async Task<Product> GetById(int id)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/Product/{id}");
 
-		public async Task<Product> Insert(Product entity)
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<Product>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        public async Task<Product> Insert(Product entity)
 		{
 			throw new NotImplementedException();
 		}
