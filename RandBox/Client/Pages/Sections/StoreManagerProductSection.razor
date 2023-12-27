@@ -1,19 +1,32 @@
-﻿<div class="info-bar col d-flex justify-content-start">
-    <h3 class="page-info">All Products</h3>
-    <div class="edit-option">
-        <h3><i class="bi bi-plus-circle" /> Add Category</h3>
+﻿@inject IGenericService<Product> ProductService
+
+@if (products == null)
+{
+    <h4>> Loading Products</h4>
+}
+else
+{
+    <div class="info-bar col d-flex justify-content-start">
+        <h3 class="page-info">All Products</h3>
+        <div class="edit-option">
+            <h3><i class="bi bi-plus-circle" /> Add Category</h3>
+        </div>
     </div>
-</div>
-<div class="item-carousel">
-    <ul class="list-unstyled col d-flex flex-wrap">
-        @foreach (var product in Products!)
-        {
-            <li><ProductCard Product=@product /></li>
-        }
-    </ul>
-</div>
+    <div class="item-carousel">
+        <ul class="list-unstyled col d-flex flex-wrap">
+            @foreach (var product in products!)
+            {
+                <li><ProductCard Product=@product /></li>
+            }
+        </ul>
+    </div>
+}
 
 @code {
-    [Parameter]
-    public List<Product>? Products { get; set; }
+    private List<Product>? products { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetAll();
+    }
 }

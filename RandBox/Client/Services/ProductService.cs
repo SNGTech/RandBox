@@ -29,10 +29,10 @@ namespace RandBox.Client.Services
 
 				if (response.IsSuccessStatusCode)
 				{
-					if(response.StatusCode == HttpStatusCode.NoContent)
+					/*if(response.StatusCode == HttpStatusCode.NoContent)
 					{
 						return Enumerable.Empty<Product>().ToList();
-					}
+					}*/
 					return await response.Content.ReadFromJsonAsync<List<Product>>();
 				}
 				else

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Components\Modals\CreateEditPlanCategoryModal.razor.css" />
     <None Remove="Components\ProductCard - Copy.razor.css" />
     <None Remove="Components\ProductCard.razor.css" />
     <None Remove="Components\ProductDisplayCard.razor.css" />
@@ -23,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Components\Modals\CreateEditPlanCategoryModal.razor.css" />
     <Content Include="Components\ProductCard.razor.css" />
     <Content Include="Components\ProductDisplayCard.razor.css" />
     <Content Include="Pages\CustomerPages\ProductDescription.razor.css" />

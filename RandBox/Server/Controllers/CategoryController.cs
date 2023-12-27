@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RandBox.Server.Repositories.Contracts;
 using RandBox.Shared.Domain;
 
@@ -41,5 +42,34 @@ namespace RandBox.Server.Controllers
 
 			return Ok(category);
 		}
-	}
+
+		[HttpPut("{id:int}")]
+		public async Task<ActionResult> UpdateCategory(int id, Category newCategory)
+		{
+			if (id != newCategory.CategoryID)
+			{
+				return BadRequest();
+			}
+
+			_unitOfWork.CategoryRepository.Update(newCategory);
+
+			try
+			{
+				await _unitOfWork.Save();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if(!await CategoryExists(id))
+				{
+					return NotFound();
+				}
+			}
+			return Ok(newCategory);
+		}
+
+		protected async Task<bool> CategoryExists(int id)
+		{
+			return await _unitOfWork.CategoryRepository.GetById(id) != null;
+		}
+    }
 }

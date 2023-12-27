@@ -1,30 +1,91 @@
-﻿<div class="info-bar col d-flex justify-content-start align-items-center">
-    <h3 class="page-info m-0">All Categories</h3>
-    <div class="edit-options col d-flex">
-        <h4 class="option-btn add-btn m-0"><i class="bi bi-plus-circle" />&nbsp; Add Category</h4>
-        <h4 class="option-btn edit-btn m-0"><i class="bi bi-pencil" />&nbsp; Edit Category</h4>
-        <h4 class="option-btn delete-btn m-0"><i class="bi bi-dash-circle" />&nbsp; Delete Category</h4>
+﻿@inject IGenericService<Category> CategoryService
+
+@if (categories == null)
+{
+    <h4>> Loading Categories</h4>
+}
+else {
+    <div class="info-bar col d-flex justify-content-start align-items-center">
+        <h3 class="page-info m-0">All Categories</h3>
+        <div class="edit-options col d-flex">
+            <h4 class="option-btn add-btn m-0"><i class="bi bi-plus-circle" />&nbsp; Add Category</h4>
+            <h4 class="option-btn edit-btn m-0 @(IsEditButtonActive() ? "" : "inactive")" @onclick="OpenEditModal">
+                <i class="bi bi-pencil" />&nbsp; Edit Category
+            </h4>
+            <h4 class="option-btn delete-btn m-0 @(IsDeleteButtonActive() ? "" : "inactive")">
+                <i class="bi bi-dash-circle" />&nbsp; Remove Category
+            </h4>
+        </div>
     </div>
-</div>
-<div class="item-carousel">
-    <ul class="list-unstyled col d-flex flex-wrap">
-        @foreach (var category in Categories!)
-        {
-            <li class="@(selected[category.] ? "selected" : "")"><div class="randbox-badge" style="background-color: @category!.BadgeColour" @onclick="SelectCategory">
-                    @category!.Name
-            </div></li>
-        }
-    </ul>
-</div>
+
+    <CreateEditCategoryModal @ref="Modal" OnSuccessfulEdit="RefreshCategories" />
+
+    <div class="item-carousel">
+        <ul class="list-unstyled col d-flex align-items-center flex-wrap">
+            @foreach (var categoryComponent in categoryComponents!)
+            {
+                var category = categoryComponent.Category;
+                <li class="@(categoryComponent.selected ? "selected" : "")">
+                    <div class="randbox-badge" style="background-color: @category!.BadgeColour" @onclick="@(() => SelectCategory(categoryComponent))">
+                        @category!.Name
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+}
 
 @code {
-    [Parameter]
-    public List<Category>? Categories { get; set; }
+    private List<Category>? categories { get; set; }
 
-    private List<string>? selected = new List<string>();
+    private List<CategoryComponent>? categoryComponents { get; set; }
 
-    protected void SelectCategory(MouseEventArgs e)
+    private CreateEditCategoryModal? Modal;
+
+    protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine(e.Button);
+        await RefreshCategories();
+    }
+
+    protected void SelectCategory(CategoryComponent component)
+    {
+        component.selected = !component.selected;
+    }
+
+    protected bool IsEditButtonActive()
+    {
+        return categoryComponents!.Count(x => x.selected) == 1;
+    }
+
+    protected bool IsDeleteButtonActive()
+    {
+        return categoryComponents!.Count(x => x.selected) >= 1;
+    }
+
+    protected void OpenEditModal()
+    {
+        if (!IsEditButtonActive())
+        {
+            return;
+        }
+        var category = categoryComponents!.FirstOrDefault(x => x.selected)!.Category;
+        Modal!.Open(category!);
+    }
+
+    protected async Task RefreshCategories()
+    {
+        categories = await CategoryService.GetAll();
+        categoryComponents = categories!.Select(x => new CategoryComponent
+            {
+                Category = x,
+                selected = false
+            }
+        ).ToList();
+    }
+
+    protected class CategoryComponent
+    {
+        public Category? Category { get; set; }
+        public bool selected { get; set; }
     }
 }

@@ -28,10 +28,52 @@ namespace RandBox.Client.Services
                 var response = await _httpClient_Public.GetAsync("api/SubscriptionCategory");
                 if (response.IsSuccessStatusCode)
                 {
-                    if (response.StatusCode == HttpStatusCode.NoContent)
+                    /*if (response.StatusCode == HttpStatusCode.NoContent)
                     {
                         return Enumerable.Empty<SubscriptionCategory>().ToList();
-                    }
+                    }*/
+                    return await response.Content.ReadFromJsonAsync<List<SubscriptionCategory>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status: {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<SubscriptionCategory>> GetAllBaseCategory()
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync("api/SubscriptionCategory/base");
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<SubscriptionCategory>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status: {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<SubscriptionCategory>> GetAllByDuration(int duration)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/SubscriptionCategory/duration/{duration}");
+                if (response.IsSuccessStatusCode)
+                {
                     return await response.Content.ReadFromJsonAsync<List<SubscriptionCategory>>();
                 }
                 else
@@ -53,10 +95,10 @@ namespace RandBox.Client.Services
                 var response = await _httpClient_Public.GetAsync($"api/SubscriptionCategory/category/{categoryId}");
                 if (response.IsSuccessStatusCode)
                 {
-                    if (response.StatusCode == HttpStatusCode.NoContent)
+                    /*if (response.StatusCode == HttpStatusCode.NoContent)
                     {
                         return Enumerable.Empty<SubscriptionCategory>().ToList();
-                    }
+                    }*/
                     return await response.Content.ReadFromJsonAsync<List<SubscriptionCategory>>();
                 }
                 else

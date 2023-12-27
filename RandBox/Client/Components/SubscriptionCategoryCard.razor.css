@@ -1,0 +1,45 @@
+﻿.subscription-category-card {
+	max-width: 20.5rem;
+	min-height: 24rem;
+	padding: 2.5rem;
+	border: 1px solid #ececec40;
+	border-radius: 20px;
+}
+
+	.subscription-category-card .duration {
+		margin-top: 0.1rem;
+		margin-bottom: 0.5rem;
+		font-size: 1.4em;
+	}
+
+		.subscription-category-card .duration span {
+			font-weight: 700;
+		}
+
+	.subscription-category-card .monthly-price-label {
+		margin-top: 1.8rem;
+		font-size: 1.5em;
+		font-weight: 500;
+	}
+
+	.subscription-category-card .monthly-price {
+		margin-bottom: 1.8rem;
+		font-weight: 700;
+	}
+
+		.subscription-category-card .monthly-price span {
+			font-weight: 600;
+			font-size: 0.6em;
+			color: #717171;
+		}
+
+	.subscription-category-card .description {
+		font-size: 0.9em;
+		font-family: Inter, sans-serif;
+		letter-spacing: 0.1rem;
+		margin: 0;
+	}
+
+		.subscription-category-card .description span {
+			font-weight: 700;
+		}

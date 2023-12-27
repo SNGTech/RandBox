@@ -35,8 +35,11 @@ main {
         text-overflow: ellipsis;
     }
 
-.article-section {
-    min-height: 81.7vh;
+.content {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 footer {

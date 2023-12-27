@@ -30,10 +30,10 @@ namespace RandBox.Client.Services
 
 				if (response.IsSuccessStatusCode)
 				{
-					if (response.StatusCode == HttpStatusCode.NoContent)
+					/*if (response.StatusCode == HttpStatusCode.NoContent)
 					{
 						return Enumerable.Empty<Category>().ToList();
-					}
+					}*/
 					return await response.Content.ReadFromJsonAsync<List<Category>>();
 				}
 				else
@@ -77,7 +77,24 @@ namespace RandBox.Client.Services
 
 		public async Task<Category> Update(Category entity)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				var response = await _httpClient_Public.PutAsJsonAsync($"api/Category/{entity.CategoryID}", entity);
+
+				if (response.IsSuccessStatusCode)
+				{
+					return await response.Content.ReadFromJsonAsync<Category>();
+				}
+				else
+				{
+					var message = await response.Content.ReadAsStringAsync();
+					throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+				}
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 	}
 }

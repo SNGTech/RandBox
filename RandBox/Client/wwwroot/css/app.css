@@ -7,6 +7,7 @@
     --randbox-background-colour: #16161A;
     --randbox-secondary-colour: #2CB67D;
     --randbox-action-colour: #7F5AF0;
+    --randbox-warn-colour: #F55353;
 }
 
 html, body {
@@ -41,12 +42,12 @@ a, .btn-link {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-.valid.modified:not([type=checkbox]) {
+/*.valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
-}
+}*/
 
 .invalid {
-    outline: 1px solid red;
+    outline: 1px solid var(--randbox-warn-colour);
 }
 
 .validation-message {
@@ -114,3 +115,17 @@ a, .btn-link {
     .loading-progress-text:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
+
+/*CUSTOMISED*/
+
+.randbox-form-input {
+    border: 1px solid #ececec40;
+    border-radius: 10px;
+    background-color: #16151a;
+    width: 100%;
+    padding: 0.5rem 0.6rem;
+    color: #d4d4d4;
+    font-family: Inter, sans-serif;
+    font-size: 1.15em;
+    font-weight: normal;
+}

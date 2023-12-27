@@ -40,10 +40,10 @@ namespace RandBox.Client.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    if (response.StatusCode == HttpStatusCode.NoContent)
+                    /*if (response.StatusCode == HttpStatusCode.NoContent)
                     {
                         return "";
-                    }
+                    }*/
                     return await response.Content.ReadFromJsonAsync<string>();
                 }
                 else

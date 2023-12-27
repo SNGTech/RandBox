@@ -1,13 +1,12 @@
 ﻿@page "/staff/store"
-@using System.ComponentModel;
 @inject NavigationManager Navigation
 @inject IGenericService<Category> CategoryService
 @inject IGenericService<Product> ProductService
 
 
-@if (products == null || categories == null)
+@if (products == null)
 {
-    <h4>Loading Store Manager</h4>
+    <h4>> Loading Store Manager</h4>
 }
 else
 {
@@ -41,24 +40,15 @@ else
         @switch(storeSection)
         {
             case StoreSection.Products:
-                @if (products == null)
-                {
-                    <h4>Loading Products</h4>
-                }
-                else
-                {
-                    <StoreManagerProductSection Products=@products/>
-                }
+                <StoreManagerProductSection />
                 break;
             case StoreSection.Categories:
-                @if (categories == null)
-                {
-                    <h4>Loading Categories</h4>
-                }
-                else
-                {
-                    <StoreManagerCategorySection Categories=@categories />
-                }
+                <StoreManagerCategorySection />
+                break;
+            case StoreSection.Countries:
+                break;
+            case StoreSection.Plans:
+                <StoreManagerPlanSection />
                 break;
             default:
                 <h4 class="page-invalid"><i class="bi bi-cone-striped" /> Invalid Store Section Selected. Please select a valid one.</h4>
@@ -78,18 +68,16 @@ else
 
     private StoreSection storeSection { get; set; }
 
-    private List<Category>? categories;
     private List<Product>? products;
 
     protected override async Task OnInitializedAsync()
     {
         storeSection = StoreSection.Products;
 
-        categories = await CategoryService.GetAll();
         products = await ProductService.GetAll();
     }
 
-    private async Task LoadStore(StoreSection section)
+    /*private async Task LoadStore(StoreSection section)
     {
         switch(section)
         {
@@ -99,14 +87,14 @@ else
             default:
                 break;
         }
-    }
+    }*/
 
-    private async Task SelectedStoreSectionChanged(ChangeEventArgs e)
+    private void SelectedStoreSectionChanged(ChangeEventArgs e)
     {
         if (e.Value != null)
         {
             storeSection = Enum.Parse<StoreSection>(e.Value.ToString()!);
-            await LoadStore(storeSection);
+            //await LoadStore(storeSection);
         }
     }
 }

@@ -1,0 +1,123 @@
+﻿@inject ISubscriptionCategoryService SubscriptionCategoryService;
+
+<div class="modal modal-fullscreen @(show ? "show" : "inactive")" id="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content p-4">
+            <div class="col d-flex justify-content-between align-items-center mb-3">
+                <i class="close-btn bi bi-chevron-left" @onclick=Close></i>
+                <h5 class="modal-title">Edit Plan Category</h5>
+                <i class="inactive bi bi-chevron-left"></i>
+            </div>
+            <div class="px-4">
+                <EditForm Model="@input" OnValidSubmit="@Submit" FormName="@($"EditPlanCategoryForm")">
+                    <DataAnnotationsValidator />
+                    <div class="row mb-3">
+                        <label class="form-label">
+                            Base Price:
+                        </label>
+                        <div class="">
+                            <InputNumber class="randbox-form-input" @bind-Value="input!.BaseMonthlyPrice"></InputNumber>
+                            <ValidationMessage For="@(() => input.BaseMonthlyPrice)" class="mt-1 text-danger" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label">
+                            Description:
+                        </label>
+                        <div>
+                            <InputTextArea class="randbox-form-input" @bind-Value="input!.Description"></InputTextArea>
+                            <ValidationMessage For="@(() => input.Description)" class="mt-1 text-danger" />
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        
+                    </div>
+                    <button type="submit" class="btn btn-submit w-100 mt-2 mb-2">Confirm Changes</button>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-backdrop fade @(show ? "show" : "inactive")" />
+
+@code {
+    [Parameter]
+    public EventCallback OnSuccessfulCreate { get; set; }
+
+    [Parameter]
+    public EventCallback OnSuccessfulEdit { get; set; }
+
+    private InputModel? input { get; set; }
+    private bool show = false;
+
+    protected override void OnInitialized()
+    {
+        input = new InputModel();
+    }
+
+    public async Task Open(int duration) {
+        var planCategories = await SubscriptionCategoryService.GetAllByDuration(duration);
+
+        if (planCategories != null)
+        {
+            input = new InputModel
+            {
+                Description = planCategories[0].Description,
+                Duration = planCategories[0].Duration,
+                BaseMonthlyPrice = planCategories[0].BaseMonthlyPrice,
+                AdjustedPrices = planCategories.Select(x => new AdjustedCategoryPrice
+                {
+                    CategoryID = x.Category!.CategoryID,
+                    AdjustedPrice = x.NewMonthlyPrice
+                }).ToList()
+            };
+        }
+        else
+        {
+            input = new InputModel();
+        }
+        show = true;
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        input = new InputModel();
+        show = false;
+        StateHasChanged();
+    }
+
+    protected async Task Submit()
+    {
+        /*var category = new Category
+        {
+        CategoryID = input!.CategoryID,
+        Name = input!.Name,
+        Description = input!.Description,
+        BadgeColour = input!.BadgeColour,
+        DateTimeCreated = DateTime.Now
+    };
+    //await SubscriptionCategoryService.Update(category);
+    Close();*/
+        await OnSuccessfulEdit.InvokeAsync();
+    }
+
+    public class InputModel
+    {
+        [Required]
+        public string? Description { get; set; }
+        [Required]
+        public int Duration { get; set; }
+        [Required]
+        public decimal BaseMonthlyPrice { get; set; }
+        [Required]
+        public List<AdjustedCategoryPrice>? AdjustedPrices { get; set; }
+    }
+
+    public class AdjustedCategoryPrice
+    {
+        public int CategoryID { get; set; }
+        public decimal AdjustedPrice { get; set; }
+    }
+}

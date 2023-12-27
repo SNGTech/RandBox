@@ -13,9 +13,9 @@
 	column-gap: 1.5rem;
 }
 
-.edit-options h4 {
-	font-size: 1.2em;
-}
+	.edit-options h4 {
+		font-size: 1.2em;
+	}
 
 .option-btn {
 	cursor: pointer;
@@ -38,9 +38,9 @@
 	min-height: 10rem;
 }
 
-.item-carousel ul {
-	gap: 3rem;
-}
+	.item-carousel ul {
+		gap: 3rem;
+	}
 
 li {
 	cursor: pointer;
@@ -48,14 +48,6 @@ li {
 	border-radius: 25px;
 	transition: border 150ms ease;
 	user-select: none;
-}
-
-.randbox-badge {
-	width: fit-content;
-	height: fit-content;
-	padding: 0.35em 1.25em 0.35em 1.25em;
-	border-radius: 20px;
-	font-weight: 700;
 }
 
 .selected {

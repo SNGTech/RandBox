@@ -1,0 +1,92 @@
+﻿@inject ISubscriptionCategoryService SubscriptionCategoryService
+
+@if (subscriptionCategories == null)
+{
+    <h4>> Loading Plan Categories</h4>
+}
+else
+{
+    <div class="info-bar col d-flex justify-content-start align-items-center">
+        <h3 class="page-info m-0">All Plan Categories</h3>
+        <div class="edit-options col d-flex">
+            <h4 class="option-btn add-btn m-0"><i class="bi bi-plus-circle" />&nbsp; Add Plan Category</h4>
+            <h4 class="option-btn edit-btn m-0 @(IsEditButtonActive() ? "" : "inactive")" @onclick="OpenEditModal">
+                <i class="bi bi-pencil" />&nbsp; Edit Plan Category
+            </h4>
+            <h4 class="option-btn delete-btn m-0 @(IsDeleteButtonActive() ? "" : "inactive")">
+                <i class="bi bi-dash-circle" />&nbsp; Remove Plan Category
+            </h4>
+        </div>
+    </div>
+
+    <CreateEditPlanCategoryModal @ref="Modal" OnSuccessfulEdit="RefreshPlanCategories" />
+
+    <div class="item-carousel">
+        <ul class="list-unstyled col d-flex align-items-center flex-wrap">
+            @foreach (var planComponent in planComponents!)
+            {
+                var planCategory = planComponent.SubscriptionCategory;
+                <li class="@(planComponent.selected ? "selected" : "")">
+                    <div @onclick="@(() => SelectPlanCategory(planComponent))">
+                        <SubscriptionCategoryCard SubscriptionCategory=planCategory />
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    private List<SubscriptionCategory>? subscriptionCategories { get; set; }
+
+    private List<SubscriptionCategoryComponent>? planComponents { get; set; }
+
+    private CreateEditPlanCategoryModal? Modal;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshPlanCategories();
+    }
+
+    protected void SelectPlanCategory(SubscriptionCategoryComponent component)
+    {
+        component.selected = !component.selected;
+    }
+
+    protected bool IsEditButtonActive()
+    {
+        return planComponents!.Count(x => x.selected) == 1;
+    }
+
+    protected bool IsDeleteButtonActive()
+    {
+        return planComponents!.Count(x => x.selected) >= 1;
+    }
+
+    protected async Task OpenEditModal()
+    {
+        if (!IsEditButtonActive())
+        {
+            return;
+        }
+        var duration = planComponents!.FirstOrDefault(x => x.selected)!.SubscriptionCategory!.Duration;
+        await Modal!.Open(duration);
+    }
+
+    protected async Task RefreshPlanCategories()
+    {
+        subscriptionCategories = await SubscriptionCategoryService.GetAllBaseCategory();
+        planComponents = subscriptionCategories!.Select(x => new SubscriptionCategoryComponent
+            {
+                SubscriptionCategory = x,
+                selected = false
+            }
+        ).ToList();
+    }
+
+    protected class SubscriptionCategoryComponent
+    {
+        public SubscriptionCategory? SubscriptionCategory { get; set; }
+        public bool selected { get; set; }
+    }
+}
