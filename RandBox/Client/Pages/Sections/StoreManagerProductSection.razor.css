@@ -6,8 +6,55 @@
 .info-bar {
 	margin-top: 2rem;
 	margin-bottom: 2.5rem;
+	column-gap: 8.5rem;
 }
 
-.item-carousel ul {
-	gap: 3rem;
+.edit-options {
+	column-gap: 1.5rem;
+}
+
+	.edit-options h4 {
+		font-size: 1.2em;
+	}
+
+.option-btn {
+	cursor: pointer;
+	user-select: none;
+}
+
+.add-btn {
+	color: #2cb67d;
+}
+
+.edit-btn {
+	color: #e2bf3a;
+}
+
+.delete-btn {
+	color: #f55353;
+}
+
+.item-carousel {
+	min-height: 10rem;
+}
+
+	.item-carousel ul {
+		gap: 3rem;
+	}
+
+li {
+	cursor: pointer;
+	border: 4px solid transparent;
+	border-radius: 25px;
+	transition: border 150ms ease;
+	user-select: none;
+}
+
+.selected {
+	border: 4px solid #2074c9;
+}
+
+.inactive {
+	opacity: 25%;
+	cursor: default;
 }

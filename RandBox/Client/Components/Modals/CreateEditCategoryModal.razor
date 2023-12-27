@@ -1,15 +1,16 @@
-﻿@inject IGenericService<Category> CategoryService;
+﻿@inject IGenericService<Category> CategoryService
+@inject ISubscriptionCategoryService SubscriptionCategoryService
 
 <div class="modal modal-dialog-centered @(show ? "show" : "inactive")" id="modal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content p-4">
             <div class="col d-flex justify-content-between align-items-center mb-3">
                 <i class="close-btn bi bi-chevron-left" @onclick=Close></i>
-                <h5 class="modal-title">Edit Category</h5>
+                <h5 class="modal-title">@(isCreate ? "Add" : "Edit") Category</h5>
                 <i class="inactive bi bi-chevron-left"></i>
             </div>
             <div class="px-4">
-                <EditForm Model="@input" OnValidSubmit="@Submit" FormName="@($"EditCategoryForm")">
+                <EditForm Model="@input" OnValidSubmit="@SubmitCallback" FormName="@($"CategoryForm")">
                     <DataAnnotationsValidator />
                     <div class="row mb-3">
                         <label class="form-label">
@@ -50,21 +51,32 @@
 
 @code {
     [Parameter]
-    public EventCallback OnSuccessfulCreate { get; set; }
+    public EventCallback OnSuccessfulSubmit { get; set; }
 
-    [Parameter]
-    public EventCallback OnSuccessfulEdit { get; set; }
+    private EventCallback SubmitCallback { get; set; }
 
     private InputModel? input { get; set; }
     private bool show = false;
+    private bool isCreate { get; set; }
 
     protected override void OnInitialized()
     {
         input = new InputModel();
     }
 
-    public void Open(Category category)
+    public void OpenInAddMode()
     {
+        SubmitCallback = EventCallback.Factory.Create(this, SubmitInAddMode);
+        isCreate = true;
+        input = new InputModel();
+        show = true;
+        StateHasChanged();
+    }
+
+    public void OpenInEditMode(Category category)
+    {
+        SubmitCallback = EventCallback.Factory.Create(this, SubmitInEditMode);
+        isCreate = false;
         if (category != null) {
             input = new InputModel
             {
@@ -89,7 +101,22 @@
         StateHasChanged();
     }
 
-    protected async Task Submit()
+    protected async Task SubmitInAddMode()
+    {
+        var category = new Category
+        {
+            Name = input!.Name,
+            Description = input!.Description,
+            BadgeColour = input!.BadgeColour,
+            DateTimeCreated = DateTime.Now
+        };
+        var addedCategory = await CategoryService.Insert(category);
+        await SubscriptionCategoryService.AddByProductCategoryId(addedCategory.CategoryID);
+        Close();
+        await OnSuccessfulSubmit.InvokeAsync();
+    }
+
+    protected async Task SubmitInEditMode()
     {
         var category = new Category
         {
@@ -101,7 +128,7 @@
         };
         await CategoryService.Update(category);
         Close();
-        await OnSuccessfulEdit.InvokeAsync();
+        await OnSuccessfulSubmit.InvokeAsync();
     }
 
     public class InputModel

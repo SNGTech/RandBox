@@ -43,6 +43,15 @@ namespace RandBox.Server.Controllers
 			return Ok(category);
 		}
 
+		[HttpPost]
+		public async Task<ActionResult> AddCategory(Category category)
+		{
+            await _unitOfWork.CategoryRepository.Insert(category);
+            await _unitOfWork.Save();
+
+            return CreatedAtAction(nameof(GetCategory), new { id = category.CategoryID }, category);
+        }
+
 		[HttpPut("{id:int}")]
 		public async Task<ActionResult> UpdateCategory(int id, Category newCategory)
 		{
@@ -67,7 +76,16 @@ namespace RandBox.Server.Controllers
 			return Ok(newCategory);
 		}
 
-		protected async Task<bool> CategoryExists(int id)
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteCategoryById(int id)
+        {
+            await _unitOfWork.CategoryRepository.DeleteById(id);
+            await _unitOfWork.Save();
+
+            return NoContent();
+        }
+
+        protected async Task<bool> CategoryExists(int id)
 		{
 			return await _unitOfWork.CategoryRepository.GetById(id) != null;
 		}

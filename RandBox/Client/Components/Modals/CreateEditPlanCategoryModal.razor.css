@@ -1,15 +1,10 @@
 ﻿.modal-content {
     background-color: #16151a;
-    border: 1px solid #ececec40;
-    border-radius: 15px;
 }
 
 .inactive {
     opacity: 0%;
     z-index: -1;
-    transition-property: opacity;
-    transition-duration: 150ms;
-    transition-timing-function: ease;
 }
 
 .show {
@@ -17,15 +12,16 @@
     opacity: 100%;
 }
 
-    .show.modal-backdrop {
-        z-index: 9;
-        opacity: 60%;
-    }
-
 .close-btn {
     cursor: pointer;
     font-size: 1.25em;
     color: #e7e7e780;
+    font-style: normal;
+    letter-spacing: 0.05rem;
+}
+
+.form-content {
+    width: 40%;
 }
 
 label {
@@ -36,9 +32,33 @@ label {
 }
 
 .modal-title {
-    font-size: 1.2em;
+    font-size: 2em;
     letter-spacing: 0.1rem;
     font-weight: 700;
+}
+
+.category-form-section {
+    font-family: Inter, sans-serif;
+}
+
+.category-form-section h3 {
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+.category-form-section p {
+    font-size: 1.1em;
+    font-weight: normal;
+    color: #acacac;
+}
+
+.dollar-prefix {
+    font-family: Inter, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #d7d7d7;
+    margin: 0;
+    margin-right: 0.8rem;
 }
 
 .btn-submit {
@@ -50,3 +70,4 @@ label {
     letter-spacing: 0.05rem;
     padding: 0.5rem 0rem;
 }
+

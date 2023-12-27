@@ -1,37 +1,79 @@
-﻿@inject ISubscriptionCategoryService SubscriptionCategoryService;
+﻿@inject ISubscriptionCategoryService SubscriptionCategoryService
+@inject IGenericService<Category> CategoryService
 
-<div class="modal modal-fullscreen @(show ? "show" : "inactive")" id="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content p-4">
-            <div class="col d-flex justify-content-between align-items-center mb-3">
-                <i class="close-btn bi bi-chevron-left" @onclick=Close></i>
-                <h5 class="modal-title">Edit Plan Category</h5>
-                <i class="inactive bi bi-chevron-left"></i>
+<div class="modal modal-dialog-centered @(show ? "show" : "inactive")" id="modal" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content p-5 m-0">
+            <div class="col d-flex justify-content-between align-items-center mx-5 mb-5 flex-grow-0">
+                <i class="close-btn bi bi-chevron-left" @onclick=Close> Close without Saving</i>
+                <h2 class="modal-title">@(isCreate ? "Add" : "Edit") Plan Category</h2>
+                <i class="close-btn inactive bi bi-chevron-left"> Close without Saving</i>
             </div>
-            <div class="px-4">
-                <EditForm Model="@input" OnValidSubmit="@Submit" FormName="@($"EditPlanCategoryForm")">
+            <div class="form-content px-4 mx-auto">
+                <EditForm Model="@input" OnValidSubmit="@SubmitCallback" FormName="@($"PlanCategoryForm")">
                     <DataAnnotationsValidator />
-                    <div class="row mb-3">
-                        <label class="form-label">
-                            Base Price:
-                        </label>
-                        <div class="">
-                            <InputNumber class="randbox-form-input" @bind-Value="input!.BaseMonthlyPrice"></InputNumber>
-                            <ValidationMessage For="@(() => input.BaseMonthlyPrice)" class="mt-1 text-danger" />
+                    <div class="row">
+                        <div class="col mb-3 @(isCreate ? "" : "disabled")">
+                            <label class="form-label">
+                                Duration (months)
+                            </label>
+                            <div>
+                                <InputNumber class="randbox-form-input" disabled=@(!isCreate) @bind-Value="input!.Duration"></InputNumber>
+                                <ValidationMessage For="@(() => input.Duration)" class="mt-1 text-danger" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="form-label">
-                            Description:
-                        </label>
-                        <div>
-                            <InputTextArea class="randbox-form-input" @bind-Value="input!.Description"></InputTextArea>
-                            <ValidationMessage For="@(() => input.Description)" class="mt-1 text-danger" />
+                        <div class="col mb-3">
+                            <label class="form-label">
+                                Base Price
+                            </label>
+                            <div>
+                                <div class="col d-flex align-items-center">
+                                    <p class="dollar-prefix">$</p>
+                                    <InputNumber class="randbox-form-input" @bind-Value="input!.BaseMonthlyPrice"></InputNumber>
+                                </div>
+                                <ValidationMessage For="@(() => input.BaseMonthlyPrice)" class="mt-1 text-danger" />
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-4">
-                        
+                        <label class="form-label">
+                            Description
+                        </label>
+                        <div>
+                            <InputTextArea class="randbox-form-input desc-area" @bind-Value="input!.Description"></InputTextArea>
+                            <ValidationMessage For="@(() => input.Description)" class="mt-1 text-danger" />
+                        </div>
                     </div>
+                    <div class="category-form-section mb-4">
+                        <h3>Adjusted Price by Product Category</h3>
+                        <p>Default category price is the above base price. Edit the below fields to adjust each category price accordingly for this subscription category</p>
+                    </div>
+                    @if (input.AdjustedPrices == null)
+                    {
+                        <h4>> Either an Exception has Occurred or Modal Not Opened Yet...</h4>
+                    }
+                    else 
+                    {
+                        <div class="row row-cols-2">
+                            @foreach (var adjustedCategoryPrice in input.AdjustedPrices!)
+                            {
+                                <div class="col mb-1">
+                                    <div class="row mb-4">
+                                        <label class="form-label">
+                                            @adjustedCategoryPrice.Category!.Name
+                                        </label>
+                                        <div>
+                                            <div class="col d-flex align-items-center">
+                                                <p class="dollar-prefix">$</p>
+                                                <InputNumber class="randbox-form-input" @bind-Value="adjustedCategoryPrice!.AdjustedPrice"></InputNumber>
+                                            </div>
+                                            <ValidationMessage For="@(() => adjustedCategoryPrice.AdjustedPrice)" class="mt-1 text-danger" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
                     <button type="submit" class="btn btn-submit w-100 mt-2 mb-2">Confirm Changes</button>
                 </EditForm>
             </div>
@@ -39,24 +81,25 @@
     </div>
 </div>
 
-<div class="modal-backdrop fade @(show ? "show" : "inactive")" />
-
 @code {
     [Parameter]
-    public EventCallback OnSuccessfulCreate { get; set; }
+    public EventCallback OnSuccessfulSubmit { get; set; }
 
-    [Parameter]
-    public EventCallback OnSuccessfulEdit { get; set; }
+    private EventCallback SubmitCallback { get; set; }
 
     private InputModel? input { get; set; }
     private bool show = false;
+    private bool isCreate { get; set; }
 
     protected override void OnInitialized()
     {
         input = new InputModel();
     }
 
-    public async Task Open(int duration) {
+    public async Task OpenInEditMode(int duration)
+    {
+        isCreate = false;
+        SubmitCallback = EventCallback.Factory.Create(this, SubmitInEditMode);
         var planCategories = await SubscriptionCategoryService.GetAllByDuration(duration);
 
         if (planCategories != null)
@@ -68,8 +111,33 @@
                 BaseMonthlyPrice = planCategories[0].BaseMonthlyPrice,
                 AdjustedPrices = planCategories.Select(x => new AdjustedCategoryPrice
                 {
-                    CategoryID = x.Category!.CategoryID,
+                    SubscriptionCategoryID = x.SubscriptionCategoryID,
+                    Category = x.Category!,
                     AdjustedPrice = x.NewMonthlyPrice
+                }).ToList()
+            };
+        }
+        else
+        {
+            input = new InputModel();
+        }
+        show = true;
+        StateHasChanged();
+    }
+
+    public async Task OpenInAddMode()
+    {
+        isCreate = true;
+        SubmitCallback = EventCallback.Factory.Create(this, SubmitInAddMode);
+        var productCategories = await CategoryService.GetAll();
+
+        if (productCategories != null)
+        {
+            input = new InputModel
+            {
+                AdjustedPrices = productCategories.Select(x => new AdjustedCategoryPrice
+                {
+                    Category = x
                 }).ToList()
             };
         }
@@ -83,24 +151,43 @@
 
     public void Close()
     {
+        SubmitCallback = default(EventCallback);
         input = new InputModel();
         show = false;
         StateHasChanged();
     }
 
-    protected async Task Submit()
+    protected async Task SubmitInEditMode()
     {
-        /*var category = new Category
+        var newSubscriptionCategories = input!.AdjustedPrices!.Select(x => new SubscriptionCategory
         {
-        CategoryID = input!.CategoryID,
-        Name = input!.Name,
-        Description = input!.Description,
-        BadgeColour = input!.BadgeColour,
-        DateTimeCreated = DateTime.Now
-    };
-    //await SubscriptionCategoryService.Update(category);
-    Close();*/
-        await OnSuccessfulEdit.InvokeAsync();
+            SubscriptionCategoryID = x.SubscriptionCategoryID,
+            Description = input!.Description,
+            Duration = input!.Duration,
+            BaseMonthlyPrice = input!.BaseMonthlyPrice,
+            NewMonthlyPrice = x.AdjustedPrice,
+            CategoryID = x.Category!.CategoryID
+        }).ToList();
+
+        await SubscriptionCategoryService.Update(input.Duration, newSubscriptionCategories);
+        Close();
+        await OnSuccessfulSubmit.InvokeAsync();
+    }
+
+    protected async Task SubmitInAddMode()
+    {
+        var newSubscriptionCategories = input!.AdjustedPrices!.Select(x => new SubscriptionCategory
+            {
+                Description = input!.Description,
+                Duration = input!.Duration,
+                BaseMonthlyPrice = input!.BaseMonthlyPrice,
+                NewMonthlyPrice = x.AdjustedPrice,
+                CategoryID = x.Category!.CategoryID
+            }).ToList();
+
+        await SubscriptionCategoryService.AddByDuration(input.Duration, newSubscriptionCategories);
+        Close();
+        await OnSuccessfulSubmit.InvokeAsync();
     }
 
     public class InputModel
@@ -117,7 +204,9 @@
 
     public class AdjustedCategoryPrice
     {
-        public int CategoryID { get; set; }
+        public int SubscriptionCategoryID { get; set; }
+        [Required]
+        public Category? Category { get; set; }
         public decimal AdjustedPrice { get; set; }
     }
 }

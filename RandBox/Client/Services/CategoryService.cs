@@ -16,13 +16,30 @@ namespace RandBox.Client.Services
 			_httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
 		}
 
-		public async Task<Category> DeleteById(int id)
-		{
-			throw new NotImplementedException();
-		}
+        public async Task<string> DeleteById(int id)
+        {
+            try
+            {
+                var response = await _httpClient_Public.DeleteAsync($"api/Category/{id}");
 
-		// Can be accessed Anonymously
-		public async Task<List<Category>> GetAll()
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        // Can be accessed Anonymously
+        public async Task<List<Category>> GetAll()
 		{
 			try
 			{
@@ -72,8 +89,25 @@ namespace RandBox.Client.Services
 
         public async Task<Category> Insert(Category entity)
 		{
-			throw new NotImplementedException();
-		}
+            try
+            {
+                var response = await _httpClient_Public.PostAsJsonAsync("api/Category", entity);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<Category>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
 		public async Task<Category> Update(Category entity)
 		{
@@ -96,5 +130,5 @@ namespace RandBox.Client.Services
 				throw;
 			}
 		}
-	}
+    }
 }

@@ -26,18 +26,25 @@ else
                     <option value="@category.CategoryID">@category.Name</option>
                 }
         </select>
-        <ol class="row d-flex justify-content-center g-0 flex-wrap">
-            @foreach(var subscriptionCategory in subscriptionCategories)
-            {
-                <li><div class="subscription-category-card">
-                    <h3 class="duration">@subscriptionCategory.Duration month@(subscriptionCategory.Duration > 1 ? "s" : "")</h3>
-                    <h4 class="category">@categories[productCategoryId - 1].Name</h4>
-                    <h2 class="monthly-price">$@subscriptionCategory.NewMonthlyPrice<span>/month</span></h2>
-                    <p class="description">@subscriptionCategory.Description</p>
-                        <button class="btn btn-subscribe" @onclick="@(() => NavigateToCheckout(subscriptionCategory.SubscriptionCategoryID))">Subscribe</button>
-                </div></li>
-            }
-        </ol>
+        @if (subscriptionCategories.Count <= 0)
+        {
+            <h5 class="text-center">Sorry, this category does not have any plans associated with it. Try another category!</h5>
+        }
+        else
+        {
+            <ol class="row d-flex justify-content-center g-0 flex-wrap">
+                @foreach(var subscriptionCategory in subscriptionCategories)
+                {
+                    <li><div class="subscription-category-card">
+                        <h3 class="duration">@subscriptionCategory.Duration month@(subscriptionCategory.Duration > 1 ? "s" : "")</h3>
+                        <h4 class="category">@subscriptionCategory.Category!.Name</h4>
+                        <h2 class="monthly-price">$@subscriptionCategory.NewMonthlyPrice<span>/month</span></h2>
+                        <p class="description">@subscriptionCategory.Description</p>
+                            <button class="btn btn-subscribe" @onclick="@(() => NavigateToCheckout(subscriptionCategory.SubscriptionCategoryID))">Subscribe</button>
+                    </div></li>
+                }
+            </ol>
+        }
     </section>
 }
 

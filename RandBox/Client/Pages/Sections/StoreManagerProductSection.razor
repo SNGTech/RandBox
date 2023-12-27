@@ -1,32 +1,115 @@
 ﻿@inject IGenericService<Product> ProductService
 
-@if (products == null)
+@if (productComponents == null)
 {
     <h4>> Loading Products</h4>
 }
 else
 {
-    <div class="info-bar col d-flex justify-content-start">
-        <h3 class="page-info">All Products</h3>
-        <div class="edit-option">
-            <h3><i class="bi bi-plus-circle" /> Add Category</h3>
+    <div class="info-bar col d-flex justify-content-start align-items-center">
+        <h3 class="page-info m-0">All Products</h3>
+        <div class="edit-options col d-flex">
+            <h4 class="option-btn add-btn m-0" @onclick="OpenAddModal">
+                <i class="bi bi-plus-circle" />&nbsp; Add Product
+            </h4>
+            <h4 class="option-btn edit-btn m-0 @(IsEditButtonActive() ? "" : "inactive")" @onclick="OpenEditModal">
+                <i class="bi bi-pencil" />&nbsp; Edit Product
+            </h4>
+            <h4 class="option-btn delete-btn m-0 @(IsDeleteButtonActive() ? "" : "inactive")" @onclick="OpenDeleteModal">
+                <i class="bi bi-dash-circle" />&nbsp; Remove Product
+            </h4>
         </div>
     </div>
     <div class="item-carousel">
         <ul class="list-unstyled col d-flex flex-wrap">
-            @foreach (var product in products!)
+            @foreach (var productComponent in productComponents!)
             {
-                <li><ProductCard Product=@product /></li>
+                var product = productComponent.Product;
+                <li class="@(productComponent.Selected ? "selected" : "")" @onclick="@(() => SelectProduct(productComponent))">
+                    <ProductCard Product=@product />
+                </li>
             }
         </ul>
     </div>
 }
 
 @code {
-    private List<Product>? products { get; set; }
+    private List<ProductComponent>? productComponents { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        products = await ProductService.GetAll();
+        await RefreshProducts();
+    }
+
+    protected void SelectProduct(ProductComponent component)
+    {
+        component.Selected = !component.Selected;
+    }
+
+    protected bool IsEditButtonActive()
+    {
+        return productComponents!.Count(x => x.Selected) == 1;
+    }
+
+    protected bool IsDeleteButtonActive()
+    {
+        return productComponents!.Count(x => x.Selected) >= 1;
+    }
+
+    protected void OpenAddModal()
+    {
+        //Modal!.OpenInAddMode();
+    }
+
+    protected void OpenEditModal()
+    {
+        /*if (!IsEditButtonActive())
+        {
+            return;
+        }
+        var category = categoryComponents!.FirstOrDefault(x => x.Selected)!.Category;
+        Modal!.OpenInEditMode(category!);*/
+    }
+
+    protected void OpenDeleteModal()
+    {
+        /*if (!IsDeleteButtonActive())
+        {
+            return;
+        }
+        DeleteModal!.Open();*/
+    }
+
+    /*protected async Task DeleteSelectedProducts()
+    {
+        var categories = categoryComponents!.FindAll(x => x.Selected).Select(x => x.Category).ToList();
+
+        foreach (var category in categories)
+        {
+            // Delete related entities first (Subscription Category)
+            await SubscriptionCategoryService.DeleteByCategoryId(category!.CategoryID);
+
+            // Now delete Category
+            await CategoryService.DeleteById(category!.CategoryID);
+        }
+
+        await RefreshCategories();
+    }*/
+
+    protected async Task RefreshProducts()
+    {
+        var products = await ProductService.GetAll();
+        productComponents = products!.Select(x => new ProductComponent
+        {
+            Product = x,
+            Selected = false
+        }
+        ).ToList();
+    }
+
+    protected class ProductComponent
+    {
+        public Product? Product { get; set; }
+        public bool Selected { get; set; }
     }
 }

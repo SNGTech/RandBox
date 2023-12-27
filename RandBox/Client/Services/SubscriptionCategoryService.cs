@@ -16,10 +16,10 @@ namespace RandBox.Client.Services
             _httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
         }
 
-        public Task<SubscriptionCategory> DeleteById(int id)
+        /*public Task<SubscriptionCategory> DeleteById(int id)
         {
             throw new NotImplementedException();
-        }
+        }*/
 
         public async Task<List<SubscriptionCategory>> GetAll()
         {
@@ -113,19 +113,115 @@ namespace RandBox.Client.Services
             }
         }
 
-        public Task<SubscriptionCategory> GetById(int id)
+        public async Task<List<SubscriptionCategory>> AddByDuration(int duration, List<SubscriptionCategory> newSubscriptionCategories)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient_Public.PostAsJsonAsync("api/SubscriptionCategory/duration", newSubscriptionCategories);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<SubscriptionCategory>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public Task<SubscriptionCategory> Insert(SubscriptionCategory entity)
+        public async Task<List<SubscriptionCategory>> AddByProductCategoryId(int categoryId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // No need body content since added SubscriptionCategories are constructed in the controller itself
+                var response = await _httpClient_Public.PostAsync($"api/SubscriptionCategory/category/{categoryId}", null);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<SubscriptionCategory>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public Task<SubscriptionCategory> Update(SubscriptionCategory entity)
+        public async Task<List<SubscriptionCategory>> Update(int duration, List<SubscriptionCategory> newSubscriptionCategories)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient_Public.PutAsJsonAsync($"api/SubscriptionCategory/duration/{duration}", newSubscriptionCategories);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<SubscriptionCategory>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> DeleteByDuration(int duration)
+        {
+            try
+            {
+                var response = await _httpClient_Public.DeleteAsync($"api/SubscriptionCategory/duration/{duration}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> DeleteByCategoryId(int categoryId)
+        {
+            try
+            {
+                var response = await _httpClient_Public.DeleteAsync($"api/SubscriptionCategory/category/{categoryId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

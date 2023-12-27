@@ -17,7 +17,7 @@ namespace RandBox.Client.Services
             _httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
         }
 
-        public Task<Customer> DeleteById(int id)
+        public Task<string> DeleteById(int id)
         {
             throw new NotImplementedException();
         }

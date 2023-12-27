@@ -7,7 +7,7 @@ namespace RandBox.Client.Services.Contracts
 		Task<T> GetById(int id);
 		Task<List<T>> GetAll();
 		Task<T> Insert(T entity);
-		Task<T> DeleteById(int id);
+		Task<string> DeleteById(int id);
 		Task<T> Update(T entity);
 	}
 }
