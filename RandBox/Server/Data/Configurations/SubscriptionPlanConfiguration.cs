@@ -13,7 +13,7 @@ namespace RandBox.Server.Data.Configurations
                 {
                     SubscriptionPlanID = 1,
                     SubscribedDateTime = DateTime.Now,
-                    CustID = 1,
+                    CustomerID = 1,
                     SubscriptionCategoryID = 12,
                     StaffID = null
                 },
@@ -21,7 +21,7 @@ namespace RandBox.Server.Data.Configurations
                 {
                     SubscriptionPlanID = 2,
                     SubscribedDateTime = DateTime.Now.AddMonths(-2),
-                    CustID = 2,
+                    CustomerID = 2,
                     SubscriptionCategoryID = 5,
                     StaffID = null
                 }

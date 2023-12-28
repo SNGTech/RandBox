@@ -24,6 +24,7 @@ namespace RandBox.Server.Data
         public DbSet<Staff> Staff { get; set; }
         public DbSet<SubscriptionPlan> SubscriptionPlan { get; set; }
         public DbSet<SubscriptionCategory> SubscriptionCategory { get; set; }
+        public DbSet<SubscriptionItem> SubscriptionItem { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<Order> Order { get; set; }
@@ -37,13 +38,12 @@ namespace RandBox.Server.Data
             builder.ApplyConfiguration(new CustomerConfiguration());
             builder.ApplyConfiguration(new CategoryConfiguration());
             builder.ApplyConfiguration(new SubscriptionCategoryConfiguration());
-            builder.ApplyConfiguration(new SubscriptionPlanConfiguration());
-
             builder.ApplyConfiguration(new StaffConfiguration());
             builder.ApplyConfiguration(new OrderConfiguration());
             builder.ApplyConfiguration(new ProductConfiguration());
             builder.ApplyConfiguration(new OrderItemConfiguration());
             builder.ApplyConfiguration(new CountryConfiguration());
+            builder.ApplyConfiguration(new SubscriptionPlanConfiguration());
 
             builder.ApplyConfiguration(new RoleConfiguration());
         }
