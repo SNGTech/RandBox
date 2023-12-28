@@ -47,10 +47,11 @@ namespace RandBox.Server.Controllers
             return Ok(Product);
         }
 
-        [HttpPatch("{countryId:int}")]
+        /*[HttpPatch("{countryId:int}")]
         public async Task<ActionResult<IEnumerable<Product>>> RemoveCountryFromProducts(int countryId)
         {
             var products = await _unitOfWork.ProductRepository.GetAll(q => q.CountryID == countryId);
+        }*/
 
         [HttpPost]
         public async Task<ActionResult> AddProduct(Product Product)
