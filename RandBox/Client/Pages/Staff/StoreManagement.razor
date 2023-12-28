@@ -1,8 +1,6 @@
 ﻿@page "/staff/store"
 @inject NavigationManager Navigation
-@inject IGenericService<Category> CategoryService
 @inject IGenericService<Product> ProductService
-
 
 @if (products == null)
 {
@@ -46,6 +44,7 @@ else
                 <StoreManagerCategorySection />
                 break;
             case StoreSection.Countries:
+                <StoreManagerCountrySection  />
                 break;
             case StoreSection.Plans:
                 <StoreManagerPlanSection />

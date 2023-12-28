@@ -1,0 +1,68 @@
+﻿.page-info {
+    font-size: 1.65em;
+    font-weight: 500;
+}
+
+.info-bar {
+    margin-top: 2rem;
+    margin-bottom: 2.5rem;
+    column-gap: 8.5rem;
+}
+
+.edit-options {
+    column-gap: 1.5rem;
+}
+
+    .edit-options h4 {
+        font-size: 1.2em;
+    }
+
+.option-btn {
+    cursor: pointer;
+    user-select: none;
+}
+
+.add-btn {
+    color: #2cb67d;
+}
+
+.edit-btn {
+    color: #e2bf3a;
+}
+
+.delete-btn {
+    color: #f55353;
+}
+
+.item-carousel {
+    min-height: 10rem;
+}
+
+    .item-carousel ul {
+        gap: 3rem;
+    }
+
+li {
+    cursor: pointer;
+    border: 4px solid transparent;
+    border-radius: 25px;
+    transition: border 150ms ease;
+    user-select: none;
+}
+
+.randbox-badge {
+    width: fit-content;
+    height: fit-content;
+    padding: 0.35em 1.25em 0.35em 1.25em;
+    border-radius: 20px;
+    font-weight: 700;
+}
+
+.selected {
+    border: 4px solid #2074c9;
+}
+
+.inactive {
+    opacity: 25%;
+    cursor: default;
+}

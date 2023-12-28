@@ -1,0 +1,61 @@
+﻿.modal-content {
+    background-color: #16151a;
+    border: 1px solid #ececec40;
+    border-radius: 15px;
+}
+
+.inactive {
+    opacity: 0%;
+    z-index: -1;
+    transition-property: opacity;
+    transition-duration: 150ms;
+    transition-timing-function: ease;
+}
+
+.show {
+    z-index: 10;
+    opacity: 100%;
+}
+
+    .show.modal-backdrop {
+        z-index: 9;
+        opacity: 60%;
+    }
+
+.close-btn {
+    cursor: pointer;
+    font-size: 1.25em;
+    color: #e7e7e780;
+}
+
+label {
+    font-family: Inter, sans-serif;
+    font-size: 1.15em;
+    letter-spacing: 0.1rem;
+    font-weight: 500;
+}
+
+.modal-title {
+    font-size: 1.2em;
+    letter-spacing: 0.1rem;
+    font-weight: 700;
+}
+
+.badge-input {
+    column-gap: 1.25rem;
+}
+
+.colour-preview {
+    width: 1.69rem;
+    height: 1.5rem;
+}
+
+.btn-submit {
+    border: 2px solid #7f5af0;
+    border-radius: 10px;
+    color: #e7e7e7;
+    font-size: 1em;
+    font-weight: 700;
+    letter-spacing: 0.05rem;
+    padding: 0.5rem 0rem;
+}

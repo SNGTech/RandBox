@@ -1,0 +1,131 @@
+﻿@inject IGenericService<Country> CountryService
+
+
+@if (CountryComponents == null)
+{
+    <h4>> Loading countries</h4>
+}
+else
+{
+    <div class="info-bar col d-flex justify-content-start align-items-center">
+        <h3 class="page-info m-0">All countries</h3>
+        <div class="edit-options col d-flex">
+            <h4 class="option-btn add-btn m-0" @onclick="OpenAddModal">
+                <i class="bi bi-plus-circle" />&nbsp; Add Country
+            </h4>
+            <h4 class="option-btn edit-btn m-0 @(IsEditButtonActive() ? "" : "inactive")" @onclick="OpenEditModal">
+                <i class="bi bi-pencil" />&nbsp; Edit Country
+            </h4>
+            <h4 class="option-btn delete-btn m-0 @(IsDeleteButtonActive() ? "" : "inactive")" @onclick="OpenDeleteModal">
+                <i class="bi bi-dash-circle" />&nbsp; Remove Country
+            </h4>
+        </div>
+    </div>
+
+    <CreateEditCountryModal @ref="Modal" OnSuccessfulSubmit="Refreshcountries" />
+    <DeleteModal @ref="DeleteModal" OnSuccessfulConfirm="DeleteSelectedcountries" />
+
+    <div class="item-carousel">
+        <ul class="list-unstyled col d-flex align-items-center flex-wrap">
+            @foreach (var CountryComponent in CountryComponents!)
+            {
+                var Country = CountryComponent.Country;
+                <li class="@(CountryComponent.Selected ? "selected" : "")" @onclick="@(() => SelectCountry(CountryComponent))">
+                    <div class="randbox-badge" style="background-color: @Country!.BadgeColour">
+                        @Country!.Name
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    private List<CountryComponent>? CountryComponents { get; set; }
+
+    private CreateEditCountryModal? Modal;
+    private DeleteModal? DeleteModal;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Refreshcountries();
+    }
+
+    protected void SelectCountry(CountryComponent component)
+    {
+        component.Selected = !component.Selected;
+    }
+
+    protected bool IsEditButtonActive()
+    {
+        return CountryComponents!.Count(x => x.Selected) == 1;
+    }
+
+    protected bool IsDeleteButtonActive()
+    {
+        return CountryComponents!.Count(x => x.Selected) >= 1;
+    }
+
+    protected void OpenAddModal()
+    {
+        Modal!.OpenInAddMode();
+    }
+
+    protected void OpenEditModal()
+    {
+        if (!IsEditButtonActive())
+        {
+            return;
+        }
+        var Country = CountryComponents!.FirstOrDefault(x => x.Selected)!.Country;
+        Modal!.OpenInEditMode(Country!);
+    }
+
+    protected void OpenDeleteModal()
+    {
+        if (!IsDeleteButtonActive())
+        {
+            return;
+        }
+        DeleteModal!.Open();
+    }
+
+    protected async Task DeleteSelectedcountries()
+    {
+        var countries = CountryComponents!.FindAll(x => x.Selected).Select(x => x.Country).ToList();
+
+        foreach (var Country in countries)
+        {
+           
+
+           
+            await CountryService.DeleteById(Country!.CountryID);
+        }
+
+        await Refreshcountries();
+    }
+
+    protected async Task Refreshcountries()
+    {
+        var countries = await CountryService.GetAll();
+        if (countries == null)
+        {
+            CountryComponents = null;
+        }
+        else
+        {
+            CountryComponents = countries!.Select(x => new CountryComponent
+                {
+                    Country = x,
+                    Selected = false
+                }
+            ).ToList();
+        }
+    }
+
+    protected class CountryComponent
+    {
+        public Country? Country { get; set; }
+        public bool Selected { get; set; }
+    }
+}

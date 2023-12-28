@@ -5,12 +5,12 @@ using System.Net.Http.Json;
 
 namespace RandBox.Client.Services
 {
-    public class ProductService : IGenericService<Product>
+    public class CountryService : IGenericService<Country>
     {
         private readonly HttpClient _httpClient_Public;
         private readonly HttpClient _httpClient_Private;
 
-        public ProductService(IHttpClientFactory clientFactory)
+        public CountryService(IHttpClientFactory clientFactory)
         {
             _httpClient_Public = clientFactory.CreateClient("RandBox.ServerAPI.public");
             _httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
@@ -20,7 +20,7 @@ namespace RandBox.Client.Services
         {
             try
             {
-                var response = await _httpClient_Public.DeleteAsync($"api/Product/{id}");
+                var response = await _httpClient_Public.DeleteAsync($"api/Country/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -39,19 +39,19 @@ namespace RandBox.Client.Services
         }
 
         // Can be accessed Anonymously
-        public async Task<List<Product>> GetAll()
+        public async Task<List<Country>> GetAll()
         {
             try
             {
-                var response = await _httpClient_Public.GetAsync("api/Product");
+                var response = await _httpClient_Public.GetAsync("api/Country");
 
                 if (response.IsSuccessStatusCode)
                 {
                     /*if (response.StatusCode == HttpStatusCode.NoContent)
 					{
-						return Enumerable.Empty<Product>().ToList();
+						return Enumerable.Empty<Country>().ToList();
 					}*/
-                    return await response.Content.ReadFromJsonAsync<List<Product>>();
+                    return await response.Content.ReadFromJsonAsync<List<Country>>();
                 }
                 else
                 {
@@ -65,15 +65,15 @@ namespace RandBox.Client.Services
             }
         }
 
-        public async Task<Product> GetById(int id)
+        public async Task<Country> GetById(int id)
         {
             try
             {
-                var response = await _httpClient_Public.GetAsync($"api/Product/{id}");
+                var response = await _httpClient_Public.GetAsync($"api/Country/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<Product>();
+                    return await response.Content.ReadFromJsonAsync<Country>();
                 }
                 else
                 {
@@ -87,15 +87,15 @@ namespace RandBox.Client.Services
             }
         }
 
-        public async Task<Product> Insert(Product entity)
+        public async Task<Country> Insert(Country entity)
         {
             try
             {
-                var response = await _httpClient_Public.PostAsJsonAsync("api/Product", entity);
+                var response = await _httpClient_Public.PostAsJsonAsync("api/Country", entity);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<Product>();
+                    return await response.Content.ReadFromJsonAsync<Country>();
                 }
                 else
                 {
@@ -109,15 +109,15 @@ namespace RandBox.Client.Services
             }
         }
 
-        public async Task<Product> Update(Product entity)
+        public async Task<Country> Update(Country entity)
         {
             try
             {
-                var response = await _httpClient_Public.PutAsJsonAsync($"api/Product/{entity.ProductID}", entity);
+                var response = await _httpClient_Public.PutAsJsonAsync($"api/Country/{entity.CountryID}", entity);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<Product>();
+                    return await response.Content.ReadFromJsonAsync<Country>();
                 }
                 else
                 {

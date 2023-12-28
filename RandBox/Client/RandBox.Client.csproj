@@ -8,26 +8,34 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\**" />
     <Compile Remove="obj\**" />
+    <Content Remove="bin\**" />
     <Content Remove="obj\**" />
+    <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="obj\**" />
+    <None Remove="bin\**" />
     <None Remove="obj\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Components\Modals\CreateEditCountryModal.razor.css" />
     <None Remove="Components\Modals\CreateEditPlanCategoryModal.razor.css" />
     <None Remove="Components\ProductCard - Copy.razor.css" />
     <None Remove="Components\ProductCard.razor.css" />
     <None Remove="Components\ProductDisplayCard.razor.css" />
     <None Remove="Pages\CustomerPages\ProductDescription.razor.css" />
+    <None Remove="Pages\Sections\StoreManagerCountrySection.razor.css" />
     <None Remove="Pages\Staff\StoreManagement.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Components\Modals\CreateEditCountryModal.razor.css" />
     <Content Include="Components\Modals\CreateEditPlanCategoryModal.razor.css" />
     <Content Include="Components\ProductCard.razor.css" />
     <Content Include="Components\ProductDisplayCard.razor.css" />
     <Content Include="Pages\CustomerPages\ProductDescription.razor.css" />
+    <Content Include="Pages\Sections\StoreManagerCountrySection.razor.css" />
     <Content Include="Pages\Staff\StoreManagement.razor.css" />
   </ItemGroup>
 

@@ -1,0 +1,316 @@
+﻿@inject IGenericService<Product> ProductService
+@inject IGenericService<Category> CategoryService
+@inject IGenericService<Country> CountryService
+
+@if (categories == null || countries == null)
+{
+    <h4>> Loading Categories and Countries </h4>
+}
+else
+{
+    <div class="modal modal-dialog-centered @(show ? "show" : "inactive")" id="modal" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content p-5 m-0">
+                <div class="col d-flex justify-content-between align-items-center mx-5 mb-5 flex-grow-0">
+                    <i class="close-btn bi bi-chevron-left" @onclick=Close> Close without Saving</i>
+                    <h2 class="modal-title">@(isCreate ? "Add" : "Edit") Product</h2>
+                    <i class="close-btn inactive bi bi-chevron-left"> Close without Saving</i>
+                </div>
+                <div class="form-content px-4 mx-auto">
+                    <EditForm Model="@input" OnValidSubmit="@SubmitCallback" FormName="@($"ProductForm")">
+                        <DataAnnotationsValidator />
+                    <div class="col">
+                        <div class="row">
+                            <div class="col mb-3 @(isCreate ? "" : "disabled")">
+                                <label class="form-label">
+                                    Product Name
+                                </label>
+                                <div>
+                                    <InputText class="randbox-form-input" disabled=@(!isCreate) @bind-Value="input!.Name"></InputText>
+                                    <ValidationMessage For="@(() => input.Name)" class="mt-1 text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row mb-4">
+                            <div class="col">
+                                <label class="form-label">
+                                    Category
+                                </label>
+                                <div>
+                                    <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.CategoryID">
+                                        @foreach (var category in categories!)
+                                        {
+                                            <option value="@category.CategoryID">@category.Name</option>
+                                        }
+                                    </InputSelect>
+                                    <ValidationMessage For="@(() => input.CategoryID)" class="mt-1 text-danger" />
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <label class="form-label">
+                                    Country Of Origin
+                                </label>
+                                <div>
+                                    <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.CountryID">
+                                        @foreach (var country in countries!)
+                                        {
+                                            <option value="@country.CountryID">@country.Name</option>
+                                        }
+                                    </InputSelect>
+                                    <ValidationMessage For="@(() => input.CountryID)" class="mt-1 text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row mb-4">
+                            <div class="col">
+                                <label class="form-label">
+                                    Original Price
+                                </label>
+                                <div class="col d-flex align-items-center">
+                                    <p class="dollar-prefix">$</p>
+                                    <InputNumber class="randbox-form-input" @bind-Value="input!.OriginalPrice"></InputNumber>
+                                </div>
+                                <ValidationMessage For="@(() => input.OriginalPrice)" class="mt-1 text-danger" />
+                            </div>
+
+
+                            <div class="col">
+                                <label class="form-label">
+                                    Discounted Price
+                                </label>
+                                <div class="col d-flex align-items-center">
+                                    <p class="dollar-prefix">$</p>
+                                    <InputNumber class="randbox-form-input" @bind-Value="input!.DiscountedPrice"></InputNumber>
+                                </div>
+                                    <ValidationMessage For="@(() => input.DiscountedPrice)" class="mt-1 text-danger" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <label class="form-label">
+                                Item Description
+                            </label>
+                            <div>
+                                <InputTextArea class="randbox-form-input desc-area" @bind-Value="input!.Description"></InputTextArea>
+                                <ValidationMessage For="@(() => input.Description)" class="mt-1 text-danger" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col">
+                                <label class="form-label">
+                                    Manufactured Date
+                                </label>
+
+                                    <div>
+                                        <InputDate class="randbox-form-input" @bind-Value="input!.ManufacturedDate"></InputDate>
+                                        <ValidationMessage For="@(() => input.ManufacturedDate)" class="mt-1 text-danger" />
+                                    </div>
+                             </div>
+
+                            <div class="col">
+                                <label class="form-label">
+                                    Expiry Date
+                                </label>
+                                <div>
+                                    <InputDate class="randbox-form-input" @bind-Value="input!.ExpiryDate"></InputDate>
+                                    <ValidationMessage For="@(() => input.ExpiryDate)" class="mt-1 text-danger" />
+                                </div>
+                            </div>
+                       
+                        </div>
+
+                        <div class="row mb-4">
+                            <label class="form-label">
+                                Current Stock
+                            </label>
+                            <div>
+                                <InputNumber class="randbox-form-input" @bind-Value="input!.StockNo"></InputNumber>
+                                <ValidationMessage For="@(() => input.StockNo)" class="mt-1 text-danger" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class = "col">
+                        <div class="row mb-4">
+                                <label class="form-label">
+                                    Enter online image link
+                                </label>
+                                <div class="hero">
+                                     <InputText class="randbox-form-input desc-area"@bind-Value="input!.ThumbnailURL"></InputText>
+                                    <ValidationMessage For="@(() => input.ThumbnailURL)" class="mt-1 text-danger" />
+                                </div>
+                        </div>
+                    </div>
+
+                        <div class="col">
+                            <div class="row mb-4">
+                                <label class="form-label">
+                                    Enter online image link
+                                </label>
+                                <div class="hero">
+                                    <InputFile accept="image.jpg,image.jpeg,image.png"></InputFile> 
+                                    <ValidationMessage For="@(() => input.ThumbnailURL)" class="mt-1 text-danger" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                    
+
+                        <button type="submit" class="btn btn-submit w-100 mt-2 mb-2">Confirm Changes</button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+
+    private List<Category>? categories;
+    private List<Country>? countries;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        countries = await CountryService.GetAll();
+        categories = await CategoryService.GetAll();
+    }
+    [Parameter]
+    public EventCallback OnSuccessfulSubmit { get; set; }
+
+    private EventCallback SubmitCallback { get; set; }
+
+    private InputModel? input { get; set; }
+    private bool show = false;
+    private bool isCreate { get; set; }
+
+    protected override void OnInitialized()
+    {
+        input = new InputModel();
+    }
+
+    public void OpenInAddMode()
+    {
+        SubmitCallback = EventCallback.Factory.Create(this, SubmitInAddMode);
+        isCreate = true;
+        input = new InputModel
+            {
+                ManufacturedDate = DateTime.Now,
+                ExpiryDate = DateTime.Now
+            };
+        show = true;
+        StateHasChanged();
+    }
+
+    public void OpenInEditMode(Product Product)
+    {
+        SubmitCallback = EventCallback.Factory.Create(this, SubmitInEditMode);
+        isCreate = false;
+        if (Product != null)
+        {
+            input = new InputModel
+                {
+                    ProductID = Product.ProductID,
+                    Name = Product.Name,
+                    Description = Product.Description,
+                    ThumbnailURL = Product.ThumbnailURL,
+                    StockNo = Product.StockNo,
+                    OriginalPrice = Product.OriginalPrice,
+                    DiscountedPrice = Product.DiscountedPrice,
+                    ManufacturedDate = Product.ManufacturedDate,
+                    ExpiryDate = Product.ExpiryDate,
+                    CountryID = Product.CountryID,
+                    CategoryID = Product.CategoryID
+
+                };
+        }
+        else
+        {
+            input = new InputModel();
+        }
+        show = true;
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        input = new InputModel();
+        show = false;
+        StateHasChanged();
+    }
+
+    protected async Task SubmitInAddMode()
+    {
+        var Product = new Product
+            {
+                ProductID = input!.ProductID,
+                Name = input!.Name,
+                Description = input!.Description,
+                ThumbnailURL = input!.ThumbnailURL,
+                StockNo = input!.StockNo,
+                OriginalPrice = input!.OriginalPrice,
+                DiscountedPrice = input!.DiscountedPrice,
+                ManufacturedDate = input!.ManufacturedDate,
+                ExpiryDate = input!.ExpiryDate,
+                CountryID = input!.CountryID,
+                CategoryID = input!.CategoryID
+            };
+        var addedProduct = await ProductService.Insert(Product);
+        Close();
+        await OnSuccessfulSubmit.InvokeAsync();
+    }
+
+    protected async Task SubmitInEditMode()
+    {
+        var Product = new Product
+            {
+                ProductID = input!.ProductID,
+                Name = input!.Name,
+                Description = input!.Description,
+                ThumbnailURL = input!.ThumbnailURL,
+                StockNo = input!.StockNo,
+                OriginalPrice = input!.OriginalPrice,
+                DiscountedPrice = input!.DiscountedPrice,
+                ManufacturedDate = input!.ManufacturedDate,
+                ExpiryDate = input!.ExpiryDate,
+                CountryID = input!.CountryID,
+                CategoryID = input!.CategoryID
+                
+            };
+        await ProductService.Update(Product);
+        Close();
+        await OnSuccessfulSubmit.InvokeAsync();
+    }
+
+    public class InputModel
+    {
+            
+        public int ProductID { get; set; }
+        [Required]
+        public string? Name { get; set; }
+        [Required]
+        public string? Description { get; set; }
+        [Required]
+        public string? ThumbnailURL { get; set; }
+        [Required]
+        public int? StockNo { get; set; }
+        [Required]
+        public decimal OriginalPrice { get; set; }
+        [Required]
+        public decimal DiscountedPrice { get; set; }
+        public DateTime ManufacturedDate { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        [Required]
+        public int? CountryID { get; set; }
+        [Required]
+        public int? CategoryID { get; set; }
+    }
+}

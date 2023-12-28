@@ -48,7 +48,17 @@ namespace RandBox.Server.Controllers
             return Ok(OrderItem);
         }
 
-
+        [HttpPost]
+        public async Task<ActionResult<OrderItem>> PostOrderItem(OrderItem OrderItem)
+        {
+            await _unitOfWork.OrderItemRepository.Insert(OrderItem);
+            await _unitOfWork.Save();
+            return CreatedAtAction("GetOrderItem", new { id = OrderItem.OrderItemID }, OrderItem);
+        }
+        protected async Task<bool> OrderItemExists(int id)
+        {
+            return await _unitOfWork.OrderItemRepository.GetById(id) != null;
+        }
     }
 }
 

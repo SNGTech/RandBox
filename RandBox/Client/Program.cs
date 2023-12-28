@@ -25,6 +25,7 @@ builder.Services.AddScoped<IGenericService<Product>, ProductService>();
 builder.Services.AddScoped<ISubscriptionCategoryService, SubscriptionCategoryService>();
 builder.Services.AddScoped<IPaymentIntentService, PaymentIntentService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IGenericService<Country>, CountryService>();
 
 builder.Services.AddApiAuthorization();
 

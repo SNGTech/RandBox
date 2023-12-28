@@ -48,6 +48,52 @@ namespace RandBox.Server.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<ActionResult> AddProduct(Product Product)
+        {
+            await _unitOfWork.ProductRepository.Insert(Product);
+            await _unitOfWork.Save();
+
+            return CreatedAtAction(nameof(GetProduct), new { id = Product.ProductID }, Product);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> UpdateProduct(int id, Product newProduct)
+        {
+            if (id != newProduct.ProductID)
+            {
+                return BadRequest();
+            }
+
+            _unitOfWork.ProductRepository.Update(newProduct);
+
+            try
+            {
+                await _unitOfWork.Save();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await ProductExists(id))
+                {
+                    return NotFound();
+                }
+            }
+            return Ok(newProduct);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteProductById(int id)
+        {
+            await _unitOfWork.ProductRepository.DeleteById(id);
+            await _unitOfWork.Save();
+
+            return NoContent();
+        }
+
+        protected async Task<bool> ProductExists(int id)
+        {
+            return await _unitOfWork.ProductRepository.GetById(id) != null;
+        }
     }
 }
 

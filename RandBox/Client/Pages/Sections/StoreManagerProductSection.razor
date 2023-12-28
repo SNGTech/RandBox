@@ -31,10 +31,16 @@ else
             }
         </ul>
     </div>
+
+    <CreateEditProductModal @ref="Modal" OnSuccessfulSubmit="RefreshProducts" />
+    <DeleteModal @ref="DeleteModal" OnSuccessfulConfirm="DeleteSelectedProducts" />
 }
 
 @code {
     private List<ProductComponent>? productComponents { get; set; }
+
+    private CreateEditProductModal? Modal;
+    private DeleteModal? DeleteModal;
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,43 +64,40 @@ else
 
     protected void OpenAddModal()
     {
-        //Modal!.OpenInAddMode();
+        Modal!.OpenInAddMode();
     }
 
     protected void OpenEditModal()
     {
-        /*if (!IsEditButtonActive())
+        if (!IsEditButtonActive())
         {
             return;
         }
-        var category = categoryComponents!.FirstOrDefault(x => x.Selected)!.Category;
-        Modal!.OpenInEditMode(category!);*/
+        var product = productComponents!.FirstOrDefault(x => x.Selected)!.Product;
+        Modal!.OpenInEditMode(product!);
     }
 
     protected void OpenDeleteModal()
     {
-        /*if (!IsDeleteButtonActive())
+        if (!IsDeleteButtonActive())
         {
             return;
         }
-        DeleteModal!.Open();*/
+        DeleteModal!.Open();
     }
 
-    /*protected async Task DeleteSelectedProducts()
+    protected async Task DeleteSelectedProducts()
     {
-        var categories = categoryComponents!.FindAll(x => x.Selected).Select(x => x.Category).ToList();
+        var products = productComponents!.FindAll(x => x.Selected).Select(x => x.Product).ToList();
 
-        foreach (var category in categories)
+        foreach (var product in products)
         {
-            // Delete related entities first (Subscription Category)
-            await SubscriptionCategoryService.DeleteByCategoryId(category!.CategoryID);
-
-            // Now delete Category
-            await CategoryService.DeleteById(category!.CategoryID);
+          
+            await ProductService.DeleteById(product!.ProductID);
         }
 
-        await RefreshCategories();
-    }*/
+        await RefreshProducts();
+    }
 
     protected async Task RefreshProducts()
     {
