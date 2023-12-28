@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RandBox.Server.Data;
 
@@ -11,9 +12,11 @@ using RandBox.Server.Data;
 namespace RandBox.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231228070633_FixDeletedSubPlanEntity")]
+    partial class FixDeletedSubPlanEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -432,7 +435,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CategoryID = 1,
                             BadgeColour = "#78A54E",
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(348),
+                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 6, 33, 96, DateTimeKind.Local).AddTicks(213),
                             Description = "Experience local snacks and treats, all while helping to support local family owned businesses!",
                             Name = "Snacks"
                         },
@@ -440,7 +443,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CategoryID = 2,
                             BadgeColour = "#D48250",
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(350),
+                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 6, 33, 96, DateTimeKind.Local).AddTicks(215),
                             Description = "Dress up as people from all over the globe! From Kimonos to Hanboks, get a fresh look every month!",
                             Name = "Clothing"
                         },
@@ -448,7 +451,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CategoryID = 3,
                             BadgeColour = "#D45A50",
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(351),
+                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 6, 33, 96, DateTimeKind.Local).AddTicks(216),
                             Description = "Unleash your artistic creativity with arts and crafts from all over the world!",
                             Name = "Arts and Crafts"
                         });
@@ -483,7 +486,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CountryID = 1,
                             BadgeColour = "#78A54E",
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(1604),
+                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 6, 33, 96, DateTimeKind.Local).AddTicks(1143),
                             Description = "Bring the well-known festivities and nightlife of Germany to your own home!",
                             Name = "Germany"
                         },
@@ -491,7 +494,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CountryID = 2,
                             BadgeColour = "#D45A50",
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(1606),
+                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 6, 33, 96, DateTimeKind.Local).AddTicks(1145),
                             Description = "The land of the rising sun, experience the iconic cultures and long-standing traditions of Japan! ",
                             Name = "Japan"
                         },
@@ -499,7 +502,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CountryID = 3,
                             BadgeColour = "#D48250",
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(1607),
+                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 6, 33, 96, DateTimeKind.Local).AddTicks(1147),
                             Description = "With many diverse ethnic groups, experience the traditional tastes and cultures of the worlds largest island country.",
                             Name = "Indonesia"
                         });
@@ -550,7 +553,7 @@ namespace RandBox.Server.Data.Migrations
                             CustID = 1,
                             Address = "Lane Road 2",
                             DateOfBirth = new DateTime(2005, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(53),
+                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 6, 33, 95, DateTimeKind.Local).AddTicks(9924),
                             Email = "cout.sngtech@gmail.com",
                             FirstName = "Titus",
                             LastName = "Lim",
@@ -563,7 +566,7 @@ namespace RandBox.Server.Data.Migrations
                             CustID = 2,
                             Address = "Hoppa Avenue 8",
                             DateOfBirth = new DateTime(2005, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(99),
+                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 6, 33, 95, DateTimeKind.Local).AddTicks(9936),
                             Email = "patrick_wu@gmail.com",
                             FirstName = "Patrick",
                             LastName = "Wu",
@@ -606,7 +609,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             OrderID = 1,
                             CustomerID = 1,
-                            DateTimeCheckout = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(816),
+                            DateTimeCheckout = new DateTime(2023, 12, 28, 15, 6, 33, 96, DateTimeKind.Local).AddTicks(693),
                             DeliveryStatus = true,
                             StaffID = 1
                         },
@@ -614,7 +617,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             OrderID = 2,
                             CustomerID = 2,
-                            DateTimeCheckout = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(818),
+                            DateTimeCheckout = new DateTime(2023, 12, 28, 15, 6, 33, 96, DateTimeKind.Local).AddTicks(695),
                             DeliveryStatus = false,
                             StaffID = 2
                         });
@@ -988,82 +991,6 @@ namespace RandBox.Server.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionItem", b =>
-                {
-                    b.Property<int>("SubscriptionItemID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubscriptionItemID"));
-
-                    b.Property<int>("MonthOfYear")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Qty")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubscriptionPlanID")
-                        .HasColumnType("int");
-
-                    b.HasKey("SubscriptionItemID");
-
-                    b.HasIndex("ProductID");
-
-                    b.HasIndex("SubscriptionPlanID");
-
-                    b.ToTable("SubscriptionItem");
-                });
-
-            modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionPlan", b =>
-                {
-                    b.Property<int>("SubscriptionPlanID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubscriptionPlanID"));
-
-                    b.Property<int?>("CustomerID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StaffID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("SubscribedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("SubscriptionCategoryID")
-                        .HasColumnType("int");
-
-                    b.HasKey("SubscriptionPlanID");
-
-                    b.HasIndex("CustomerID");
-
-                    b.HasIndex("StaffID");
-
-                    b.HasIndex("SubscriptionCategoryID");
-
-                    b.ToTable("SubscriptionPlan");
-
-                    b.HasData(
-                        new
-                        {
-                            SubscriptionPlanID = 1,
-                            CustomerID = 1,
-                            SubscribedDateTime = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(1747),
-                            SubscriptionCategoryID = 12
-                        },
-                        new
-                        {
-                            SubscriptionPlanID = 2,
-                            CustomerID = 2,
-                            SubscribedDateTime = new DateTime(2023, 10, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(1749),
-                            SubscriptionCategoryID = 5
-                        });
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1169,54 +1096,9 @@ namespace RandBox.Server.Data.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionItem", b =>
-                {
-                    b.HasOne("RandBox.Shared.Domain.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RandBox.Shared.Domain.SubscriptionPlan", "SubscriptionPlan")
-                        .WithMany("SubscriptionItems")
-                        .HasForeignKey("SubscriptionPlanID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("SubscriptionPlan");
-                });
-
-            modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionPlan", b =>
-                {
-                    b.HasOne("RandBox.Shared.Domain.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerID");
-
-                    b.HasOne("RandBox.Shared.Domain.Staff", "Staff")
-                        .WithMany()
-                        .HasForeignKey("StaffID");
-
-                    b.HasOne("RandBox.Shared.Domain.SubscriptionCategory", "SubscriptionCategory")
-                        .WithMany()
-                        .HasForeignKey("SubscriptionCategoryID");
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Staff");
-
-                    b.Navigation("SubscriptionCategory");
-                });
-
             modelBuilder.Entity("RandBox.Shared.Domain.Order", b =>
                 {
                     b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionPlan", b =>
-                {
-                    b.Navigation("SubscriptionItems");
                 });
 #pragma warning restore 612, 618
         }

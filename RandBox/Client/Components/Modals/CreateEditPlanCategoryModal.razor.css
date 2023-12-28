@@ -71,3 +71,6 @@ label {
     padding: 0.5rem 0rem;
 }
 
+.disabled {
+    opacity: 50%;
+}

@@ -47,7 +47,32 @@ namespace RandBox.Server.Controllers
             return Ok(Product);
         }
 
+        [HttpPatch("{countryId:int}")]
+        public async Task<ActionResult<IEnumerable<Product>>> RemoveCountryFromProducts(int countryId)
+        {
+            var products = await _unitOfWork.ProductRepository.GetAll(q => q.CountryID == countryId);
 
+            if (products == null)
+            {
+                return BadRequest();
+            }
+
+            foreach (var product in products)
+            {
+                product.CountryID = countryId;
+                _unitOfWork.ProductRepository.Update(product);
+            }
+
+            try
+            {
+                await _unitOfWork.Save();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+            return Ok(products);
+        }
     }
 }
 

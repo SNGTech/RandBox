@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 
 namespace RandBox.Client.Services
 {
-	public class ProductService : IGenericService<Product>
+    public class ProductService : IProductService
 	{
 		private readonly HttpClient _httpClient_Public;
 		private readonly HttpClient _httpClient_Private;
@@ -69,13 +69,34 @@ namespace RandBox.Client.Services
             }
         }
 
-
         public async Task<Product> Insert(Product entity)
 		{
 			throw new NotImplementedException();
 		}
 
-		public async Task<Product> Update(Product entity)
+        public async Task<List<Product>> RemoveCountryFromProducts(int countryId)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PatchAsync($"api/Product/country/{countryId}", null);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<Product>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Product> Update(Product entity)
 		{
 			throw new NotImplementedException();
 		}

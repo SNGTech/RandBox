@@ -1,0 +1,127 @@
+﻿@page "/staff/subscriptions"
+@using System.Globalization;
+@inject IGenericService<SubscriptionPlan> SubscriptionPlansService
+
+@if (subscriptions == null || filteredSubscriptionComponents == null)
+{
+    <h4>> Loading Subscriptions</h4>
+}
+else 
+{
+    <div class="col d-flex justify-content-between align-items-center mb-4">
+        <h3 class="m-0">Subscriptions</h3>
+        <div class="position-relative">
+            <i class="bi bi-search search-icon position-absolute" />
+            <input class="search-box" placeholder="Search SubscriptionID" @oninput="FilterSubscriptions" />
+        </div>
+    </div>
+
+    <div class="options-bar col d-flex mb-4">
+        <h4 class="option-btn extend-btn m-0 @(IsExtendOrHandleButtonActive() ? "" : "inactive")">
+            Extend Duration
+        </h4>
+        <h4 class="option-btn unsubscribe-btn m-0 @(IsUnsubscribeButtonActive() ? "" : "inactive")">
+            Unsubscribe and Notify
+        </h4>
+        <h4 class="option-btn handle-btn m-0 @(IsExtendOrHandleButtonActive() ? "": "inactive")">
+            Handle Subscription
+        </h4>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="edge-cell-left" scope="col">#Id</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Monthly Price</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Staff In-charge</th>
+                <th class="edge-cell-right" scope="col">Delivery Status (cur. month)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var component in filteredSubscriptionComponents!)
+            {
+                var subscription = component.SubscriptionPlan;
+                DateTime endDate = subscription!.SubscribedDateTime.AddMonths(subscription.SubscriptionCategory!.Duration);
+                <tr class="body-row @(component.Selected ? "selected" : "")" @onclick="@(() => SelectSubscription(component))">
+                    <th class="edge-cell-left" scope="row">@subscription!.SubscriptionPlanID</th>
+                    <td>@subscription.SubscribedDateTime.ToString("dd.MM.yy", CultureInfo.InvariantCulture)</td>
+                    <td>
+                        @endDate.ToString("dd.MM.yy", CultureInfo.InvariantCulture)
+                    </td>
+                    <td>$@subscription.SubscriptionCategory!.NewMonthlyPrice</td>
+                    <td>@subscription.Customer!.FirstName</td>
+                    <td class="@(subscription.Staff == null ? "warn" : "")">
+                        @(subscription.Staff == null ? "Needs an IC" : subscription.Staff.FirstName)
+                    </td>
+                    <td class="edge-cell-right"></td>
+                    <td class="additional-info collapsible @(component.Selected ? "expand" : "")">
+                        <div class="col d-flex justify-content-between">
+                            <p>Subscription Duration: <span>@subscription.SubscriptionCategory.Duration month@(subscription.SubscriptionCategory.Duration > 1 ? "s" : "")</span></p>
+                            <p>No. of Days Till End of Subscription: <span>@((endDate - DateTime.Now).Days) days</span></p>
+                            @* TODO: MAKE THE BELOW WORK *@
+                            <p>Total Paid To Date: <span>$82.76</span></p>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<SubscriptionPlan>? subscriptions { get; set; }
+    private List<SubscriptionComponent>? filteredSubscriptionComponents { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        subscriptions = await SubscriptionPlansService.GetAll();
+        filteredSubscriptionComponents = MapSubscriptionToComponent(subscriptions);
+    }
+
+    private void SelectSubscription(SubscriptionComponent component)
+    {
+        component!.Selected = !component.Selected;
+    }
+
+    private void FilterSubscriptions(ChangeEventArgs e)
+    {
+        string? search = e.Value!.ToString();
+        if (search != null && search != "")
+        {
+            var filtered = subscriptions!.FindAll(x => x.SubscriptionPlanID.ToString().StartsWith(search!));
+            filteredSubscriptionComponents = MapSubscriptionToComponent(filtered);
+        }
+        else
+        {
+            filteredSubscriptionComponents = MapSubscriptionToComponent(subscriptions!);
+        }
+    }
+
+    protected bool IsExtendOrHandleButtonActive()
+    {
+        return filteredSubscriptionComponents!.Count(x => x.Selected) == 1;
+    }
+
+    protected bool IsUnsubscribeButtonActive()
+    {
+        return filteredSubscriptionComponents!.Count(x => x.Selected) >= 1;
+    }
+
+    private List<SubscriptionComponent> MapSubscriptionToComponent(List<SubscriptionPlan> subscriptions)
+    {
+        return subscriptions.Select(x => new SubscriptionComponent
+        {
+            SubscriptionPlan = x,
+            Selected = false
+        }).ToList();
+    }
+
+    public class SubscriptionComponent
+    {
+        public SubscriptionPlan? SubscriptionPlan { get; set; }
+        public bool Selected { get; set; }
+    }
+}
