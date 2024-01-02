@@ -29,5 +29,20 @@ namespace RandBox.Server.Controllers
 
             return Ok(subscriptions);
         }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<SubscriptionPlan>> GetSubscription(int id)
+        {
+            var subscription = (await _unitOfWork.PlanRepository.GetAll(
+                q => q.SubscriptionPlanID == id,
+                includes: q => q.Include(x => x.SubscriptionCategory).Include(x => x.Customer).Include(x => x.Staff)!)).First();
+
+            if (subscription == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(subscription);
+        }
     }
 }

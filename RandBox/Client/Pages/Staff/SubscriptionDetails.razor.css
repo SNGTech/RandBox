@@ -1,0 +1,66 @@
+﻿.close-btn {
+	cursor: pointer;
+	font-size: 1.25em;
+	color: #e7e7e780;
+	font-style: normal;
+	letter-spacing: 0.05rem;
+}
+
+.title {
+	margin-top: 1.5rem;
+	font-size: 2em;
+	letter-spacing: 0.1rem;
+}
+
+.warn-info-div {
+	margin-bottom: 2rem;
+}
+
+.warn-info-div h3 {
+	font-size: 1.5em;
+	font-weight: 500;
+	letter-spacing: 0.1rem;
+}
+
+	.warn-info-div .info-text {
+		color: #e2bf3a;
+	}
+
+	.warn-info-div .warn-text {
+		color: #f55353;
+	}
+
+.id {
+	font-size: 1.3em;
+	letter-spacing: 0.1rem;
+	font-weight: 500;
+	color: #a7a7a7;
+}
+
+.additional-info p {
+	font-size: 1.1em;
+	letter-spacing: 0.1rem;
+	font-weight: 500;
+	color: #a7a7a7;
+}
+
+	.additional-info p span {
+		color: #e7e7e7;
+	}
+
+.month-header {
+	font-size: 1.5em;
+	font-weight: 500;
+	letter-spacing: 0.1rem;
+	margin-bottom: 1.5rem;
+}
+
+.btn-add {
+	border: 2px solid #7f5af0;
+	border-radius: 10px;
+	color: #e7e7e7;
+	font-size: 1em;
+	font-weight: 700;
+	letter-spacing: 0.05rem;
+	padding: 0.5rem 0rem;
+}

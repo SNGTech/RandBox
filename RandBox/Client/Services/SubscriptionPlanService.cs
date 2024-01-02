@@ -42,9 +42,10 @@ namespace RandBox.Client.Services
             }
         }
 
-        public Task<SubscriptionPlan> GetById(int id)
+        public async Task<SubscriptionPlan> GetById(int id)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient_Public.GetAsync($"api/SubscriptionPlan/{id}");
+            return await response.Content.ReadFromJsonAsync<SubscriptionPlan>();
         }
 
         public Task<SubscriptionPlan> Insert(SubscriptionPlan entity)
