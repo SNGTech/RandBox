@@ -1,0 +1,137 @@
+﻿@inject IGenericService<Product> ProductSerivce
+@* @inject IGenericService<SubscriptionItem> SubscriptionItemService *@
+
+@if (productComponents == null)
+{
+    <h4>> Loading Products</h4>
+}
+else
+{
+    <div class="modal modal-dialog-centered @(show ? "show" : "inactive")" id="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content p-5">
+                <div class="col d-flex justify-content-between align-items-center mb-3">
+                    <i class="close-btn bi bi-chevron-left" @onclick=Close></i>
+                    <h2 class="modal-title">@(isCreate ? $"Add Item(s) for Month #{month}" : "Edit Item")</h2>
+                    <i class="inactive bi bi-chevron-left"></i>
+                </div>
+                <div class="option-bar col d-flex justify-content-between my-3">
+                    <h3 class="available-stock-label">Available Items In Stock</h3>
+                    <h3 class="deselect" @onclick=ResetSelection>Deselect All</h3>
+                </div>
+                <div class="container-carousel p-4">
+                    <div class="item-carousel">
+                        <ul class="list-unstyled col d-flex justify-content-between flex-wrap">
+                            @foreach (var productComponent in productComponents!)
+                            {
+                                var product = productComponent.Product;
+                                <li class="@(productComponent.Selected ? "selected" : "")" @onclick="@(() => SelectProduct(productComponent))">
+                                    <ProductCard Product=@product />
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="selected-number mt-3">@GetSelectedNo() Item(s) Selected</h3>
+                <div class="mx-auto">
+                    <button type="submit" class="btn btn-submit mt-2 mb-2" @onclick=SubmitCallback>Confirm Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop fade @(show ? "show" : "inactive")" />
+}
+
+@code {
+    [Parameter]
+    public EventCallback OnSuccessfulSubmit { get; set; }
+
+    private EventCallback SubmitCallback { get; set; }
+
+    private List<ProductComponent>? productComponents { get; set; }
+
+    private bool show = false;
+    private bool isCreate { get; set; }
+    private int month { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var products = await ProductSerivce.GetAll();
+        productComponents = products.Select(x => new ProductComponent
+        {
+            Product = x,
+            Selected = false
+        }).ToList();
+    }
+
+    protected void ResetSelection()
+    {
+        productComponents = productComponents!.Select(x => new ProductComponent
+            {
+                Product = x.Product,
+                Selected = false
+            }).ToList();
+    }
+
+    protected void SelectProduct(ProductComponent component)
+    {
+        // If in edit mode, remove all selection first
+        if (!isCreate)
+        {
+            ResetSelection();
+        }
+        component.Selected = !component.Selected;
+    }
+
+    protected int GetSelectedNo()
+    {
+        return productComponents!.FindAll(x => x.Selected).Count;
+    }
+
+    public void OpenInAddMode(int month)
+    {
+        SubmitCallback = EventCallback.Factory.Create(this, SubmitInAddMode);
+        isCreate = true;
+        this.month = month;
+        ResetSelection();
+        show = true;
+        StateHasChanged();
+    }
+
+    public void OpenInEditMode(SubscriptionItem item)
+    {
+        SubmitCallback = EventCallback.Factory.Create(this, SubmitInEditMode);
+        isCreate = false;
+        ResetSelection();
+        productComponents!.First(x => x.Product!.ProductID == item.Product!.ProductID).Selected = true;
+        show = true;
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        show = false;
+        StateHasChanged();
+    }
+
+    protected async Task SubmitInAddMode()
+    {
+        
+        Close();
+        await OnSuccessfulSubmit.InvokeAsync();
+    }
+
+    protected async Task SubmitInEditMode()
+    {
+        
+        Close();
+        await OnSuccessfulSubmit.InvokeAsync();
+    }
+
+    protected class ProductComponent
+    {
+        public Product? Product { get; set; }
+        public bool Selected { get; set; }
+    }
+}

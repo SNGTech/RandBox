@@ -1,0 +1,103 @@
+﻿.modal-dialog {
+	max-width: 75%;
+}
+
+.modal-content {
+	background-color: #16151a;
+	border: 1px solid #ececec40;
+	border-radius: 15px;
+}
+
+.inactive {
+	opacity: 0%;
+	z-index: -1;
+	transition-property: opacity;
+	transition-duration: 150ms;
+	transition-timing-function: ease;
+}
+
+.show {
+	z-index: 10;
+	opacity: 100%;
+}
+
+	.show.modal-backdrop {
+		z-index: 9;
+		opacity: 60%;
+	}
+
+.close-btn {
+	cursor: pointer;
+	font-size: 1.25em;
+	color: #e7e7e780;
+}
+
+label {
+	font-family: Inter, sans-serif;
+	font-size: 1.15em;
+	letter-spacing: 0.1rem;
+	font-weight: 500;
+}
+
+.modal-title {
+	font-size: 1.2em;
+	letter-spacing: 0.1rem;
+	font-weight: 700;
+}
+
+.btn-submit {
+	border: 2px solid #7f5af0;
+	border-radius: 10px;
+	color: #e7e7e7;
+	font-size: 1em;
+	font-weight: 700;
+	letter-spacing: 0.05rem;
+	padding: 0.5rem 5rem;
+}
+
+.option-bar h3 {
+	font-size: 1.25em;
+	color: #d4d4d4;
+}
+
+	.option-bar h3.deselect {
+		color: #f55353;
+		cursor: pointer;
+	}
+
+.container-carousel {
+	border: 1px solid #ececec40;
+	border-radius: 20px;
+	overflow-y: auto;
+}
+
+.item-carousel {
+	min-width: 30rem;
+	min-height: 10rem;
+}
+
+	.item-carousel ul {
+		gap: 2rem 3rem;
+	}
+
+li {
+	cursor: pointer;
+	border: 4px solid transparent;
+	border-radius: 25px;
+	transition: border 150ms ease;
+	user-select: none;
+}
+
+.selected-number {
+	font-size: 1.1em;
+	color: #d4d4d4;
+}
+
+.selected {
+	border: 4px solid #2074c9;
+}
+
+.inactive-btn {
+	opacity: 25%;
+	cursor: default;
+}
