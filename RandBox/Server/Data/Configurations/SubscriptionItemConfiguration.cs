@@ -29,7 +29,7 @@ namespace RandBox.Server.Data.Configurations
                 {
                     SubscriptionItemID = 3,
                     Qty = 1,
-                    MonthOfYear = 10,
+                    MonthOfYear = 11,
                     ProductID = 3,
                     SubscriptionPlanID = 2
                 },
@@ -37,7 +37,7 @@ namespace RandBox.Server.Data.Configurations
                 {
                     SubscriptionItemID = 4,
                     Qty = 1,
-                    MonthOfYear = 11,
+                    MonthOfYear = 1,
                     ProductID = 2,
                     SubscriptionPlanID = 2
                 }

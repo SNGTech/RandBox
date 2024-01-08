@@ -32,7 +32,7 @@ namespace RandBox.Server.Controllers
         public async Task<ActionResult<IEnumerable<SubscriptionItem>>> GetAllSubscriptionItemsByPlan(int planId)
         {
             var items = await _unitOfWork.SubscriptionItemRepository.GetAll(q => q.SubscriptionPlanID == planId,
-                includes: q => q.Include(x => x.Product)!);
+                includes: q => q.Include(x => x.Product)!.Include(x => x.Product!.Category)!.Include(x => x.Product!.Country)!);
 
             if (items == null)
             {

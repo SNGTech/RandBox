@@ -3,6 +3,8 @@
 }
 
 .modal-content {
+	max-height: 100vh;
+	overflow-y: auto;
 	background-color: #16151a;
 	border: 1px solid #ececec40;
 	border-radius: 15px;

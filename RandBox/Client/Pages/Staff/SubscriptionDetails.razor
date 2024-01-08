@@ -27,19 +27,20 @@ else
             @for(int i = 0; i < subscription.SubscriptionCategory!.Duration; i++)
             {
                 int month = i + 1;
-                var month_items = GetItemsByMonth(month);
+                DateTime dateTimeAfterMonth = subscription.SubscribedDateTime.AddMonths(i);
+                var monthItems = GetItemsByMonth(dateTimeAfterMonth.Month);
 
                 <div class="mb-4">
-                    <h3 class="month-header">Month #@(month) (@subscription.SubscribedDateTime.AddMonths(i).ToString("MMMM"))</h3>
+                    <h3 class="month-header">Month #@(month) (@dateTimeAfterMonth.ToString("MMMM"))</h3>
                     <div class="items-catalogue">
-                        @if (month_items == null)
+                        @if (monthItems == null)
                         {
                             <h4 class="no-items-text">No items here yet...</h4>
                         }
                         else
                         {
-                            <ul class="list-unstyled col d-flex justify-content-between flex-wrap">
-                                @foreach (var item in month_items!)
+                            <ul class="list-unstyled col d-flex justify-content-start flex-wrap gap-4">
+                                @foreach (var item in monthItems!)
                                 {
                                     <li class="">
                                         <ProductCard Product=@item.Product />
