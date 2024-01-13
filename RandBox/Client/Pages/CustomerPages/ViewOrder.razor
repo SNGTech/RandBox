@@ -1,0 +1,57 @@
+﻿@page "/view-order/{OrderId:int}"
+@inject IGenericService<Order> OrderService
+@inject IGenericService<OrderItem> OrderItemService
+
+<h2 class="text-center">Order Details</h2>
+
+@if (order != null)
+{
+    <div>
+        /<p><strong>Order ID:</strong> @order.OrderID</p>
+        <p><strong>Order Date:</strong> @order.DateTimeCheckout</p>
+        <p><strong>Delivery Status:</strong> @order.DeliveryStatus</p>
+
+        <h3>Order Items</h3>
+
+        <!-- Display all order items with the same order ID -->
+        <h3>All Order Items with the Same Order ID</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var otherOrderItem in orderitems)
+                {
+                    @if (otherOrderItem.OrderID ==order.OrderID)
+                    {
+                        <tr>
+                            <td>@otherOrderItem.Product.Name</td>
+                            <td>@otherOrderItem.Qty</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p>Loading order details...</p>
+}
+
+@code {
+    [Parameter]
+    public int OrderId { get; set; }
+
+    private Order order;
+    private List<OrderItem> orderitems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        orderitems = await OrderItemService.GetAll();
+        order = await OrderService.GetByOrderId(OrderId);
+    }
+}

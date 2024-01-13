@@ -48,11 +48,37 @@ namespace RandBox.Client.Services
             }
         }
 
-        public async Task<OrderItem> GetById(int id)
+
+        public async Task<List<OrderItem>> GetByOrderId(int id)
         {
             try
             {
-                var response = await _httpClient_Public.GetAsync($"api/OrderItem/{id}");
+                var response = await _httpClient_Public.GetAsync($"api/OrderItems?orderId={id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<OrderItem>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+
+
+        public async Task<OrderItem> Insert(OrderItem entity)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PostAsJsonAsync("api/OrderItem", entity);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -68,11 +94,6 @@ namespace RandBox.Client.Services
             {
                 throw;
             }
-        }
-
-        public async Task<OrderItem> Insert(OrderItem entity)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<OrderItem> Update(OrderItem entity)
@@ -98,6 +119,11 @@ namespace RandBox.Client.Services
         }
 
         Task<string> IGenericService<OrderItem>.DeleteById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<OrderItem> IGenericService<OrderItem>.GetByOrderId(int id)
         {
             throw new NotImplementedException();
         }

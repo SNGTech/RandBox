@@ -2,6 +2,8 @@
 @using System.ComponentModel;
 @page "/product-details/{ProductId:int}"
 @inject IGenericService<Product> ProductService
+@inject IGenericService<OrderItem> OrderItemService
+@inject IGenericService<Order> OrderService
 
 
 
@@ -61,18 +63,65 @@
 
     protected override async Task OnInitializedAsync()
     {
-        product = await ProductService.GetById(ProductId);
-       
+        product = await ProductService.GetByOrderId(ProductId);
+
+    }
+    [Parameter]
+    public EventCallback OnSuccessfulSubmit { get; set; }
+
+    private EventCallback SubmitCallback { get; set; }
+
+    private InputModel? input { get; set; }
+    private bool show = false;
+    private bool isCreate { get; set; }
+
+    protected override void OnInitialized()
+    {
+        input = new InputModel();
     }
 
 
     private int quantity = 0;
-    private void AddToCart(int quantity)
+    protected async Task AddToCart(int quantity)
     {
         var message = $"Added {quantity} {product!.Name}(s) to the cart.";
         Console.WriteLine(message);
         
+        var newOrder = new Order
+            {
+                DateTimeCheckout = DateTime.Now,
+                DeliveryStatus = false,
+                CustomerID = 1,  
+                OrderItems = new List<OrderItem>()  
+            };
 
+        
+        var addedOrder = await OrderService.Insert(newOrder);
+        input.OrderID = addedOrder.OrderID;
+        
+        var orderItem = new OrderItem
+            {
+                Qty = quantity,
+                ProductID = ProductId,
+                OrderID = input.OrderID ?? 0  // Use the OrderID from the input model
+            };
+// Add the OrderItem to the database
+        
+        var addedOrderItem = await OrderItemService.Insert(orderItem);
+
+        await OnSuccessfulSubmit.InvokeAsync();
     }
+    public class InputModel
+    {
+      
+        public int OrderItemID { get; set; }
+        [Required]
+        public int? Qty { get; set; }
+        [Required]
+        public int? OrderID { get; set; }
+        [Required]
+        public int? ProductID { get; set; }
+    }
+
 }
  

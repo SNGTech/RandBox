@@ -42,7 +42,7 @@ namespace RandBox.Client.Services
             }
         }
 
-        public Task<SubscriptionPlan> GetById(int id)
+        public Task<SubscriptionPlan> GetByOrderId(int id)
         {
             throw new NotImplementedException();
         }

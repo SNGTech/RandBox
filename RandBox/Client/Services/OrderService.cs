@@ -48,7 +48,7 @@ namespace RandBox.Client.Services
             }
         }
 
-        public async Task<Order> GetById(int id)
+        public async Task<Order> GetByOrderId(int id)
         {
             try
             {
@@ -72,7 +72,24 @@ namespace RandBox.Client.Services
 
         public async Task<Order> Insert(Order entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient_Public.PostAsJsonAsync("api/Order", entity);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<Order>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<Order> Update(Order entity)
