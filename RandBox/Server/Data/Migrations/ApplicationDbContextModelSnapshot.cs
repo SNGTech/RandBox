@@ -432,7 +432,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CategoryID = 1,
                             BadgeColour = "#78A54E",
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(348),
+                            DateTimeCreated = new DateTime(2024, 1, 8, 2, 19, 2, 767, DateTimeKind.Local).AddTicks(9830),
                             Description = "Experience local snacks and treats, all while helping to support local family owned businesses!",
                             Name = "Snacks"
                         },
@@ -440,7 +440,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CategoryID = 2,
                             BadgeColour = "#D48250",
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(350),
+                            DateTimeCreated = new DateTime(2024, 1, 8, 2, 19, 2, 767, DateTimeKind.Local).AddTicks(9832),
                             Description = "Dress up as people from all over the globe! From Kimonos to Hanboks, get a fresh look every month!",
                             Name = "Clothing"
                         },
@@ -448,7 +448,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CategoryID = 3,
                             BadgeColour = "#D45A50",
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(351),
+                            DateTimeCreated = new DateTime(2024, 1, 8, 2, 19, 2, 767, DateTimeKind.Local).AddTicks(9833),
                             Description = "Unleash your artistic creativity with arts and crafts from all over the world!",
                             Name = "Arts and Crafts"
                         });
@@ -483,7 +483,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CountryID = 1,
                             BadgeColour = "#78A54E",
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(1604),
+                            DateTimeCreated = new DateTime(2024, 1, 8, 2, 19, 2, 768, DateTimeKind.Local).AddTicks(763),
                             Description = "Bring the well-known festivities and nightlife of Germany to your own home!",
                             Name = "Germany"
                         },
@@ -491,7 +491,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CountryID = 2,
                             BadgeColour = "#D45A50",
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(1606),
+                            DateTimeCreated = new DateTime(2024, 1, 8, 2, 19, 2, 768, DateTimeKind.Local).AddTicks(765),
                             Description = "The land of the rising sun, experience the iconic cultures and long-standing traditions of Japan! ",
                             Name = "Japan"
                         },
@@ -499,7 +499,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CountryID = 3,
                             BadgeColour = "#D48250",
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(1607),
+                            DateTimeCreated = new DateTime(2024, 1, 8, 2, 19, 2, 768, DateTimeKind.Local).AddTicks(766),
                             Description = "With many diverse ethnic groups, experience the traditional tastes and cultures of the worlds largest island country.",
                             Name = "Indonesia"
                         });
@@ -550,7 +550,7 @@ namespace RandBox.Server.Data.Migrations
                             CustID = 1,
                             Address = "Lane Road 2",
                             DateOfBirth = new DateTime(2005, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(53),
+                            DateTimeCreated = new DateTime(2024, 1, 8, 2, 19, 2, 767, DateTimeKind.Local).AddTicks(9563),
                             Email = "cout.sngtech@gmail.com",
                             FirstName = "Titus",
                             LastName = "Lim",
@@ -563,7 +563,7 @@ namespace RandBox.Server.Data.Migrations
                             CustID = 2,
                             Address = "Hoppa Avenue 8",
                             DateOfBirth = new DateTime(2005, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateTimeCreated = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(99),
+                            DateTimeCreated = new DateTime(2024, 1, 8, 2, 19, 2, 767, DateTimeKind.Local).AddTicks(9579),
                             Email = "patrick_wu@gmail.com",
                             FirstName = "Patrick",
                             LastName = "Wu",
@@ -606,7 +606,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             OrderID = 1,
                             CustomerID = 1,
-                            DateTimeCheckout = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(816),
+                            DateTimeCheckout = new DateTime(2024, 1, 8, 2, 19, 2, 768, DateTimeKind.Local).AddTicks(322),
                             DeliveryStatus = true,
                             StaffID = 1
                         },
@@ -614,7 +614,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             OrderID = 2,
                             CustomerID = 2,
-                            DateTimeCheckout = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(818),
+                            DateTimeCheckout = new DateTime(2024, 1, 8, 2, 19, 2, 768, DateTimeKind.Local).AddTicks(324),
                             DeliveryStatus = false,
                             StaffID = 2
                         });
@@ -1015,6 +1015,40 @@ namespace RandBox.Server.Data.Migrations
                     b.HasIndex("SubscriptionPlanID");
 
                     b.ToTable("SubscriptionItem");
+
+                    b.HasData(
+                        new
+                        {
+                            SubscriptionItemID = 1,
+                            MonthOfYear = 12,
+                            ProductID = 4,
+                            Qty = 1,
+                            SubscriptionPlanID = 1
+                        },
+                        new
+                        {
+                            SubscriptionItemID = 2,
+                            MonthOfYear = 12,
+                            ProductID = 2,
+                            Qty = 1,
+                            SubscriptionPlanID = 1
+                        },
+                        new
+                        {
+                            SubscriptionItemID = 3,
+                            MonthOfYear = 10,
+                            ProductID = 3,
+                            Qty = 1,
+                            SubscriptionPlanID = 2
+                        },
+                        new
+                        {
+                            SubscriptionItemID = 4,
+                            MonthOfYear = 11,
+                            ProductID = 2,
+                            Qty = 1,
+                            SubscriptionPlanID = 2
+                        });
                 });
 
             modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionPlan", b =>
@@ -1052,14 +1086,14 @@ namespace RandBox.Server.Data.Migrations
                         {
                             SubscriptionPlanID = 1,
                             CustomerID = 1,
-                            SubscribedDateTime = new DateTime(2023, 12, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(1747),
+                            SubscribedDateTime = new DateTime(2024, 1, 8, 2, 19, 2, 768, DateTimeKind.Local).AddTicks(909),
                             SubscriptionCategoryID = 12
                         },
                         new
                         {
                             SubscriptionPlanID = 2,
                             CustomerID = 2,
-                            SubscribedDateTime = new DateTime(2023, 10, 28, 15, 10, 37, 796, DateTimeKind.Local).AddTicks(1749),
+                            SubscribedDateTime = new DateTime(2023, 11, 8, 2, 19, 2, 768, DateTimeKind.Local).AddTicks(912),
                             SubscriptionCategoryID = 5
                         });
                 });

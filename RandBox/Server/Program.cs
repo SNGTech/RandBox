@@ -43,7 +43,11 @@ StripeConfiguration.ApiKey = "sk_test_51OPpJqKZqzi7Rqy6Q0lSWfKkH5qofg04MVGZxsD7D
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IStripeCustomerService, StripeCustomerService>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(op =>
+    op.SerializerSettings.ReferenceLoopHandling =
+    Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
