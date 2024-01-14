@@ -1,0 +1,103 @@
+﻿@page "/staff/subscriptions/{SubscriptionPlanId:int}"
+@inject IGenericService<SubscriptionPlan> SubscriptionService
+@inject ISubscriptionItemService SubscriptionItemService
+@inject NavigationManager Navigation
+
+@if (items == null || subscription == null)
+{
+    <h4>> Loading Subscription Details</h4>
+}
+else
+{
+    <div class="mb-5">
+        <i class="close-btn bi bi-chevron-left" @onclick=GoBack> Back</i>
+        <h3 class="title mb-3">Edit Subscription Details</h3>
+        <h4 class="id mb-4">ID: @subscription!.SubscriptionPlanID</h4>
+        <div class="additional-info col d-flex justify-content-between mb-3">
+            <p>Subscription Duration: <span>@subscription.SubscriptionCategory!.Duration month@(subscription.SubscriptionCategory.Duration > 1 ? "s" : "")</span></p>
+            <p>No. of Days Till End of Subscription: <span>@GetCurrentDuration()</span></p>
+            @* TODO: MAKE THE BELOW WORK *@
+            <p>Total Paid To Date: <span>$82.76</span></p>
+        </div>
+        <div class="warn-info-div">
+            <h3 class="info-text">1 out of 4 months completed</h3>
+            <h3 class="warn-text"></h3>
+        </div>
+        <div class="content">
+            @for(int i = 0; i < subscription.SubscriptionCategory!.Duration; i++)
+            {
+                int month = i + 1;
+                DateTime dateTimeAfterMonth = subscription.SubscribedDateTime.AddMonths(i);
+                var monthItems = GetItemsByMonth(dateTimeAfterMonth.Month);
+
+                <div class="mb-4">
+                    <h3 class="month-header">Month #@(month) (@dateTimeAfterMonth.ToString("MMMM"))</h3>
+                    <div class="items-catalogue">
+                        @if (monthItems == null)
+                        {
+                            <h4 class="no-items-text">No items here yet...</h4>
+                        }
+                        else
+                        {
+                            <ul class="list-unstyled col d-flex justify-content-start flex-wrap gap-4">
+                                @foreach (var item in monthItems!)
+                                {
+                                    <li class="">
+                                        <ProductCard Product=@item.Product />
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        <button class="btn btn-add mt-2 mb-2" @onclick=@(() => OpenAddItemsModal(month))>Add Items</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<CreateEditSubscriptionItemModal @ref="Modal" OnSuccessfulSubmit="RefreshItems" />
+
+@code {
+    [Parameter]
+    public int SubscriptionPlanId { get; set; }
+
+    private List<SubscriptionItem> items = new List<SubscriptionItem>();
+
+    private CreateEditSubscriptionItemModal? Modal;
+
+    private SubscriptionPlan? subscription;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //subscription = await SubscriptionService.GetById(SubscriptionPlanId);
+        await RefreshItems();
+    }
+
+    public void OpenAddItemsModal(int month)
+    {
+        Modal!.OpenInAddMode(month);
+    }
+
+    public async Task RefreshItems()
+    {
+        items = await SubscriptionItemService.GetAllByPlan(subscription!.SubscriptionPlanID);
+    }
+
+    protected List<SubscriptionItem> GetItemsByMonth(int month)
+    {
+        var month_items = items.FindAll(x => x.MonthOfYear == month);
+        return month_items;
+    }
+
+    private int GetCurrentDuration()
+    {
+        DateTime endDate = subscription!.SubscribedDateTime.AddMonths(subscription.SubscriptionCategory!.Duration);
+        return (endDate - DateTime.Now).Days;
+    }
+
+    public void GoBack()
+    {
+        Navigation.NavigateTo("/staff/subscriptions");
+    }
+}
