@@ -1,0 +1,62 @@
+﻿<div class="mb-4">
+    <div>
+        <h3 class="month-header">Month #@(MonthNo) (@dateTimeAfterMonth.ToString("MMMM"))</h3>
+    </div>
+    <div class="items-catalogue">
+        @if (monthItems == null)
+        {
+            <h4 class="no-items-text">No items here yet...</h4>
+        }
+        else
+        {
+            <ul class="list-unstyled col d-flex justify-content-start flex-wrap gap-4">
+                @foreach (var item in monthItems)
+                {
+                    <li class="">
+                        <ProductCard Product=@item.Product />
+                    </li>
+                }
+            </ul>
+        }
+        <button class="btn btn-add mt-2 mb-2" @onclick=@(() => OpenAddItemsModal(Subscription!, monthItems, MonthNo))>Add Items</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public SubscriptionPlan? Subscription { get; set; }
+    [Parameter]
+    public List<SubscriptionItem>? Items { get; set; }
+    [Parameter]
+    public int MonthNo { get; set; }
+    [Parameter]
+    public CreateEditSubscriptionItemModal? Modal { get; set; }
+    [Parameter]
+    public DeleteModal? DeleteModal { get; set; }
+
+    private DateTime dateTimeAfterMonth { get; set; }
+    private List<SubscriptionItem>? monthItems { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        dateTimeAfterMonth = Subscription!.SubscribedDateTime.AddMonths(MonthNo);
+        monthItems = GetItemsByMonth(dateTimeAfterMonth.Month);
+    }
+
+    public void OpenAddItemsModal(SubscriptionPlan subscription, List<SubscriptionItem>? monthItems, int month)
+    {
+        Modal!.OpenInAddMode(subscription, monthItems, month);
+    }
+
+    protected List<SubscriptionItem> GetItemsByMonth(int month)
+    {
+        if (Items == null)
+        {
+            return Enumerable.Empty<SubscriptionItem>().ToList();
+        }
+
+        var month_items = Items.FindAll(x => x.MonthOfYear == month);
+        return month_items;
+    }
+
+}
