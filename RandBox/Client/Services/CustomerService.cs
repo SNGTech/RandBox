@@ -27,7 +27,7 @@ namespace RandBox.Client.Services
             throw new NotImplementedException();
         }
 
-        public Task<Customer> GetByOrderId(int id)
+        public Task<Customer> GetById(int id)
         {
             throw new NotImplementedException();
         }

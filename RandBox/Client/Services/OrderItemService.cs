@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 
 namespace RandBox.Client.Services
 {
-    public class OrderItemService : IGenericService<OrderItem>
+    public class OrderItemService : IOrderItemService
     {
         private readonly HttpClient _httpClient_Public;
         private readonly HttpClient _httpClient_Private;
@@ -48,12 +48,16 @@ namespace RandBox.Client.Services
             }
         }
 
+        public Task<OrderItem> GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
 
-        public async Task<List<OrderItem>> GetByOrderId(int id)
+        public async Task<List<OrderItem>> GetItemsByOrderId(int orderId)
         {
             try
             {
-                var response = await _httpClient_Public.GetAsync($"api/OrderItems?orderId={id}");
+                var response = await _httpClient_Public.GetAsync($"api/OrderItems?orderId={orderId}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -119,11 +123,6 @@ namespace RandBox.Client.Services
         }
 
         Task<string> IGenericService<OrderItem>.DeleteById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<OrderItem> IGenericService<OrderItem>.GetByOrderId(int id)
         {
             throw new NotImplementedException();
         }

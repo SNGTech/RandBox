@@ -1,6 +1,6 @@
 ﻿@page "/view-order/{OrderId:int}"
 @inject IGenericService<Order> OrderService
-@inject IGenericService<OrderItem> OrderItemService
+@inject IOrderItemService OrderItemService
 @inject IGenericService<Product> ProductService
 
 
@@ -64,7 +64,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         orderitems = await OrderItemService.GetAll();
-        order = await OrderService.GetByOrderId(OrderId);
+        order = await OrderService.GetById(OrderId);
         products = await ProductService.GetAll();
 
         

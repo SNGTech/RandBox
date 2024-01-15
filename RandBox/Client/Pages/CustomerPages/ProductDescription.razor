@@ -76,7 +76,7 @@
     protected override async Task OnInitializedAsync()
     {
         order = await OrderService.GetAll();
-        product = await ProductService.GetByOrderId(ProductId);
+        product = await ProductService.GetById(ProductId);
     }
     [Parameter]
     public EventCallback OnSuccessfulSubmit { get; set; }
@@ -135,6 +135,7 @@
 
         await OnSuccessfulSubmit.InvokeAsync();
     }
+
     public class InputModel
     {
 
@@ -147,5 +148,4 @@
         [Required]
         public int? ProductID { get; set; }
     }
-
 }
