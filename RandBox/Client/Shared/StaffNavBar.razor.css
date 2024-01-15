@@ -42,7 +42,7 @@
 ul {
 	display: inline-flex;
 	list-style: none;
-	row-gap: 1.5rem;
+	row-gap: 1.0rem;
 }
 
 li {

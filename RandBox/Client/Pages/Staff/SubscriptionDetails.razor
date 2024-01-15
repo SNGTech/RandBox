@@ -1,6 +1,5 @@
 ﻿@page "/staff/subscriptions/{SubscriptionPlanId:int}"
 @inject IGenericService<SubscriptionPlan> SubscriptionService
-@inject ISubscriptionItemService SubscriptionItemService
 @inject NavigationManager Navigation
 
 @if (items == null || subscription == null)
@@ -28,12 +27,10 @@ else
             @for(int i = 0; i < subscription.SubscriptionCategory!.Duration; i++)
             {
                 int monthNo = i + 1;
-                <MonthItemsEditor Subscription="subscription" Items="items" MonthNo="monthNo" Modal="Modal" DeleteModal="DeleteModal" />            }
+                <MonthItemsEditor Subscription="subscription" MonthNo="monthNo" />            }
         </div>
     </div>
 }
-
-<CreateEditSubscriptionItemModal @ref="Modal" OnSuccessfulSubmit="RefreshItems" />
 
 @code {
     [Parameter]
@@ -48,13 +45,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        //subscription = await SubscriptionService.GetById(SubscriptionPlanId);
-        await RefreshItems();
-    }
-
-    public async Task RefreshItems()
-    {
-        items = await SubscriptionItemService.GetAllByPlan(subscription!.SubscriptionPlanID);
+        subscription = await SubscriptionService.GetById(SubscriptionPlanId);
     }
 
     private int GetCurrentDuration()

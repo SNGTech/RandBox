@@ -62,5 +62,49 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
+
+        public async Task<SubscriptionItem> Update(SubscriptionItem updatedItem)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PutAsJsonAsync($"api/SubscriptionItem/{updatedItem.SubscriptionItemID}", updatedItem);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<SubscriptionItem>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> DeleteById(int id)
+        {
+            try
+            {
+                var response = await _httpClient_Public.DeleteAsync($"api/SubscriptionItem/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

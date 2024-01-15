@@ -12,7 +12,7 @@ else
             <div class="modal-content p-5">
                 <div class="col d-flex justify-content-between align-items-center mb-3">
                     <i class="close-btn bi bi-chevron-left" @onclick=Close></i>
-                    <h2 class="modal-title">@(isCreate ? $"Add Item(s) for Month #{monthNo}" : "Edit Item")</h2>
+                    <h2 class="modal-title">@(isCreate ? $"Add Item(s)" : "Edit Item") for Month #@monthNo</h2>
                     <i class="inactive bi bi-chevron-left"></i>
                 </div>
                 <div class="option-bar col d-flex justify-content-between my-3">
@@ -70,6 +70,8 @@ else
     private List<SubscriptionItem>? itemsAlreadyAdded { get; set; }
     private int monthNo { get; set; }
 
+    private SubscriptionItem? item { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         var products = await ProductSerivce.GetAll();
@@ -89,14 +91,26 @@ else
             }).ToList();
     }
 
+    protected void SelectSingle(int productId)
+    {
+        productComponents = productComponents!.Select(x => new ProductComponent
+            {
+                Product = x.Product,
+                Selected = productId == x.Product!.ProductID
+            }).ToList();
+    }
+
     protected void SelectProduct(ProductComponent component)
     {
-        // If in edit mode, remove all selection first
+        // If in edit mode, only select one selection
         if (!isCreate)
         {
-            ResetSelection();
+            SelectSingle(component.Product!.ProductID);
         }
-        component.Selected = !component.Selected;
+        else
+        {
+            component.Selected = !component.Selected;
+        }
     }
 
     protected int GetSelectedNo()
@@ -116,12 +130,15 @@ else
         StateHasChanged();
     }
 
-    public void OpenInEditMode(SubscriptionItem item)
+    public void OpenInEditMode(SubscriptionPlan subscription, List<SubscriptionItem>? monthItems, SubscriptionItem item)
     {
         SubmitCallback = EventCallback.Factory.Create(this, SubmitInEditMode);
         isCreate = false;
-        ResetSelection();
-        productComponents!.First(x => x.Product!.ProductID == item.Product!.ProductID).Selected = true;
+        this.subscription = subscription;
+        this.itemsAlreadyAdded = monthItems;
+        this.itemsAlreadyAdded!.Remove(item);
+        SelectSingle(item.Product!.ProductID);
+        this.item = item;
         show = true;
         StateHasChanged();
     }
@@ -148,6 +165,18 @@ else
 
     protected async Task SubmitInEditMode()
     {
+        var selected = productComponents!.FindAll(x => x.Selected).Select(x => new SubscriptionItem
+            {
+                SubscriptionItemID = item!.SubscriptionItemID,
+                ProductID = x.Product!.ProductID,
+                Qty = 1,
+                MonthOfYear = item.MonthOfYear,
+                SubscriptionPlanID = item.SubscriptionPlanID
+            }).FirstOrDefault();
+        if (selected != null)
+        {
+            await SubscriptionItemService.Update(selected);
+        }
         Close();
         await OnSuccessfulSubmit.InvokeAsync();
     }

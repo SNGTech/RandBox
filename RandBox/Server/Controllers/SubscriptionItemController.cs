@@ -50,5 +50,43 @@ namespace RandBox.Server.Controllers
 
             return CreatedAtAction(nameof(GetAllSubscripionItemsByIds), new { ids = newItems.Select(x => x.SubscriptionItemID).ToList() }, newItems);
         }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> UpdateItem(int id, SubscriptionItem updatedItem)
+        {
+            if (id != updatedItem.SubscriptionItemID)
+            {
+                return BadRequest();
+            }
+
+            _unitOfWork.SubscriptionItemRepository.Update(updatedItem);
+
+            try
+            {
+                await _unitOfWork.Save();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await SubscriptionItemExists(id))
+                {
+                    return NotFound();
+                }
+            }
+            return Ok(updatedItem);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteItemById(int id)
+        {
+            await _unitOfWork.SubscriptionItemRepository.DeleteById(id);
+            await _unitOfWork.Save();
+
+            return NoContent();
+        }
+
+        protected async Task<bool> SubscriptionItemExists(int id)
+        {
+            return await _unitOfWork.SubscriptionItemRepository.GetById(id) != null;
+        }
     }
 }

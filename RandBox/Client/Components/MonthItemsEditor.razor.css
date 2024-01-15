@@ -5,6 +5,27 @@
 	margin-bottom: 1.5rem;
 }
 
+.edit-options {
+	column-gap: 1.5rem;
+}
+
+	.edit-options h4 {
+		font-size: 1.2em;
+	}
+
+.option-btn {
+	cursor: pointer;
+	user-select: none;
+}
+
+.edit-btn {
+	color: #e2bf3a;
+}
+
+.delete-btn {
+	color: #f55353;
+}
+
 .btn-add {
 	border: 2px solid #7f5af0;
 	border-radius: 10px;
@@ -17,5 +38,22 @@
 
 .no-items-text {
 	font-size: 1.2em;
-	color: #d4d4d4;
+	color: #a4a4a4;
+}
+
+li {
+	cursor: pointer;
+	border: 4px solid transparent;
+	border-radius: 25px;
+	transition: border 150ms ease;
+	user-select: none;
+}
+
+.selected {
+	border: 4px solid #2074c9;
+}
+
+.inactive {
+	opacity: 25%;
+	cursor: default;
 }
