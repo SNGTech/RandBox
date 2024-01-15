@@ -36,6 +36,11 @@ namespace RandBox.Client.Services
             }
         }
 
+        public Task<SubscriptionItem> GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<SubscriptionItem>> InsertRange(List<SubscriptionItem> newItems)
         {
             try

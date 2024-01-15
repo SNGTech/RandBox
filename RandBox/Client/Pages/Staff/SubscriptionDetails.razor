@@ -48,7 +48,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        subscription = await SubscriptionService.GetById(SubscriptionPlanId);
+        //subscription = await SubscriptionService.GetById(SubscriptionPlanId);
         await RefreshItems();
     }
 

@@ -65,7 +65,7 @@ namespace RandBox.Client.Services
 			}
 		}
 
-        public async Task<Category> GetById(int id)
+        public async Task<Category> GetByOrderId(int id)
         {
             try
             {

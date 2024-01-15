@@ -1,7 +1,9 @@
-﻿
-@using System.ComponentModel;
+﻿@using System.ComponentModel;
 @page "/product-details/{ProductId:int}"
 @inject IGenericService<Product> ProductService
+@inject IGenericService<OrderItem> OrderItemService
+@inject IGenericService<RandBox.Shared.Domain.Order> OrderService
+
 
 
 
@@ -34,9 +36,13 @@
                 <p>Snacks</p>
                 <h4 style="margin-top:4rem;">@product!.Name</h4>
                 <h2>@product!.DiscountedPrice SGD </h2>
-                <p>Price</p><hr />
-                <p>Status: In Stock (@product.StockNo)    Country: @product?.Country?.Name</p>   
-                <p>@product!.Description</p><hr/>
+                <p>Price</p>
+
+                <hr />
+                <p>Status: In Stock (@product.StockNo)    Country: @product?.Country?.Name</p>
+                <p>@product!.Description</p>
+
+                <hr />
             }
         </div>
     </div>
@@ -47,32 +53,99 @@
     <input type="number" id="quantity" name="quantity" min="1" @bind="quantity" />
 </div>
 
+<div>
+    <label for="orderCustomerId">Customer ID:</label>
+    <input type="number" id="orderCustomerId" name="orderCustomerId" @bind="input.CustomerID" />
+</div>
+
+<div>
+    <label for="orderId">Order ID:</label>
+    <input type="number" id="orderId" name="orderId" @bind="input.OrderID" />
+</div>
 
 <button type="button" class="btn btn-primary" @onclick="() => AddToCart(quantity)">Add to Cart</button>
-
 
 
 @code {
     [Parameter]
     public int ProductId { get; set; }
-
+    private List<RandBox.Shared.Domain.Order>? order;
     private Product? product;
     private Category? category;
 
     protected override async Task OnInitializedAsync()
     {
-        product = await ProductService.GetById(ProductId);
-       
+        order = await OrderService.GetAll();
+        product = await ProductService.GetByOrderId(ProductId);
+    }
+    [Parameter]
+    public EventCallback OnSuccessfulSubmit { get; set; }
+
+    private EventCallback SubmitCallback { get; set; }
+
+    private InputModel? input { get; set; }
+    private bool show = false;
+    private bool isCreate { get; set; }
+
+    protected override void OnInitialized()
+    {
+        input = new InputModel();
     }
 
 
     private int quantity = 0;
-    private void AddToCart(int quantity)
+    protected async Task AddToCart(int quantity)
     {
         var message = $"Added {quantity} {product!.Name}(s) to the cart.";
         Console.WriteLine(message);
-        
 
+        // Check if the entered OrderID already exists in the list of orders
+        var existingOrder = order.FirstOrDefault(o => o.OrderID == input.OrderID);
+
+        if (existingOrder != null)
+        {
+            // Use the existing order
+            input.OrderID = existingOrder.OrderID;
+        }
+        else
+        {
+            // Create a new order
+            var newOrder = new RandBox.Shared.Domain.Order
+                {
+                    DateTimeCheckout = DateTime.Now,
+                    DeliveryStatus = false,
+                    CustomerID = input.CustomerID, // Use the entered CustomerID
+                    OrderItems = new List<OrderItem>()
+                };
+
+            var addedOrder = await OrderService.Insert(newOrder);
+            input.OrderID = addedOrder.OrderID;
+        }
+        product.StockNo -= quantity;
+        await ProductService.Update(product);
+
+        var orderItem = new OrderItem
+            {
+                Qty = quantity,
+                ProductID = ProductId,
+                OrderID = input.OrderID ?? 0
+            };
+
+        var addedOrderItem = await OrderItemService.Insert(orderItem);
+
+        await OnSuccessfulSubmit.InvokeAsync();
     }
+    public class InputModel
+    {
+
+        public int CustomerID  { get; set; }
+        public int OrderItemID { get; set; }
+        [Required]
+        public int? Qty { get; set; }
+        [Required]
+        public int? OrderID { get; set; }
+        [Required]
+        public int? ProductID { get; set; }
+    }
+
 }
- 
