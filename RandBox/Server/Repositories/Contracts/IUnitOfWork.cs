@@ -7,7 +7,7 @@ namespace RandBox.Server.Repositories.Contracts
 		IGenericRepository<Customer> CustomerRepository { get; }
 		IGenericRepository<Staff> StaffRepository { get; }
 		IGenericRepository<Product> ProductRepository { get; }
-		IGenericRepository<Order> OrderRepository { get; }
+		IGenericRepository<Orders> OrderRepository { get; }
 		IGenericRepository<OrderItem> OrderItemRepository { get; }
 		IGenericRepository<Category> CategoryRepository { get; }
 

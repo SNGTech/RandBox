@@ -26,6 +26,7 @@
     <None Remove="Components\ProductDisplayCard.razor.css" />
     <None Remove="Pages\CustomerPages\ProductDescription.razor.css" />
     <None Remove="Pages\Sections\StoreManagerCountrySection.razor.css" />
+    <None Remove="Pages\Staff\OrderManagement.razor.css" />
     <None Remove="Pages\Staff\StoreManagement.razor.css" />
   </ItemGroup>
 

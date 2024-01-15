@@ -1,8 +1,9 @@
 ﻿@using System.ComponentModel;
 @page "/product-details/{ProductId:int}"
 @inject IGenericService<Product> ProductService
-@inject IGenericService<OrderItem> OrderItemService
-@inject IGenericService<RandBox.Shared.Domain.Order> OrderService
+@inject IOrderItemService OrderItemService
+@inject IGenericService<Orders> OrderService
+
 
 
 
@@ -69,7 +70,7 @@
 @code {
     [Parameter]
     public int ProductId { get; set; }
-    private List<RandBox.Shared.Domain.Order>? order;
+    private List<Orders>? order;
     private Product? product;
     private Category? category;
 
@@ -110,7 +111,7 @@
         else
         {
             // Create a new order
-            var newOrder = new RandBox.Shared.Domain.Order
+            var newOrder = new Orders
                 {
                     DateTimeCheckout = DateTime.Now,
                     DeliveryStatus = false,

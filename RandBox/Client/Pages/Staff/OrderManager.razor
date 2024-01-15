@@ -1,0 +1,137 @@
+﻿@page "/staff/purchases"
+@inject IGenericService<Orders> OrderService
+@inject IOrderItemService OrderItemService
+@inject NavigationManager Navigation
+
+@if (orders == null || filteredOrderComponents == null)
+{
+    <h4>> Loading Orders</h4>
+}
+else
+{
+    <div class="col d-flex justify-content-between align-items-center mb-4">
+        <h3 class="m-0">Orders</h3>
+        <div class="position-relative">
+            <i class="bi bi-search search-icon position-absolute" />
+            <input class="search-box" placeholder="Search OrderID" @oninput="FilterOrders" />
+        </div>
+    </div>
+
+    <div class="options-bar col d-flex mb-4">
+        <h4 class="option-btn extend-btn m-0 @(IsExtendOrHandleButtonActive() ? "" : "inactive")">
+            Assign staff
+        </h4>
+        <h4 class="option-btn unsubscribe-btn m-0 @(IsUnsubscribeButtonActive() ? "" : "inactive")">
+            Cancel and Notify
+        </h4>
+    </div>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#Id</th>
+                <th scope="col">Order Date</th>
+                <th scope="col">Total Price</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Staff In-charge</th>
+                <th class="edge-cell-right" scope="col">Delivery Status (cur. month)</th>
+            </tr>
+        </thead>
+    </table>
+    @foreach (var component in filteredOrderComponents!)
+    {
+        
+        var order = component.Order;
+       
+        
+        <tr>
+            <td>@order.OrderID</td>
+            <td>@order.DateTimeCheckout</td>
+            <td>@order.OrderItems</td>
+
+
+            <td>@order.CustomerID</td>
+            <td class="@(order.Staff == null ? "warn" : "")">
+                @(order.Staff == null ? "Needs an IC" : order.Staff.FirstName)
+            </td>
+
+        </tr>
+    }
+
+
+}
+
+
+
+
+
+@code
+{
+    private List<Orders> orders;
+
+    private List<OrderComponent>? filteredOrderComponents { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+         orders = await OrderService.GetAll
+       ();
+        filteredOrderComponents = MapOrderToComponent(orders);
+    }
+
+    private void SelectOrder(OrderComponent component)
+    {
+        component!.Selected = !component.Selected;
+    }
+
+    private void FilterOrders(ChangeEventArgs e)
+    {
+        string? search = e.Value!.ToString();
+        if (search != null && search != "")
+        {
+            var filtered = orders!.FindAll(x => x.OrderID.ToString().StartsWith(search!));
+            filteredOrderComponents = MapOrderToComponent(filtered);
+        }
+        else
+        {
+            filteredOrderComponents = MapOrderToComponent(orders!);
+        }
+    }
+
+    protected bool IsExtendOrHandleButtonActive()
+    {
+        return filteredOrderComponents!.Count(x => x.Selected) == 1;
+    }
+
+    protected bool IsUnsubscribeButtonActive()
+    {
+        return filteredOrderComponents!.Count(x => x.Selected) >= 1;
+    }
+
+    protected void NavigateToHandleOrder()
+    {
+        if (!IsExtendOrHandleButtonActive())
+        {
+            return;
+        }
+
+        var selectedOrder = filteredOrderComponents!.FirstOrDefault(x => x.Selected);
+        Navigation.NavigateTo($"/staff/orders/{selectedOrder!.Order!.OrderID}");
+    }
+
+    private List<OrderComponent> MapOrderToComponent(List<Orders> order)
+    {
+        return order.Select(x => new OrderComponent
+            {
+                Order = x,
+                Selected = false
+            }).ToList();
+    }
+    public class OrderComponent
+    {
+        public Orders? Order { get; set; }
+        public bool Selected { get; set; }
+    }
+
+
+}

@@ -1,5 +1,5 @@
 ﻿@page "/view-order/{OrderId:int}"
-@inject IGenericService<Order> OrderService
+@inject IGenericService<Orders> OrderService
 @inject IOrderItemService OrderItemService
 @inject IGenericService<Product> ProductService
 
@@ -27,18 +27,18 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var otherOrderItem in orderitems!)
+                @foreach (var orderItem in orderitems!)
                 {
-                    @if (otherOrderItem.OrderID ==order.OrderID)
+                    @if (orderItem.OrderID == order.OrderID)
                     {
                         @foreach (var product in products)
                         {
-                            @if (product.ProductID == otherOrderItem.ProductID)
+                            @if (product.ProductID == orderItem.ProductID)
                             {
                                 <tr>
                                     <td style="color: white;"><strong>@product.Name</strong></td>
-                                    <td style="color: white;"><strong>@otherOrderItem.Qty</strong></td>
-                                    <td style="color: white;">$@(product.DiscountedPrice * otherOrderItem.Qty)</td>
+                                    <td style="color: white;"><strong>@orderItem.Qty</strong></td>
+                                    <td style="color: white;">$@(product.DiscountedPrice * orderItem.Qty)</td>
                                 </tr>
                             }
                         }
@@ -57,7 +57,7 @@ else
     [Parameter]
     public int OrderId { get; set; }
 
-    private Order? order;
+    private Orders? order;
     private List<Product>? products;
     private List<OrderItem>? orderitems;
 

@@ -20,10 +20,11 @@ namespace RandBox.Server.Controllers
 
         // Get all Order
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetAllOrder()
+        public async Task<ActionResult<IEnumerable<Orders>>> GetAllOrder()
 
         {
-            var Order = await _unitOfWork.OrderRepository.GetAll();
+            var Order = await _unitOfWork.OrderRepository.GetAll(
+                includes: q => q.Include(x => x.OrderItems!)!.ThenInclude(x => x.Product));
             if (Order == null)
             {
                 return NotFound();
@@ -35,7 +36,7 @@ namespace RandBox.Server.Controllers
 
         // Get Order by id
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrder(int id)
+        public async Task<ActionResult<IEnumerable<Orders>>> GetOrder(int id)
         {
             var Order = await _unitOfWork.OrderRepository.GetById(id);
 
@@ -49,7 +50,7 @@ namespace RandBox.Server.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order Order)
+        public async Task<ActionResult<Orders>> PostOrder(Orders Order)
         {
             await _unitOfWork.OrderRepository.Insert(Order);
             await _unitOfWork.Save();

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RandBox.Shared.Domain
 {
-    public class Order
+    public class Orders
     {
         [Key]
         public int OrderID { get; set; }

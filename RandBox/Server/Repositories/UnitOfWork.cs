@@ -11,7 +11,7 @@ namespace RandBox.Server.Repositories
 		private IGenericRepository<Customer>? customerRepository;
 		private IGenericRepository<Staff>? staffRepository;
 		private IGenericRepository<Product>? productRepository;
-		private IGenericRepository<Order>? orderRepository;
+		private IGenericRepository<Orders>? orderRepository;
 		private IGenericRepository<OrderItem>? orderItemRepository;
 		private IGenericRepository<Category>? categoryRepository;
 		private IGenericRepository<Country>? countryRepository;
@@ -30,8 +30,8 @@ namespace RandBox.Server.Repositories
 			=> staffRepository ??= new GenericRepository<Staff>(_context);
 		public IGenericRepository<Product> ProductRepository
 			=> productRepository ??= new GenericRepository<Product>(_context);
-		public IGenericRepository<Order> OrderRepository
-			=> orderRepository ??= new GenericRepository<Order>(_context);
+		public IGenericRepository<Orders> OrderRepository
+			=> orderRepository ??= new GenericRepository<Orders>(_context);
 		public IGenericRepository<OrderItem> OrderItemRepository
 			=> orderItemRepository ??= new GenericRepository<OrderItem>(_context);
 		public IGenericRepository<Category> CategoryRepository

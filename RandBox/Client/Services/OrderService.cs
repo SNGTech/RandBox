@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 
 namespace RandBox.Client.Services
 {
-    public class OrderService : IGenericService<Order>
+    public class OrderService : IGenericService<Orders>
     {
         private readonly HttpClient _httpClient_Public;
         private readonly HttpClient _httpClient_Private;
@@ -16,13 +16,13 @@ namespace RandBox.Client.Services
             _httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
         }
 
-        public async Task<Order> DeleteById(int id)
+        public async Task<Orders> DeleteById(int id)
         {
             throw new NotImplementedException();
         }
 
         // Can be accessed Anonymously
-        public async Task<List<Order>> GetAll()
+        public async Task<List<Orders>> GetAll()
         {
             try
             {
@@ -34,7 +34,7 @@ namespace RandBox.Client.Services
 					{
 						return Enumerable.Empty<Order>().ToList();
 					}*/
-                    return await response.Content.ReadFromJsonAsync<List<Order>>();
+                    return await response.Content.ReadFromJsonAsync<List<Orders>>();
                 }
                 else
                 {
@@ -48,7 +48,7 @@ namespace RandBox.Client.Services
             }
         }
 
-        public async Task<Order> GetById(int id)
+        public async Task<Orders> GetById(int id)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace RandBox.Client.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<Order>();
+                    return await response.Content.ReadFromJsonAsync<Orders>();
                 }
                 else
                 {
@@ -70,7 +70,7 @@ namespace RandBox.Client.Services
             }
         }
 
-        public async Task<Order> Insert(Order entity)
+        public async Task<Orders> Insert(Orders entity)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace RandBox.Client.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<Order>();
+                    return await response.Content.ReadFromJsonAsync<Orders>();
                 }
                 else
                 {
@@ -92,7 +92,7 @@ namespace RandBox.Client.Services
             }
         }
 
-        public async Task<Order> Update(Order entity)
+        public async Task<Orders> Update(Orders entity)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace RandBox.Client.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<Order>();
+                    return await response.Content.ReadFromJsonAsync<Orders>();
                 }
                 else
                 {
@@ -114,7 +114,7 @@ namespace RandBox.Client.Services
             }
         }
 
-        Task<string> IGenericService<Order>.DeleteById(int id)
+        Task<string> IGenericService<Orders>.DeleteById(int id)
         {
             throw new NotImplementedException();
         }
