@@ -21,7 +21,7 @@ namespace RandBox.Client.Services
         {
             try
             {
-                var body = new { id = planId, custEmail = custEmail };
+                var body = new { plan_id = planId, cust_email = custEmail };
                 var response = await _httpClient_Public.PostAsJsonAsync("api/payment-intent", body);
                 if (response.IsSuccessStatusCode)
                 {

@@ -1,15 +1,104 @@
-﻿.product-carousel ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    gap: 4rem;
+﻿.page-title {
+    font-weight: 700;
+    font-size: 2.9em;
+    letter-spacing: 0.15rem;
 }
 
-.product-carousel li {
-    flex: 0 0 auto;
+.gradient-backdrop {
+    width: 25%;
+    height: 10rem;
+    background-color: #3615ED;
+    filter: blur(100px);
+    position: absolute;
+    top: -25px;
+    z-index: -1;
+    opacity: 60%;
 }
 
-    .product-carousel li:not(:first-child) {
-        margin-left: 4rem;
+.product-carousel ul {
+    gap: 2rem 4rem;
+}
+
+li {
+    cursor: pointer;
+    user-select: none;
+}
+
+.search-box {
+    border: 1px solid #94949433;
+    border-radius: 15px;
+    background-color: #16151a;
+    min-width: 52rem;
+    padding: 0.2rem 0.6rem 0.2rem 2.8rem;
+    color: #949494;
+    font-family: Inter, sans-serif;
+    font-size: 1.15em;
+    font-weight: normal;
+}
+
+.search-icon {
+    font-size: 1.3em;
+    top: 3px;
+    left: 13px;
+    color: #949494;
+    font-weight: 500;
+}
+
+.product-section {
+    gap: 3rem;
+}
+
+.filter-box {
+    width: 20%;
+    padding: 1.5rem;
+    border: 1px solid #94949433;
+    border-radius: 15px;
+    font-family: Inter, sans-serif;
+    height: fit-content;
+}
+
+.filter-box h3 {
+    font-weight: 700;
+    font-size: 1.6em;
+}
+
+.filter-title {
+    font-weight: 700;
+    font-size: 1.3em;
+    letter-spacing: 0.05rem;
+}
+
+.filter-checkbox {
+    font-size: 1.15em;
+    letter-spacing: 0.05rem;
+}
+
+    .filter-checkbox input[type="checkbox"] {
+        width: 1rem;
+        height: 1rem;
+        margin-right: 1rem;
+        border: 1px solid #94949433;
+        background-color: #1d1b1e;
+        border-radius: 5px;
     }
+
+    .filter-checkbox input:checked[type="checkbox"] {
+        border: 1px solid #ffffff;
+        background-color: #ffffff;
+        background-image: none;
+    }
+
+    .filter-checkbox input:focus[type="checkbox"] {
+        box-shadow: 0 0 0 0.1rem #a7a7a7;
+    }
+
+.btn-apply-filter {
+    height: fit-content;
+    border: 2px solid #7f5af0;
+    border-radius: 10px;
+    color: #e7e7e7;
+    font-size: 1em;
+    font-weight: 700;
+    letter-spacing: 0.05rem;
+    padding: 0.6rem 1.2rem;
+}
