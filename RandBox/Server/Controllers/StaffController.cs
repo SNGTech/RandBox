@@ -3,108 +3,93 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RandBox.Server.Repositories.Contracts;
 using RandBox.Shared.Domain;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RandBox.Server.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class StaffController : ControllerBase
-	{
-		private readonly IUnitOfWork _unitOfWork;
+    [Route("api/[controller]")]
+    [ApiController]
+    public class StaffController : ControllerBase
+    {
+        private readonly IUnitOfWork _unitOfWork;
 
-		public StaffController(IUnitOfWork unitOfWork)
+        public StaffController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
-		{
-			_unitOfWork = unitOfWork;
-		}
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Staff>>> GetAllStaff()
+        {
+            var staffList = await _unitOfWork.StaffRepository.GetAll();
 
-		// Get all staff
-		[HttpGet]
-		public async Task<ActionResult<IEnumerable<Staff>>> GetAllStaff()
+            if (staffList == null)
+            {
+                return NotFound();
+            }
 
-		{
-			var staff = await _unitOfWork.StaffRepository.GetAll();
-			if (staff == null)
-			{
-				return NotFound();
-			}
+            return Ok(staffList);
+        }
 
-			return Ok(staff);
-		}
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<IEnumerable<Staff>>> GetStaff(int id)
+        {
+            var staff = await _unitOfWork.StaffRepository.GetById(id);
 
-		// Get staff by id
-		[HttpGet("{id:int}")]
-		public async Task<ActionResult<IEnumerable<Staff>>> GetStaff(int id)
-		{
-			var staff = await _unitOfWork.StaffRepository.GetById(id);
+            if (staff == null)
+            {
+                return NotFound();
+            }
 
-			if (staff == null)
-			{
-				return NotFound();
-			}
+            return Ok(staff);
+        }
 
-			return Ok(staff);
-		}
+        [HttpPost]
+        public async Task<ActionResult> AddStaff(Staff staff)
+        {
+            await _unitOfWork.StaffRepository.Insert(staff);
+            await _unitOfWork.Save();
 
-		// Update staff inplace
-		[HttpPut("{id}")]
-		public async Task<IActionResult> PutStaff(int id, Staff staff)
-		{
-			if (id != staff.StaffID)
-			{
-				return BadRequest();
-			}
+            return CreatedAtAction(nameof(GetStaff), new { id = staff.StaffID }, staff);
+        }
 
-			_unitOfWork.StaffRepository.Update(staff);
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> UpdateStaff(int id, Staff newStaff)
+        {
+            if (id != newStaff.StaffID)
+            {
+                return BadRequest();
+            }
 
-			try
-			{
-				await _unitOfWork.Save();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!await StaffExists(id))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
-			}
+            _unitOfWork.StaffRepository.Update(newStaff);
 
-			return NoContent();
-		}
+            try
+            {
+                await _unitOfWork.Save();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await StaffExists(id))
+                {
+                    return NotFound();
+                }
+            }
+            return Ok(newStaff);
+        }
 
-		// Post staff
-		[HttpPost]
-		public async Task<ActionResult<Staff>> PostStaff(Staff staff)
-		{
-			await _unitOfWork.StaffRepository.Insert(staff);
-			await _unitOfWork.Save();
-			return CreatedAtAction("GetMake", new { id = staff.StaffID }, staff);
-		}
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteStaffById(int id)
+        {
+            await _unitOfWork.StaffRepository.DeleteById(id);
+            await _unitOfWork.Save();
 
-		// Delete staff by id
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteStaff(int id)
-		{
-			var staff = await _unitOfWork.StaffRepository.GetById(id);
+            return NoContent();
+        }
 
-			if (staff == null)
-			{
-				return NotFound();
-			}
-			await _unitOfWork.StaffRepository.DeleteById(id);
-			await _unitOfWork.Save();
-			return NoContent();
-		}
-
-		// Checks if (entity) already exists in (entity)repo in this case staff
-		private async Task<bool> StaffExists(int id)
-		{
-			var staff = await _unitOfWork.StaffRepository.GetById(id);
-			return staff != null;
-		}
-	}
+        protected async Task<bool> StaffExists(int id)
+        {
+            return await _unitOfWork.StaffRepository.GetById(id) != null;
+        }
+    }
 }

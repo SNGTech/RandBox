@@ -74,8 +74,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-         orders = await OrderService.GetAll
-       ();
+         orders = await OrderService.GetAll();
         filteredOrderComponents = MapOrderToComponent(orders);
     }
 
