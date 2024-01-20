@@ -1,11 +1,12 @@
 ﻿@page "/staff/purchases"
 @inject IGenericService<Orders> OrderService
 @inject IOrderItemService OrderItemService
+@inject IGenericService<Customer> CustomerService
 @inject NavigationManager Navigation
 
-@if (orders == null || filteredOrderComponents == null)
+@if (OrderComponents == null)
 {
-    <h4>> Loading Orders</h4>
+    <h4>Loading Orders</h4>
 }
 else
 {
@@ -13,24 +14,30 @@ else
         <h3 class="m-0">Orders</h3>
         <div class="position-relative">
             <i class="bi bi-search search-icon position-absolute" />
-            <input class="search-box" placeholder="Search OrderID" @oninput="FilterOrders" />
+            <input class="search-box">
         </div>
     </div>
 
     <div class="options-bar col d-flex mb-4">
-        <h4 class="option-btn extend-btn m-0 @(IsExtendOrHandleButtonActive() ? "" : "inactive")">
-            Assign staff
+        <h4 class="option-btn add-btn m-0" @onclick="OpenAddModal">
+            <i class="bi bi-plus-circle" />&nbsp; Add Order
         </h4>
-        <h4 class="option-btn unsubscribe-btn m-0 @(IsUnsubscribeButtonActive() ? "" : "inactive")">
-            Cancel and Notify
+        <h4 class="option-btn edit-btn m-0 @(IsEditButtonActive() ? "" : "inactive")" @onclick="OpenEditModal">
+            <i class="bi bi-pencil" />&nbsp; Edit Order
+        </h4>
+        
+        <h4 class="option-btn delete-btn m-0 @(IsDeleteButtonActive() ? "" : "inactive")" @onclick="OpenDeleteModal">
+            <i class="bi bi-dash-circle" />&nbsp; Remove Order 
         </h4>
     </div>
 
+    <CreateEditOrderModal @ref="Modal" OnSuccessfulSubmit="RefreshOrders" />
+    <DeleteModal @ref="DeleteModal" OnSuccessfulConfirm="DeleteSelectedOrders" />
 
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">#Id</th>
+                <th class="edge-cell-left" scope="col">#Id</th>
                 <th scope="col">Order Date</th>
                 <th scope="col">Total Price</th>
                 <th scope="col">Customer</th>
@@ -38,99 +45,147 @@ else
                 <th class="edge-cell-right" scope="col">Delivery Status (cur. month)</th>
             </tr>
         </thead>
+        <tbody>
+            @foreach (var component in OrderComponents!)
+            {
+                var order = component.Order;
+                var items = component.Order.OrderItems;
+                var totalPrice = order.OrderItems?.Sum(item => item.Qty * item.Product.DiscountedPrice) ?? 0;
+
+                <tr class="body-row @(component.Selected ? "selected" : "")" @onclick="@(() => SelectOrder(component))">
+                    <td>@order.OrderID</td>
+                    <td>@order.DateTimeCheckout.ToString("dd.MM.yy")</td>
+                    <td>$@totalPrice</td>
+                    
+                    <td>@order.CustomerID</td>
+                    <td class="@(order.Staff == null ? "warn" : "")">
+                        @(order.Staff == null ? "Needs an IC" : order.Staff.FirstName)
+                    </td>
+                    <td class="edge-cell-right"></td>
+                </tr>
+
+                @if (component.Selected)
+                {
+                   
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Product Id</th>
+                                        <th scope="col">Product Name</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Quantity</th>
+                                        <th class="edge-cell-right" scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in items!)
+                                    {
+                                        <tr>
+                                            <td>@item.Product!.ProductID</td>
+                                            <td>@item.Product!.Name</td>
+                                            <td>@item.Product!.DiscountedPrice</td>
+                                            <td>@item.Qty</td>
+                                            <td>$@(item.Product!.DiscountedPrice * item.Qty)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        
+                    
+                }
+            }
+        </tbody>
     </table>
-    @foreach (var component in filteredOrderComponents!)
-    {
-        
-        var order = component.Order;
-       
-        
-        <tr>
-            <td>@order.OrderID</td>
-            <td>@order.DateTimeCheckout</td>
-            <td>@order.OrderItems</td>
-
-
-            <td>@order.CustomerID</td>
-            <td class="@(order.Staff == null ? "warn" : "")">
-                @(order.Staff == null ? "Needs an IC" : order.Staff.FirstName)
-            </td>
-
-        </tr>
-    }
-
-
 }
 
+@code {
+    private List<OrderComponent>? OrderComponents { get; set; }
 
-
-
-
-@code
-{
-    private List<Orders> orders;
-
-    private List<OrderComponent>? filteredOrderComponents { get; set; }
+    private CreateEditOrderModal? Modal;
+    private DeleteModal? DeleteModal;
 
     protected override async Task OnInitializedAsync()
     {
-         orders = await OrderService.GetAll();
-        filteredOrderComponents = MapOrderToComponent(orders);
+        await RefreshOrders();
     }
 
-    private void SelectOrder(OrderComponent component)
+    protected void SelectOrder(OrderComponent component)
     {
-        component!.Selected = !component.Selected;
+        component.Selected = !component.Selected;
     }
 
-    private void FilterOrders(ChangeEventArgs e)
+    protected bool IsEditButtonActive()
     {
-        string? search = e.Value!.ToString();
-        if (search != null && search != "")
-        {
-            var filtered = orders!.FindAll(x => x.OrderID.ToString().StartsWith(search!));
-            filteredOrderComponents = MapOrderToComponent(filtered);
-        }
-        else
-        {
-            filteredOrderComponents = MapOrderToComponent(orders!);
-        }
+        return OrderComponents!.Count(x => x.Selected) == 1;
     }
 
-    protected bool IsExtendOrHandleButtonActive()
+    protected bool IsDeleteButtonActive()
     {
-        return filteredOrderComponents!.Count(x => x.Selected) == 1;
+        return OrderComponents!.Count(x => x.Selected) >= 1;
     }
 
-    protected bool IsUnsubscribeButtonActive()
+    protected void OpenAddModal()
     {
-        return filteredOrderComponents!.Count(x => x.Selected) >= 1;
+        Modal!.OpenInAddMode();
     }
 
-    protected void NavigateToHandleOrder()
+    protected void OpenEditModal()
     {
-        if (!IsExtendOrHandleButtonActive())
+        if (!IsEditButtonActive())
         {
             return;
         }
-
-        var selectedOrder = filteredOrderComponents!.FirstOrDefault(x => x.Selected);
-        Navigation.NavigateTo($"/staff/orders/{selectedOrder!.Order!.OrderID}");
+        var order = OrderComponents!.FirstOrDefault(x => x.Selected)!.Order;
+        Modal!.OpenInEditMode(order!);
     }
 
-    private List<OrderComponent> MapOrderToComponent(List<Orders> order)
+    protected void OpenDeleteModal()
     {
-        return order.Select(x => new OrderComponent
-            {
-                Order = x,
-                Selected = false
-            }).ToList();
+        if (!IsDeleteButtonActive())
+        {
+            return;
+        }
+        DeleteModal!.Open();
+    }
+
+    protected async Task DeleteSelectedOrders()
+    {
+        var selectedOrders = OrderComponents!.FindAll(x => x.Selected).Select(x => x.Order).ToList();
+
+        foreach (var order in selectedOrders)
+        {
+            await OrderService.DeleteById(order!.OrderID);
+        }
+
+        await RefreshOrders();
+    }
+
+    protected async Task RefreshOrders()
+    {
+        var orders = await OrderService.GetAll();
+        if (orders == null)
+        {
+            OrderComponents = null;
+        }
+        else
+        {
+            OrderComponents = orders!.Select(x => new OrderComponent
+                {
+                    Order = x,
+                    Selected = false
+                }
+            ).ToList();
+        }
     }
     public class OrderComponent
     {
         public Orders? Order { get; set; }
         public bool Selected { get; set; }
+        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 
-
 }
+
+
+

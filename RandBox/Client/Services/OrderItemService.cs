@@ -2,6 +2,8 @@
 using RandBox.Shared.Domain;
 using System.Net;
 using System.Net.Http.Json;
+using System.Numerics;
+using System.Text.Json;
 
 namespace RandBox.Client.Services
 {
@@ -20,7 +22,27 @@ namespace RandBox.Client.Services
         {
             throw new NotImplementedException();
         }
+        public async Task<List<OrderItem>> InsertRange(List<OrderItem> newItems)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PostAsJsonAsync("api/OrderItem", newItems);
 
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<OrderItem>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         // Can be accessed Anonymously
         public async Task<List<OrderItem>> GetAll()
         {
@@ -57,11 +79,23 @@ namespace RandBox.Client.Services
         {
             try
             {
-                var response = await _httpClient_Public.GetAsync($"api/OrderItems?orderId={orderId}");
+                var response = await _httpClient_Public.GetAsync($"api/OrderItem/Order/{orderId}");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<List<OrderItem>>();
+                    var content = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+                        return JsonSerializer.Deserialize<List<OrderItem>>(content, new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+                    }
+                    catch (JsonException ex)
+                    {
+                        // Log or handle the JSON deserialization exception
+                        throw new Exception($"Error deserializing JSON: {ex.Message}");
+                    }
                 }
                 else
                 {
@@ -69,11 +103,13 @@ namespace RandBox.Client.Services
                     throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                // Log or handle the general exception
+                throw new Exception($"Error in GetItemsByOrderId: {ex.Message}");
             }
         }
+
 
 
 
@@ -127,4 +163,5 @@ namespace RandBox.Client.Services
             throw new NotImplementedException();
         }
     }
+   
 }

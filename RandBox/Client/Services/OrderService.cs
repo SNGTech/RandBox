@@ -16,9 +16,26 @@ namespace RandBox.Client.Services
             _httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
         }
 
-        public async Task<Orders> DeleteById(int id)
+        public async Task<string> DeleteById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient_Public.DeleteAsync($"api/Order/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         // Can be accessed Anonymously
@@ -114,9 +131,6 @@ namespace RandBox.Client.Services
             }
         }
 
-        Task<string> IGenericService<Orders>.DeleteById(int id)
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }

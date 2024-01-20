@@ -22,14 +22,49 @@ namespace RandBox.Client.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<Customer>> GetAll()
+        public async Task<List<Customer>> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient_Public.GetAsync("api/Customer");
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                    return await response.Content.ReadFromJsonAsync<List<Customer>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public Task<Customer> GetById(int id)
+        public async Task<Customer> GetById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/Customer/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<Customer>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<string> GetCurrentCustomerEmail()
