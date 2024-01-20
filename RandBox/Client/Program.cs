@@ -25,7 +25,7 @@ builder.Services.AddScoped<IGenericService<Product>, ProductService>();
 builder.Services.AddScoped<IGenericService<SubscriptionPlan>, SubscriptionPlanService>();
 builder.Services.AddScoped<ISubscriptionCategoryService, SubscriptionCategoryService>();
 builder.Services.AddScoped<IPaymentIntentService, PaymentIntentService>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IGenericService<Customer>, CustomerService>();
 builder.Services.AddScoped<IGenericService<Country>, CountryService>();
 builder.Services.AddScoped<ISubscriptionItemService, SubscriptionItemService>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();

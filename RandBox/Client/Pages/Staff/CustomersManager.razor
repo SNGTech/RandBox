@@ -1,0 +1,161 @@
+﻿@page "/staff/customers"
+@inject IGenericService<Customer> CustomerService
+
+@if (customers == null || filteredCustomerComponents == null)
+{
+    <h4>> Loading Customers</h4>
+}
+else
+{
+    <div class="col d-flex justify-content-between align-items-center mb-4">
+        <h3 class="m-0">Customers</h3>
+        <div class="position-relative">
+            <i class="bi bi-search search-icon position-absolute" />
+            <input class="search-box" placeholder="Search Customer Name" @oninput="FilterCustomers" />
+        </div>
+    </div>
+
+    <div class="options-bar col d-flex mb-4">
+        <h4 class="option-btn add-btn m-0" @onclick=OpenAddModal>
+            Add Customer
+        </h4>
+        <h4 class="option-btn edit-btn m-0 @(IsEditButtonActive() ? "": "inactive")" @onclick=OpenEditModal>
+            Edit Customer
+        </h4>
+        <h4 class="option-btn delete-btn m-0 @(IsRemoveButtonActive() ? "" : "inactive")" @onclick=OpenDeleteModal>
+            Remove Customer
+        </h4>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="edge-cell-left" scope="col">#Id</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th class="edge-cell-right" scope="col">Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var component in filteredCustomerComponents!)
+            {
+                var customer = component.Customer;
+                <tr class="body-row @(component.Selected ? "selected" : "")" @onclick="@(() => SelectCustomer(component))">
+                    <th class="edge-cell-left" scope="row">@customer!.CustID</th>
+                    <td>@customer!.FirstName</td>
+                    <td>@customer!.LastName</td>
+                    <td class ="edge-cell-right">@customer!.Email</td>
+                    <td class="additional-info collapsible @(component.Selected ? "expand" : "")">
+                        <div class="col d-flex justify-content-between">
+                            <p>Date of Birth: <span>@customer.DateOfBirth.ToString("dd.MM.yy", CultureInfo.InvariantCulture)</span></p>
+                            <p>Address: <span>@customer.Address</span></p>
+                            <p>Unit No: <span>#@customer.UnitNo</span></p>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<CreateEditCustomerModal @ref="Modal" OnSuccessfulSubmit="RefreshCustomers" />
+<DeleteModal @ref="DeleteModal" OnSuccessfulConfirm="DeleteSelectedCustomers" />
+
+@code {
+    private List<Customer>? customers { get; set; }
+    private List<CustomerComponent>? filteredCustomerComponents { get; set; }
+
+    private CreateEditCustomerModal? Modal;
+    private DeleteModal? DeleteModal;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshCustomers();
+    }
+
+    private void SelectCustomer(CustomerComponent component)
+    {
+        component!.Selected = !component.Selected;
+    }
+
+    private void FilterCustomers(ChangeEventArgs e)
+    {
+        string? search = e.Value!.ToString();
+        if (search != null && search != "")
+        {
+            var filtered = customers!.FindAll(x => (x.FirstName + " " + x.LastName).Contains(search!));
+            filteredCustomerComponents = MapCustomerToComponent(filtered);
+        }
+        else
+        {
+            filteredCustomerComponents = MapCustomerToComponent(customers!);
+        }
+    }
+
+    protected bool IsEditButtonActive()
+    {
+        return filteredCustomerComponents!.Count(x => x.Selected) == 1;
+    }
+
+    protected bool IsRemoveButtonActive()
+    {
+        return filteredCustomerComponents!.Count(x => x.Selected) >= 1;
+    }
+
+    protected void OpenAddModal()
+    {
+        Modal!.OpenInAddMode();
+    }
+
+    protected void OpenEditModal()
+    {
+        if (!IsEditButtonActive())
+        {
+            return;
+        }
+        var customer = filteredCustomerComponents!.FirstOrDefault(x => x.Selected)!.Customer;
+        Modal!.OpenInEditMode(customer!);
+    }
+
+    protected void OpenDeleteModal()
+    {
+        if (!IsRemoveButtonActive())
+        {
+            return;
+        }
+        DeleteModal!.Open();
+    }
+
+    private List<CustomerComponent> MapCustomerToComponent(List<Customer> customers)
+    {
+        return customers.Select(x => new CustomerComponent
+            {
+                Customer = x,
+                Selected = false
+            }).ToList();
+    }
+
+    protected async Task DeleteSelectedCustomers()
+    {
+        var customers = filteredCustomerComponents!.FindAll(x => x.Selected).Select(x => x.Customer).ToList();
+
+        foreach (var customer in customers)
+        {
+            await CustomerService.DeleteById(customer!.CustID);
+        }
+
+        await RefreshCustomers();
+    }
+
+    protected async Task RefreshCustomers()
+    {
+        customers = await CustomerService.GetAll();
+        filteredCustomerComponents = MapCustomerToComponent(customers);
+    }
+
+    public class CustomerComponent
+    {
+        public Customer? Customer { get; set; }
+        public bool Selected { get; set; }
+    }
+}
