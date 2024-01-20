@@ -25,7 +25,7 @@ namespace RandBox.Client.Services
         {
             try
             {
-                var response = await _httpClient_Public.GetAsync("api/SubscriptionCategory");
+                var response = await _httpClient_Public.GetAsync("api/SubscriptionCategory/all");
                 if (response.IsSuccessStatusCode)
                 {
                     /*if (response.StatusCode == HttpStatusCode.NoContent)

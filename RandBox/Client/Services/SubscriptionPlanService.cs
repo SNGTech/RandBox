@@ -15,9 +15,26 @@ namespace RandBox.Client.Services
             _httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
         }
 
-        public Task<string> DeleteById(int id)
+        public async Task<string> DeleteById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient_Public.DeleteAsync($"api/SubscriptionPlan/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<List<SubscriptionPlan>> GetAll()
@@ -48,9 +65,26 @@ namespace RandBox.Client.Services
             return await response.Content.ReadFromJsonAsync<SubscriptionPlan>();
         }
 
-        public Task<SubscriptionPlan> Insert(SubscriptionPlan entity)
+        public async Task<SubscriptionPlan> Insert(SubscriptionPlan entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient_Public.PostAsJsonAsync("api/SubscriptionPlan", entity);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<SubscriptionPlan>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public Task<SubscriptionPlan> Update(SubscriptionPlan entity)

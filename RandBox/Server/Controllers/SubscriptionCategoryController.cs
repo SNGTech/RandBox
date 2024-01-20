@@ -16,10 +16,11 @@ namespace RandBox.Server.Controllers
 			_unitOfWork = unitOfWork;
 		}
 
-		[HttpGet]
+		[HttpGet("all")]
 		public async Task<ActionResult<IEnumerable<SubscriptionCategory>>> GetAllSubscripionCategories()
 		{
-			var subscription_categories = await _unitOfWork.SubscriptionCategoryRepository.GetAll();
+			var subscription_categories = await _unitOfWork.SubscriptionCategoryRepository.GetAll(
+                includes: q => q.Include(x => x.Category!));
 
 			if (subscription_categories == null)
 			{

@@ -45,5 +45,23 @@ namespace RandBox.Server.Controllers
 
             return Ok(subscription);
         }
+
+        [HttpPost]
+        public async Task<ActionResult> AddSubscription(SubscriptionPlan subscription)
+        {
+            await _unitOfWork.PlanRepository.Insert(subscription);
+            await _unitOfWork.Save();
+
+            return CreatedAtAction(nameof(GetSubscription), new { id = subscription.SubscriptionPlanID }, subscription);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteSubscriptionById(int id)
+        {
+            await _unitOfWork.PlanRepository.DeleteById(id);
+            await _unitOfWork.Save();
+
+            return NoContent();
+        }
     }
 }

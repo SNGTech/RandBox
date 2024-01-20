@@ -1,0 +1,139 @@
+﻿@inject IGenericService<Customer> CustomerService
+@inject IGenericService<Staff> StaffService
+@inject ISubscriptionCategoryService SubscriptionCategoryService
+@inject IGenericService<SubscriptionPlan> SubscriptionService
+
+@if (!(customers == null || staffs == null || subscriptionCategories == null))
+{
+    <div class="modal modal-dialog-centered @(show ? "show" : "inactive")" id="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+                <div class="col d-flex justify-content-between align-items-center mb-3">
+                    <i class="close-btn bi bi-chevron-left" @onclick=Close></i>
+                    <h5 class="modal-title">Add Subscription</h5>
+                    <i class="inactive bi bi-chevron-left"></i>
+                </div>
+                <div class="px-4">
+                    <EditForm Model="@input" OnValidSubmit="@SubmitCreate" FormName="@($"SubscriptionCreateForm")">
+                        <DataAnnotationsValidator />
+                        <div class="row mb-3">
+                            <label class="form-label">
+                                Subscription Date
+                            </label>
+                            <div>
+                                <InputDate class="randbox-form-input" @bind-Value="input!.SubscribeDateTime"></InputDate>
+                                <ValidationMessage For="@(() => input.SubscribeDateTime)" class="mt-1 text-danger" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="form-label">
+                                Subscription Category
+                            </label>
+                            <div>
+                                <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.SubscriptionCategoryID">
+                                    @foreach (var subscriptionCategory in subscriptionCategories!)
+                                    {
+                                        <option value="@subscriptionCategory.SubscriptionCategoryID">
+                                            @subscriptionCategory.Duration Months - @subscriptionCategory.Category!.Name
+                                        </option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => input.SubscriptionCategoryID)" class="mt-1 text-danger" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="form-label">
+                                Customer
+                            </label>
+                            <div>
+                                <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.CustomerID">
+                                    @foreach (var customer in customers!)
+                                    {
+                                        <option value="@customer.CustID">@customer.CustID - @customer.FirstName @customer.LastName</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => input.CustomerID)" class="mt-1 text-danger" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="form-label">
+                                Staff
+                            </label>
+                            <div>
+                                <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.StaffID">
+                                    @foreach (var staff in staffs!)
+                                    {
+                                        <option value="@staff.StaffID">@staff.StaffID - @staff.FirstName @staff.LastName</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => input.StaffID)" class="mt-1 text-danger" />
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-submit w-100 mt-2 mb-2">Add Subscription</button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal-backdrop fade @(show ? "show" : "inactive")" />
+
+@code {
+    [Parameter]
+    public EventCallback OnSuccessfulSubmit { get; set; }
+
+    private List<Customer>? customers { get; set; }
+    private List<Staff>? staffs { get; set; }
+    private List<SubscriptionCategory>? subscriptionCategories { get; set; }
+
+    private InputModel? input { get; set; }
+    private bool show = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        input = new InputModel();
+        subscriptionCategories = await SubscriptionCategoryService.GetAll();
+        customers = await CustomerService.GetAll();
+        staffs = await StaffService.GetAll();
+    }
+
+    public void Open()
+    {
+        input = new InputModel();
+        show = true;
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        input = new InputModel();
+        show = false;
+        StateHasChanged();
+    }
+
+    protected async Task SubmitCreate()
+    {
+        var subscription = new SubscriptionPlan
+            {
+                SubscribedDateTime = input!.SubscribeDateTime,
+                CustomerID = input!.CustomerID,
+                StaffID = input!.StaffID,
+                SubscriptionCategoryID = input!.SubscriptionCategoryID
+            };
+        await SubscriptionService.Insert(subscription);
+        Close();
+        await OnSuccessfulSubmit.InvokeAsync();
+    }
+
+    public class InputModel
+    {
+        [Required]
+        public DateTime SubscribeDateTime { get; set; }
+        [Required]
+        public int? CustomerID { get; set; }
+        public int? StaffID { get; set; }
+        [Required]
+        public int? SubscriptionCategoryID { get; set; }
+    }
+}
