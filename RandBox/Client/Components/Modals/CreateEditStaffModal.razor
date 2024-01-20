@@ -1,0 +1,192 @@
+﻿@inject IGenericService<Staff> StaffService
+
+
+<div class="modal modal-dialog-centered @(show ? "show" : "inactive")" id="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content p-4">
+            <i class="close-btn bi bi-x" @onclick=Close></i>
+
+            <div class="col d-flex justify-content-between align-items-center mb-3">
+                <i class="close-btn bi bi-x" @onclick=Close></i>
+                <h5 class="modal-title">@(isCreate ? "Add" : "Edit") Staff</h5>
+                <i class="inactive bi bi-chevron-left"></i>
+            </div>
+            <div class="px-4">
+                <EditForm Model="@input" OnValidSubmit="@SubmitCallback" FormName="@($"StaffForm")">
+                    <DataAnnotationsValidator />
+                    <div class="row mb-3">
+                        <label class="form-label">
+                            First Name:
+                        </label>
+                        <div class="">
+                            <InputText class="randbox-form-input" @bind-Value="input!.FirstName"></InputText>
+                            <ValidationMessage For="@(() => input.FirstName)" class="mt-1 text-danger" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label">
+                            Last Name:
+                        </label>
+                        <div>
+                            <InputText class="randbox-form-input" @bind-Value="input!.LastName"></InputText>
+                            <ValidationMessage For="@(() => input.LastName)" class="mt-1 text-danger" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label">
+                            Email:
+                        </label>
+                        <div>
+                            <InputText class="randbox-form-input" @bind-Value="input!.Email"></InputText>
+                            <ValidationMessage For="@(() => input.Email)" class="mt-1 text-danger" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label">
+                            Password:
+                        </label>
+                        <div>
+                            <InputText type="password" class="randbox-form-input" @bind-Value="input!.PasswordHash"></InputText>
+                            <ValidationMessage For="@(() => input.PasswordHash)" class="mt-1 text-danger" />
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <label class="form-label">
+                            Date Of Birth:
+                        </label>
+                        <div>
+                            <InputDate class="randbox-form-input" @bind-Value="input!.DateOfBirth"></InputDate>
+                            <ValidationMessage For="@(() => input.DateOfBirth)" class="mt-1 text-danger" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label">
+                            Contact Number:
+                        </label>
+                        <div>
+                            <InputText class="randbox-form-input" @bind-Value="input!.ContactNumber"></InputText>
+                            <ValidationMessage For="@(() => input.ContactNumber)" class="mt-1 text-danger" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-submit w-100 mt-2 mb-2">Confirm Changes</button>
+                    <button type="button" class="btn btn-secondary w-100 mt-2" @onclick=Close>Close</button>
+            
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnSuccessfulSubmit { get; set; }
+
+    private EventCallback SubmitCallback { get; set; }
+
+    private InputModel? input { get; set; }
+    private bool show = false;
+    private bool isCreate { get; set; }
+
+    protected override void OnInitialized()
+    {
+        input = new InputModel();
+    }
+
+    public void OpenInAddMode()
+    {
+        SubmitCallback = EventCallback.Factory.Create(this, SubmitInAddMode);
+        isCreate = true;
+        input = new InputModel();
+        show = true;
+        StateHasChanged();
+    }
+
+    public void OpenInEditMode(Staff Staff)
+    {
+        SubmitCallback = EventCallback.Factory.Create(this, SubmitInEditMode);
+        isCreate = false;
+        if (Staff != null)
+        {
+            input = new InputModel
+                {
+                    StaffID = Staff.StaffID,
+                    FirstName = Staff.FirstName,
+                    LastName = Staff.LastName,
+                    Email = Staff.Email,
+                    PasswordHash = Staff.PasswordHash,
+                    DateOfBirth = Staff.DateOfBirth,
+                    ContactNumber = Staff.ContactNumber
+                };
+        }
+        else
+        {
+            input = new InputModel();
+        }
+        show = true;
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        input = new InputModel();
+        show = false;
+        StateHasChanged();
+    }
+
+    protected async Task SubmitInAddMode()
+    {
+        var staff = new Staff
+            {
+                FirstName = input!.FirstName,
+                LastName = input!.LastName,
+                Email = input!.Email,
+                PasswordHash = input!.PasswordHash,
+                DateOfBirth = input!.DateOfBirth,
+                ContactNumber = input!.ContactNumber
+            };
+        var addedStaff = await StaffService.Insert(staff);
+        Close();
+        await OnSuccessfulSubmit.InvokeAsync();
+    }
+
+    protected async Task SubmitInEditMode()
+    {
+        var staff = new Staff
+            {
+                StaffID = input!.StaffID,
+                FirstName = input!.FirstName,
+                LastName = input!.LastName,
+                Email = input!.Email,
+                PasswordHash = input!.PasswordHash,
+                DateOfBirth = input!.DateOfBirth,
+                ContactNumber = input!.ContactNumber
+            };
+        await StaffService.Update(staff);
+        Close();
+        await OnSuccessfulSubmit.InvokeAsync();
+    }
+
+    public class InputModel
+    {
+        public int StaffID { get; set; }
+
+        //[Required(ErrorMessage = "First Name is required")]
+        public string? FirstName { get; set; }
+
+        //[Required(ErrorMessage = "Last Name is required")]
+        public string? LastName { get; set; }
+
+        //[Required(ErrorMessage = "Email is required")]
+        //[EmailAddress(ErrorMessage = "Invalid Email Address")]
+        public string? Email { get; set; }
+
+
+        public string? PasswordHash { get; set; }
+
+        //[Required(ErrorMessage = "Date of Birth is required")]
+        public DateTime DateOfBirth { get; set; }
+
+        //[Required(ErrorMessage = "Contact Number is required")]
+        public string? ContactNumber { get; set; }
+    }
+}

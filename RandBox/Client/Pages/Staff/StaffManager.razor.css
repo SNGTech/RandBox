@@ -1,0 +1,177 @@
+﻿.search-box {
+    border: 1px solid #ececec40;
+    border-radius: 10px;
+    background-color: #16151a;
+    min-width: 30rem;
+    padding: 0.2rem 0.6rem 0.2rem 2.8rem;
+    color: #949494;
+    font-family: Inter, sans-serif;
+    font-size: 1.15em;
+    font-weight: normal;
+}
+
+.search-icon {
+    font-size: 1.3em;
+    top: 3px;
+    left: 13px;
+    color: #949494;
+    font-weight: 500;
+}
+
+.options-bar {
+    column-gap: 5rem;
+}
+
+    .options-bar h4 {
+        font-size: 1.2em;
+        font-weight: 500;
+    }
+
+.option-btn {
+    cursor: pointer;
+    user-select: none;
+}
+
+.extend-btn {
+    color: #2cb67d;
+}
+
+.unsubscribe-btn {
+    color: #f55353;
+}
+
+.handle-btn {
+    color: #4c6ac8;
+}
+
+thead {
+    border-bottom-color: #25242d;
+    border-bottom-width: 4px;
+}
+
+th {
+    border: none;
+    padding: 1rem 0rem;
+    font-size: 1.25em;
+    font-weight: 500;
+    color: #a7a7a7;
+    letter-spacing: 0.1rem;
+
+}
+
+tr {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+td {
+    border: none;
+    padding: 1rem 0rem;
+    font-size: 1.25em;
+    font-weight: 500;
+    color: #d7d7d7;
+    letter-spacing: 0.05rem;
+}
+
+.edge-cell-left {
+    padding-left: 1rem;
+}
+
+.edge-cell-right {
+    padding-right: 1rem;
+}
+
+.warn {
+    color: #e2bf3a;
+}
+
+.body-row {
+    background-color: transparent;
+}
+
+    .body-row:hover {
+        background-color: #1d1d23;
+    }
+
+        .body-row:hover.selected {
+            background-color: #23232d;
+        }
+
+.additional-info {
+    background-color: #1c1c25;
+    display: grid;
+    grid-column: 1/-1;
+    padding: 0;
+}
+
+    .additional-info div {
+        padding: 1rem 4rem;
+    }
+
+    .additional-info p {
+        font-size: 0.8em;
+        letter-spacing: 0.1rem;
+        margin: 0;
+        font-weight: 500;
+        color: #a7a7a7;
+    }
+
+        .additional-info p span {
+            color: #e7e7e7;
+        }
+
+.collapsible {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 250ms ease-in-out;
+}
+
+.selected {
+    background-color: #23232d;
+}
+
+.collapsible.expand {
+    max-height: 15vh;
+}
+
+.inactive {
+    opacity: 50%;
+    cursor: default;
+}
+/* Update styles for table, thead, th, tr, and td */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    border-bottom: 4px solid #25242d;
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+}
+
+tr {
+    background-color: transparent;
+    display: table-row;
+}
+
+    /* Additional styles for hover effect */
+    tr:hover {
+        background-color: #1d1d23;
+    }
+
+    tr.selected:hover {
+        background-color: #23232d;
+    }
+
+/* Apply specific styles to the first and last cells in a row */
+td:first-child, th:first-child {
+    padding-left: 1rem;
+}
+
+td:last-child, th:last-child {
+    padding-right: 1rem;
+}

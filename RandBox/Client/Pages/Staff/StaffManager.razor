@@ -1,0 +1,145 @@
+﻿@page "/staff/staff"
+@inject IGenericService<Staff> StaffService
+@inject NavigationManager Navigation
+
+<h3>Staff Manager</h3>
+
+@if (StaffComponents == null)
+{
+    <h4>Loading Staff</h4>
+}
+else
+{
+    <div class="info-bar col d-flex justify-content-start align-items-center">
+        <div class="edit-options col d-flex">
+            <h4 class="option-btn add-btn m-0" @onclick="OpenAddModal">
+                <i class="bi bi-plus-circle" />&nbsp; Add Staff
+            </h4>
+            <h4 class="option-btn edit-btn m-0 @(IsEditButtonActive() ? "" : "inactive")" @onclick="OpenEditModal">
+                <i class="bi bi-pencil" />&nbsp; Edit Staff
+            </h4>
+            <h4 class="option-btn delete-btn m-0 @(IsDeleteButtonActive() ? "" : "inactive")" @onclick="OpenDeleteModal">
+                <i class="bi bi-dash-circle" />&nbsp; Remove Staff
+            </h4>
+        </div>
+    </div>
+
+    <CreateEditStaffModal @ref="Modal" OnSuccessfulSubmit="RefreshStaff" />
+    <DeleteModal @ref="DeleteModal" OnSuccessfulConfirm="DeleteSelectedStaff" />
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#Id</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Date Of Birth</th>
+                    <th scope="col">Contact Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var staffMember in StaffComponents!)
+                {
+                    var staff = staffMember.Staff;
+                    <tr class="@(staffMember.Selected ? "selected" : "")" @onclick="@(() => SelectStaff(staffMember))">
+                        <td>@staff!.StaffID</td>
+                        <td>@staff!.FirstName</td>
+                        <td>@staff!.LastName</td>
+                        <td>@staff!.Email</td>
+                        <td>@staff!.DateOfBirth.ToString("yyyy-MM-dd")</td>
+                        <td>@staff!.ContactNumber</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<StaffComponent>? StaffComponents { get; set; }
+
+    private CreateEditStaffModal? Modal;
+    private DeleteModal? DeleteModal;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshStaff();
+    }
+
+    protected void SelectStaff(StaffComponent component)
+    {
+        component.Selected = !component.Selected;
+    }
+
+    protected bool IsEditButtonActive()
+    {
+        return StaffComponents!.Count(x => x.Selected) == 1;
+    }
+
+    protected bool IsDeleteButtonActive()
+    {
+        return StaffComponents!.Count(x => x.Selected) >= 1;
+    }
+
+    protected void OpenAddModal()
+    {
+        Modal!.OpenInAddMode();
+    }
+
+    protected void OpenEditModal()
+    {
+        if (!IsEditButtonActive())
+        {
+            return;
+        }
+        var staffMember = StaffComponents!.FirstOrDefault(x => x.Selected)!.Staff;
+        Modal!.OpenInEditMode(staffMember!);
+    }
+
+    protected void OpenDeleteModal()
+    {
+        if (!IsDeleteButtonActive())
+        {
+            return;
+        }
+        DeleteModal!.Open();
+    }
+
+    protected async Task DeleteSelectedStaff()
+    {
+        var selectedStaff = StaffComponents!.FindAll(x => x.Selected).Select(x => x.Staff).ToList();
+
+        foreach (var staffMember in selectedStaff)
+        {
+            await StaffService.DeleteById(staffMember!.StaffID);
+        }
+
+        await RefreshStaff();
+    }
+
+    protected async Task RefreshStaff()
+    {
+        var staffMembers = await StaffService.GetAll();
+        if (staffMembers == null)
+        {
+            StaffComponents = null;
+        }
+        else
+        {
+            StaffComponents = staffMembers!.Select(x => new StaffComponent
+                {
+                    Staff = x,
+                    Selected = false
+                }
+            ).ToList();
+        }
+    }
+
+    protected class StaffComponent
+    {
+        public Staff? Staff { get; set; }
+        public bool Selected { get; set; }
+    }
+}

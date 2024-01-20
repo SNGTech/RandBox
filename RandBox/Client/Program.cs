@@ -30,6 +30,7 @@ builder.Services.AddScoped<IGenericService<Country>, CountryService>();
 builder.Services.AddScoped<ISubscriptionItemService, SubscriptionItemService>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<IGenericService<Orders>, OrderService>();
+builder.Services.AddScoped<IGenericService<Staff>, StaffService>();
 
 builder.Services.AddApiAuthorization();
 

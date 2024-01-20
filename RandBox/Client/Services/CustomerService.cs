@@ -107,26 +107,9 @@ namespace RandBox.Client.Services
             }
         }
 
-        public async Task<Customer> Update(Customer entity)
+        public Task<Customer> Update(Customer entity)
         {
-            try
-            {
-                var response = await _httpClient_Public.PutAsJsonAsync($"api/Customer/{entity.CustID}", entity);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadFromJsonAsync<Customer>();
-                }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            throw new NotImplementedException();
         }
     }
 }

@@ -48,6 +48,14 @@ namespace RandBox.Server.Controllers
             return Ok(Order);
         }
 
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteOrderById(int id)
+        {
+            await _unitOfWork.OrderRepository.DeleteById(id); 
+            await _unitOfWork.Save();
+
+            return NoContent();
+        }
 
         [HttpPost]
         public async Task<ActionResult<Orders>> PostOrder(Orders Order)
