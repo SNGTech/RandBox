@@ -1,0 +1,88 @@
+﻿@inject IGenericService<Staff> StaffService
+@inject IGenericService<SubscriptionPlan> SubscriptionService
+
+@if (staffs != null)
+{
+    <div class="modal modal-dialog-centered @(show ? "show" : "inactive")" id="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+                <div class="col d-flex justify-content-between align-items-center mb-3">
+                    <i class="close-btn bi bi-chevron-left" @onclick=Close></i>
+                    <h5 class="modal-title">Assign Staff to Subscription</h5>
+                    <i class="inactive bi bi-chevron-left"></i>
+                </div>
+                <div class="px-4">
+                    <EditForm Model="@input" OnValidSubmit="@SubmitAssign" FormName="@($"AssignForm")">
+                        <DataAnnotationsValidator />
+                        <div class="row mb-3">
+                            <label class="form-label">
+                                Staff
+                            </label>
+                            <div>
+                                <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.StaffID">
+                                    <option value="" disabled selected>Select Staff</option>
+                                    @foreach (var staff in staffs!)
+                                    {
+                                        <option value="@staff.StaffID">@staff.StaffID - @staff.FirstName @staff.LastName</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => input.StaffID)" class="mt-1 text-danger" />
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-submit w-100 mt-2 mb-2">Assign Staff</button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal-backdrop fade @(show ? "show" : "inactive")" />
+
+@code {
+    [Parameter]
+    public EventCallback OnSuccessfulAssign { get; set; }
+
+    private List<Staff>? staffs { get; set; }
+
+    private SubscriptionPlan? subscription { get; set; }
+
+    private InputModel? input { get; set; }
+    private bool show = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        input = new InputModel();
+        staffs = await StaffService.GetAll();
+    }
+
+    public void Open(SubscriptionPlan subscription)
+    {
+        this.subscription = subscription;
+        input = new InputModel();
+        show = true;
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        input = new InputModel();
+        show = false;
+        StateHasChanged();
+    }
+
+    protected async Task SubmitAssign()
+    {
+        subscription!.StaffID = input!.StaffID;
+        await SubscriptionService.Update(subscription);
+        Close();
+        await OnSuccessfulAssign.InvokeAsync();
+    }
+
+    public class InputModel
+    {
+        [Required]
+        public int? StaffID { get; set; } 
+    }
+}

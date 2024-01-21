@@ -55,6 +55,30 @@ namespace RandBox.Server.Controllers
             return CreatedAtAction(nameof(GetSubscription), new { id = subscription.SubscriptionPlanID }, subscription);
         }
 
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> UpdateSubscription(int id, SubscriptionPlan newSubscription)
+        {
+            if (id != newSubscription.SubscriptionPlanID)
+            {
+                return BadRequest();
+            }
+
+            _unitOfWork.PlanRepository.Update(newSubscription);
+
+            try
+            {
+                await _unitOfWork.Save();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await SubscriptionExists(id))
+                {
+                    return NotFound();
+                }
+            }
+            return Ok(newSubscription);
+        }
+
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteSubscriptionById(int id)
         {
@@ -62,6 +86,11 @@ namespace RandBox.Server.Controllers
             await _unitOfWork.Save();
 
             return NoContent();
+        }
+
+        protected async Task<bool> SubscriptionExists(int id)
+        {
+            return await _unitOfWork.PlanRepository.GetById(id) != null;
         }
     }
 }

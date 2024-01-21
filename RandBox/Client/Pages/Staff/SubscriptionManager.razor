@@ -26,6 +26,12 @@ else
         <h4 class="option-btn handle-btn m-0 @(IsHandleButtonActive() ? "": "inactive")" @onclick=NavigateToHandleSubscription>
             Handle Subscription
         </h4>
+        <h4 class="option-btn add-btn m-0 @(IsHandleButtonActive() ? "": "inactive")" @onclick=OpenAssignmentModal>
+            Assign Staff
+        </h4>
+        <h4 class="option-btn handle-btn m-0 @(IsHandleButtonActive() ? "": "inactive")">
+            Mark Delivered
+        </h4>
     </div>
 
     <table class="table">
@@ -71,6 +77,7 @@ else
 }
 
 <CreateSubscriptionModal @ref="Modal" OnSuccessfulSubmit="RefreshSubscriptions" />
+<StaffAssignModal @ref="AssignmentModal" OnSuccessfulAssign="RefreshSubscriptions" />
 <DeleteModal @ref="DeleteModal" OnSuccessfulConfirm="DeleteSelectedSubscriptions" />
 
 @code {
@@ -78,6 +85,7 @@ else
     private List<SubscriptionComponent>? filteredSubscriptionComponents { get; set; }
 
     private CreateSubscriptionModal? Modal;
+    private StaffAssignModal? AssignmentModal;
     private DeleteModal? DeleteModal;
 
     protected override async Task OnInitializedAsync()
@@ -130,6 +138,16 @@ else
             return;
         }
         DeleteModal!.Open();
+    }
+
+    protected void OpenAssignmentModal()
+    {
+        if (!IsHandleButtonActive())
+        {
+            return;
+        }
+        var selectedSubscription = filteredSubscriptionComponents!.FirstOrDefault(x => x.Selected);
+        AssignmentModal!.Open(selectedSubscription!.SubscriptionPlan!);
     }
 
     protected void NavigateToHandleSubscription()

@@ -87,9 +87,26 @@ namespace RandBox.Client.Services
             }
         }
 
-        public Task<SubscriptionPlan> Update(SubscriptionPlan entity)
+        public async Task<SubscriptionPlan> Update(SubscriptionPlan entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient_Public.PutAsJsonAsync($"api/SubscriptionPlan/{entity.SubscriptionPlanID}", entity);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<SubscriptionPlan>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
