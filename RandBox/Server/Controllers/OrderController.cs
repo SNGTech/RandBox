@@ -68,6 +68,30 @@ namespace RandBox.Server.Controllers
         {
             return await _unitOfWork.OrderRepository.GetById(id) != null;
         }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> UpdateOrder(int id, Orders newOrder)
+        {
+            if (id != newOrder.OrderID)
+            {
+                return BadRequest();
+            }
+
+            _unitOfWork.OrderRepository.Update(newOrder);
+
+            try
+            {
+                await _unitOfWork.Save();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await OrderExists(id))
+                {
+                    return NotFound();
+                }
+            }
+            return Ok(newOrder);
+        }
     }
 }
 

@@ -51,14 +51,13 @@ else
             {
                 var order = component.Order;
                 var items = component.Order!.OrderItems;
-                var totalPrice = order!.OrderItems?.Sum(item => item.Qty * item.Product!.DiscountedPrice) ?? 0;
+                var totalPrice = order?.OrderItems?.Sum(item => item?.Qty * item?.Product?.DiscountedPrice ?? 0) ?? 0;
 
                 <tr class="body-row @(component.Selected ? "selected" : "")" @onclick="@(() => SelectOrder(component))">
                     <td class="edge-cell-left">@order.OrderID</td>
                     <td>@order.DateTimeCheckout.ToString("dd.MM.yy")</td>
                     <td>$@totalPrice</td>
-
-                    <td>@(order.Customer != null ? order.Customer.FirstName : "N/A")</td>
+                    <td>@(order.Customer?.FirstName ?? "N/A")</td>
                     <td class="@(order.Staff == null ? "warn" : "")">
                         @(order.Staff == null ? "Needs an IC" : order.Staff.FirstName)
                     </td>
@@ -78,13 +77,14 @@ else
                                 @foreach (var item in items!)
                                 {
                                     <tr>
-                                        <td class="edge-cell-left">@item.Product!.ProductID</td>
-                                        <td>@item.Product!.Name</td>
-                                        <td>@item.Product!.DiscountedPrice</td>
+                                        <td class="edge-cell-left">@((item.Product != null) ? item.Product.ProductID : "N/A")</td>
+                                        <td>@((item.Product != null) ? item.Product.Name : "N/A")</td>
+                                        <td>@((item.Product != null) ? item.Product.DiscountedPrice.ToString() : "N/A")</td>
                                         <td>@item.Qty</td>
-                                        <td class="edge-cell-right">$@(item.Product!.DiscountedPrice * item.Qty)</td>
+                                        <td class="edge-cell-right">$@((item.Product != null) ? (item.Product.DiscountedPrice * item.Qty).ToString() : "N/A")</td>
                                     </tr>
                                 }
+
                             </tbody>
                         </table>
                     </td>
@@ -131,9 +131,12 @@ else
         {
             return;
         }
-        var order = OrderComponents!.FirstOrDefault(x => x.Selected)!.Order;
-        //Modal!.OpenInEditMode(order!);
+        var orderComponent = OrderComponents!.FirstOrDefault(x => x.Selected)!;
+        var order = orderComponent.Order;
+        var orderItems = orderComponent.OrderItems;
+        Modal!.OpenInEditMode(order!);
     }
+
 
     protected void OpenDeleteModal()
     {

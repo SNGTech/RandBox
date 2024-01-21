@@ -19,12 +19,10 @@
                         <DataAnnotationsValidator />
 
                         <div class="row mb-3">
-                            <label class="form-label">
-                                Customer
-                            </label>
+                            <label class="form-label">Customer</label>
                             <div>
-                                <InputSelect class="dropdown randbox-form-input" disabled=@(!isCreate) @bind-Value="input!.CustomerID">
-                                    <option value="" disabled selected>Select Customer</option>
+                                <InputSelect class="dropdown randbox-form-input" @bind-Value="input.CustomerID">
+                                    <option value="" disabled>Select Customer</option>
                                     @foreach (var customer in customers!)
                                     {
                                         <option value="@customer.CustID">@customer.CustID - @customer.FirstName @customer.LastName</option>
@@ -35,12 +33,10 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label class="form-label">
-                                Staff
-                            </label>
+                            <label class="form-label">Staff</label>
                             <div>
-                                <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.StaffID">
-                                    <option value="" disabled selected>Select Staff</option>
+                                <InputSelect class="dropdown randbox-form-input" @bind-Value="input.StaffID">
+                                    <option value="" disabled>Select Staff</option>
                                     @foreach (var staff in staffs!)
                                     {
                                         <option value="@staff.StaffID">@staff.StaffID - @staff.FirstName @staff.LastName</option>
@@ -51,9 +47,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label class="form-label">
-                                Product
-                            </label>
+                            <label class="form-label">Product</label>
                             <div>
                                 <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.ProductID">
                                     <option value="" disabled selected>Select Product</option>
@@ -67,9 +61,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label class="form-label">
-                                Quantity
-                            </label>
+                            <label class="form-label">Quantity</label>
                             <div>
                                 <InputNumber class="randbox-form-input" @bind-Value="input.Quantity"></InputNumber>
                                 <ValidationMessage For="@(() => input.Quantity)" class="mt-1 text-danger" />
@@ -77,7 +69,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col">
-                                <button type="button" class="btn btn-sm btn-success" @onclick="AddOrderItem">Add Item</button>
+                                <button type="button" class="btn btn-sm btn-success" @onclick="(e) => AddOrderItem()">Add Item</button>
                             </div>
                         </div>
                         <ul class="list-unstyled">
@@ -97,7 +89,7 @@
                                 }
                             }
                         </ul>
-                       
+
                         <button type="submit" class="btn btn-submit w-100 mt-2 mb-2" @onclick="SubmitCallback" disabled="@IsSubmitDisabled">Confirm Changes</button>
 
                     </EditForm>
@@ -120,12 +112,12 @@
     private bool isCreate { get; set; }
     private bool isEdit { get; set; }
     private bool isSubmitting = false;
-
+    private OrderItemModel editedOrderItem;
     private bool IsSubmitDisabled => !IsFormValid();
 
     private bool IsFormValid()
     {
-        if (input.CustomerID == null || input.StaffID == null  || orderItems == null || orderItems.Count == 0)
+        if (input.CustomerID == null || input.StaffID == null || orderItems == null || orderItems.Count == 0)
         {
             return false;
         }
@@ -134,42 +126,54 @@
     }
     public void OpenInAddMode()
     {
-        SubmitCallback = EventCallback.Factory.Create(this, SubmitInAddMode);
         isCreate = true;
         input = new InputModel();
+        SubmitCallback = EventCallback.Factory.Create(this, async () => await SubmitInAddMode()); // Use async
         show = true;
         StateHasChanged();
     }
+
+    
+
+
+    public void OpenInEditMode(Orders order)
+    {
+        isCreate = false;
+
+        // Initialize input properties with values from the order object
+        input = new InputModel
+            {
+                OrderID = order.OrderID,
+                CustomerID = order.CustomerID,
+                StaffID = order.StaffID,
+                // Populate other properties as needed
+            };
+
+        orderItems = order.OrderItems.Select(item => new OrderItemModel
+            {
+                ProductID = item.ProductID,
+                OrderItemID = item.OrderItemID,
+                ProductName = item.Product.Name,
+                Quantity = item.Qty
+            }).ToList();
+
+        // Assign the SubmitCallback to the SubmitInEditMode method
+        SubmitCallback = EventCallback.Factory.Create(this, async () => await SubmitInEditMode(order));
+
+        show = true;
+        StateHasChanged();
+    }
+
+
 
     protected override async Task OnInitializedAsync()
     {
         products = await ProductService.GetAll();
         customers = await CustomerService.GetAll();
         staffs = await StaffService.GetAll();
-        orderItems = new List<OrderItemModel>();
+
     }
 
-    private void AddOrderItem()
-    {
-        if (products != null && input.ProductID != null && input.Quantity > 0)
-        {
-            var selectedProduct = products.FirstOrDefault(p => p.ProductID == input.ProductID);
-            if (selectedProduct != null)
-            {
-                var newOrderItem = new OrderItemModel
-                    {
-                        ProductID = selectedProduct.ProductID,
-                        ProductName = selectedProduct.Name,
-                        Quantity = input.Quantity
-                    };
-
-                orderItems.Add(newOrderItem);
-
-                input.ProductID = null;
-                input.Quantity = 0;
-            }
-        }
-    }
 
 
     private void RemoveOrderItem(OrderItemModel orderItem)
@@ -190,9 +194,8 @@
         input.Quantity = 0;
         orderItems = new List<OrderItemModel>();
         show = false;
+        StateHasChanged();
     }
-
-
 
     protected async Task SubmitInAddMode()
     {
@@ -245,6 +248,64 @@
         }
     }
 
+
+    protected async Task SubmitInEditMode(Orders order)
+    {
+        if (isSubmitting)
+        {
+            return;
+        }
+
+        try
+        {
+            isSubmitting = true;
+
+            // Fetch all existing order items associated with the current order
+            var existingOrderItems = await OrderItemService.GetAllByOrder(order!.OrderID);
+
+            // Delete the existing order items
+            foreach (var existingOrderItem in existingOrderItems)
+            {
+                await OrderItemService.DeleteById(existingOrderItem.OrderItemID);
+            }
+
+            // Create a new list for the order items from the modal
+            var newOrderItems = orderItems.Select(item => new OrderItem
+                {
+                    ProductID = item.ProductID ?? 0,
+                    Qty = item.Quantity ?? 0
+                }).ToList();
+
+            // Set the order's OrderItems property to the new list
+            order.OrderItems = newOrderItems;
+
+            // Update other order details as needed
+            order.CustomerID = input.CustomerID;  // Update input.CustomerID or use existing value if null
+            order.StaffID = input.StaffID;            // Update input.StaffID or use existing value if null
+            await OrderService.Update(order);
+
+            // Clear the order items list in the modal
+            orderItems = new List<OrderItemModel>();
+
+            // Close the modal
+            Close();
+
+            // Trigger a refresh of orders or perform any other necessary actions
+            await OnSuccessfulSubmit.InvokeAsync();
+
+            // Explicitly trigger a re-render
+            StateHasChanged();
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+
+
+
+
     private void EditOrderItem(OrderItemModel orderItem)
     {
         if (orderItems != null && orderItem != null)
@@ -256,43 +317,43 @@
             // Set the edit mode flag
             isEdit = true;
 
-            // Remove the order item from the list
-            orderItems.Remove(orderItem);
-            orderItems = new List<OrderItemModel>(orderItems); // Reassign the list to force a re-render
-            StateHasChanged();
+            // Store the edited order item
+            editedOrderItem = orderItem;
+
+            // No need to remove the order item from the list
         }
     }
 
 
-    private void ConfirmEdit()
+
+
+
+   
+
+
+    private void AddOrderItem()
     {
-        var editedOrderItem = new OrderItemModel
+        if (products != null && input.ProductID != null && input.Quantity > 0)
+        {
+            var selectedProduct = products.FirstOrDefault(p => p.ProductID == input.ProductID);
+            if (selectedProduct != null)
             {
-                ProductID = input.ProductID,
-                Quantity = input.Quantity
-            };
+                var newOrderItem = new OrderItemModel
+                    {
+                        ProductID = selectedProduct.ProductID,
+                        ProductName = selectedProduct.Name,
+                        Quantity = input.Quantity
+                    };
 
-        // Find the index of the edited order item in the list
-        var index = orderItems.FindIndex(item => item.ProductID == editedOrderItem.ProductID);
+                orderItems.Add(newOrderItem);
 
-        if (index != -1)
-        {
-            // Replace the existing order item with the edited one
-            orderItems[index] = editedOrderItem;
+                input.ProductID = null;
+                input.Quantity = 0;
+            }
         }
-        else
-        {
-            // If not found, add the edited order item to the list
-            orderItems.Add(editedOrderItem);
-        }
-
-        // Reset input fields and flags
-        input.ProductID = null;
-        input.Quantity = 0;
-        isEdit = false;
-
-        // Note: Don't add the edited order to the orders list here
     }
+
+
 
 
     public class InputModel
@@ -304,7 +365,7 @@
         public int? StaffID { get; set; }
 
         public int? ProductID { get; set; }
-        
+
         public int? Quantity { get; set; }
     }
 
