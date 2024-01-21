@@ -56,8 +56,8 @@ else
                     <td class="edge-cell-left">@order.OrderID</td>
                     <td>@order.DateTimeCheckout.ToString("dd.MM.yy")</td>
                     <td>$@totalPrice</td>
-                    
-                    <td>@order.CustomerID</td>
+
+                    <td>@(order.Customer != null ? order.Customer.FirstName : "N/A")</td>
                     <td class="@(order.Staff == null ? "warn" : "")">
                         @(order.Staff == null ? "Needs an IC" : order.Staff.FirstName)
                     </td>
