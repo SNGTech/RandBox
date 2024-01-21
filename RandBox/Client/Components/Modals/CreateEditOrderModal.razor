@@ -81,6 +81,7 @@
                             </div>
                         </div>
 
+
                         <!-- Display the list of order items -->
                         <ul class="list-unstyled">
                             @if (orderItems != null)
@@ -89,9 +90,11 @@
                                 {
                                     <li>
                                         <div class="d-flex justify-content-between align-items-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" @bind="orderItems[i].Selected" />
+                                            </div>
                                             <span>@($"{orderItems[i].ProductName} - Qty: {orderItems[i].Quantity}")</span>
                                             <div class="d-flex">
-                                                <button type="button" class="btn btn-sm btn-warning me-2" @onclick="() => EditOrderItem(i)">Edit</button>
                                                 <button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveOrderItem(i)">Remove</button>
                                             </div>
                                         </div>
@@ -100,6 +103,15 @@
                             }
                         </ul>
 
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <button type="button" class="btn btn-sm btn-success" @onclick="AddOrderItem">Add Item</button>
+                            </div>
+                            <div class="col">
+                                
+                            </div>
+                        </div>
                         <button type="submit" class="btn btn-submit w-100 mt-2 mb-2" @onclick="SubmitCallback">Confirm Changes</button>
                     </EditForm>
                 </div>
@@ -116,6 +128,7 @@
 
     private List<Customer>? customers { get; set; }
     private List<Staff>? staffs { get; set; }
+    private List<OrderItemModel>? orderItems;
 
     private InputModel? input { get; set; }
     private bool show = false;
@@ -126,7 +139,7 @@
     private int selectedProductID { get; set; }
     private int selectedQuantity { get; set; }
 
-    private List<OrderItemModel>? orderItems = new List<OrderItemModel>();
+  
 
     protected override async Task OnInitializedAsync()
     {
@@ -134,6 +147,7 @@
         productList = await ProductService.GetAll();
         customers = await CustomerService.GetAll();
         staffs = await StaffService.GetAll();
+        orderItems = new List<OrderItemModel>();
     }
 
     public void OpenInAddMode()
@@ -146,34 +160,7 @@
         StateHasChanged();
     }
 
-    public void OpenInEditMode(Orders order)
-    {
-        SubmitCallback = EventCallback.Factory.Create(this, SubmitInEditMode);
-        isCreate = false;
-        if (order != null)
-        {
-            input = new InputModel
-                {
-                    OrderID = order.OrderID,
-                    CustomerID = order.CustomerID,
-                    StaffID = order.StaffID,
-                };
-            orderItems = order.OrderItems?.Select(oi => new OrderItemModel
-                {
-                    ProductName = oi.Product!.Name,
-                    Quantity = oi.Qty
-                }).ToList() ?? new List<OrderItemModel>();
-        }
-        else
-        {
-            input = new InputModel();
-            orderItems = new List<OrderItemModel>();
-        }
-        ResetProductSelection();
-        show = true;
-        StateHasChanged();
-    }
-
+  
     private void ResetProductSelection()
     {
         selectedProductID = 0;
@@ -189,6 +176,7 @@
             {
                 orderItems!.Add(new OrderItemModel
                     {
+                        
                         ProductName = product.Name,
                         Quantity = selectedQuantity
                     });
@@ -199,17 +187,6 @@
         }
     }
 
-    private void EditOrderItem(int index)
-    {
-        selectedProductID = productList?.FirstOrDefault(p => p.Name == orderItems[index].ProductName)?.ProductID ?? 0;
-        selectedQuantity = orderItems[index].Quantity ?? 0;
-        orderItems.RemoveAt(index);
-    }
-
-    private void RemoveOrderItem(int index)
-    {
-        orderItems.RemoveAt(index);
-    }
 
     public void Close()
     {
@@ -219,62 +196,77 @@
         show = false;
         StateHasChanged();
     }
+    private bool isSubmitting = false;
 
     protected async Task SubmitInAddMode()
     {
-        // Create a new order
-        var newOrder = new Orders
-            {
-                DateTimeCheckout = DateTime.Now,
-                DeliveryStatus = false,
-                CustomerID = null,
-                OrderItems = new List<OrderItem>()
-            };
-
-        var addedOrder = await OrderService.Insert(newOrder);
-        input!.OrderID = addedOrder.OrderID;
-
-        // Find the selected product based on the ID
-        var selectedProduct = productList?.FirstOrDefault(p => p.ProductID == selectedProductID);
-
-        if (selectedProduct != null)
+        if (isSubmitting)
         {
-            // Update product stock
-            selectedProduct.StockNo -= selectedQuantity;
-            await ProductService.Update(selectedProduct);
 
-            // Insert order item
-            var orderItem = new OrderItem
+            return;
+        }
+
+        try
+        {
+            isSubmitting = true;
+            var newOrder = new Orders
                 {
-                    Qty = selectedQuantity,
-                    ProductID = selectedProductID,
-                    OrderID = input.OrderID
+                    DateTimeCheckout = DateTime.Now,
+                    DeliveryStatus = false,
+                    CustomerID = input!.CustomerID,
+                    StaffID = input!.StaffID,
+                    OrderItems = new List<OrderItem>()
                 };
 
-            var addedOrderItem = await OrderItemService.Insert(orderItem);
+            var addedOrder = await OrderService.Insert(newOrder);
+            input!.OrderID = addedOrder.OrderID;
+
+            // Add order items
+            foreach (var orderItemModel in orderItems)
+            {
+                var selectedProduct = productList?.FirstOrDefault(p => p.Name == orderItemModel.ProductName);
+
+                if (selectedProduct != null)
+                {
+                    // Update product stock
+                    selectedProduct.StockNo -= orderItemModel.Quantity.GetValueOrDefault();
+                    await ProductService.Update(selectedProduct);
+
+                    // Insert order item
+                    var orderItem = new OrderItem
+                        {
+                            Qty = orderItemModel.Quantity,
+                            ProductID = selectedProduct.ProductID,
+                            OrderID = input.OrderID
+                        };
+
+                    await OrderItemService.Insert(orderItem);
+                }
+            }
+
             await OnSuccessfulSubmit.InvokeAsync();
             Close();
         }
+        finally
+        {
+            isSubmitting = false;
+        }
     }
 
-    protected async Task SubmitInEditMode()
+    public void RemoveOrderItem(int index)
     {
-        var order = new Orders
-            {
-                OrderID = input!.OrderID,
-                CustomerID = input!.CustomerID,
-                StaffID = input!.StaffID,
-                OrderItems = orderItems?.Select(oi => new OrderItem
-                {
-                    ProductID = productList!.FirstOrDefault(p => p.Name == oi.ProductName)?.ProductID ?? 0,
-                    Qty = oi.Quantity.GetValueOrDefault(),
-                }).ToList(),
-            };
+        if (index >= 0 && index < orderItems.Count)
+        {
+            // Remove the order item from the list
+            orderItems.RemoveAt(index);
 
-        await OrderService.Update(order);
-        Close();
-        await OnSuccessfulSubmit.InvokeAsync();
+            // Trigger a refresh of the component asynchronously
+            InvokeAsync(StateHasChanged);
+        }
     }
+
+
+
 
     public class InputModel
     {
@@ -286,9 +278,12 @@
 
     public class OrderItemModel
     {
+        public int OrderItemID { get; set; }
         [Required]
         public string? ProductName { get; set; }
         [Required]
         public int? Quantity { get; set; }
+        public bool Selected { get; set; } // Add this line
     }
+
 }

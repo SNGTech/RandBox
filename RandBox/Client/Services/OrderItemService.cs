@@ -18,9 +18,26 @@ namespace RandBox.Client.Services
             _httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
         }
 
-        public async Task<OrderItem> DeleteById(int id)
+        public async Task<string> DeleteById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient_Public.DeleteAsync($"api/OrderItem/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         public async Task<List<OrderItem>> InsertRange(List<OrderItem> newItems)
         {
