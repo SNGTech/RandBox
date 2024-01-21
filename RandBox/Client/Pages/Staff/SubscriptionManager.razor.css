@@ -137,3 +137,8 @@ td {
 	opacity: 50%;
 	cursor: default;
 }
+
+.ended {
+	background-color: #23232d;
+	opacity: 25%;
+}

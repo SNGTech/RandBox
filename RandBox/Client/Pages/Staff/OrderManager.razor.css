@@ -32,16 +32,16 @@
     user-select: none;
 }
 
-.extend-btn {
+.add-btn {
     color: #2cb67d;
 }
 
-.unsubscribe-btn {
-    color: #f55353;
+.edit-btn {
+    color: #e2bf3a;
 }
 
-.handle-btn {
-    color: #4c6ac8;
+.delete-btn {
+    color: #f55353;
 }
 
 thead {
@@ -60,7 +60,7 @@ th {
 
 tr {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(6, 1fr);
 }
 
 td {
@@ -122,7 +122,7 @@ td {
 .collapsible {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 250ms ease-in-out;
+    transition: max-height 300ms ease-in-out;
 }
 
 .selected {
@@ -130,10 +130,14 @@ td {
 }
 
 .collapsible.expand {
-    max-height: 15vh;
+    max-height: 50vh;
 }
 
 .inactive {
     opacity: 50%;
     cursor: default;
+}
+
+.additional-info-table {
+    font-size: 0.7em;
 }

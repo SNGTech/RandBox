@@ -31,6 +31,7 @@
                             </label>
                             <div>
                                 <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.SubscriptionCategoryID">
+                                    <option value="" disabled selected>Select Subcription Category</option>
                                     @foreach (var subscriptionCategory in subscriptionCategories!)
                                     {
                                         <option value="@subscriptionCategory.SubscriptionCategoryID">
@@ -47,6 +48,7 @@
                             </label>
                             <div>
                                 <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.CustomerID">
+                                    <option value="" disabled selected>Select Customer</option>
                                     @foreach (var customer in customers!)
                                     {
                                         <option value="@customer.CustID">@customer.CustID - @customer.FirstName @customer.LastName</option>
@@ -61,6 +63,7 @@
                             </label>
                             <div>
                                 <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.StaffID">
+                                    <option value="" disabled selected>Select Staff</option>
                                     @foreach (var staff in staffs!)
                                     {
                                         <option value="@staff.StaffID">@staff.StaffID - @staff.FirstName @staff.LastName</option>

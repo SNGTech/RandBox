@@ -45,11 +45,11 @@ else
             {
                 var subscription = component.SubscriptionPlan;
                 DateTime endDate = subscription!.SubscribedDateTime.AddMonths(subscription.SubscriptionCategory!.Duration);
-                <tr class="body-row @(component.Selected ? "selected" : "")" @onclick="@(() => SelectSubscription(component))">
+                <tr class="body-row @(component.Selected ? "selected" : "") @(HasEnded(endDate) ? "ended": "")" @onclick="@(() => SelectSubscription(component))">
                     <th class="edge-cell-left" scope="row">@subscription!.SubscriptionPlanID</th>
                     <td>@subscription.SubscribedDateTime.ToString("dd.MM.yy", CultureInfo.InvariantCulture)</td>
-                    <td>
-                        @endDate.ToString("dd.MM.yy", CultureInfo.InvariantCulture)
+                    <td class="@(HasEnded(endDate) ? "warn" : "")">
+                        @(HasEnded(endDate) ? "Ended" : endDate.ToString("dd.MM.yy", CultureInfo.InvariantCulture))
                     </td>
                     <td>$@subscription.SubscriptionCategory!.NewMonthlyPrice</td>
                     <td>@subscription.Customer!.FirstName</td>
@@ -60,9 +60,8 @@ else
                     <td class="additional-info collapsible @(component.Selected ? "expand" : "")">
                         <div class="col d-flex justify-content-between">
                             <p>Subscription Duration: <span>@subscription.SubscriptionCategory.Duration month@(subscription.SubscriptionCategory.Duration > 1 ? "s" : "")</span></p>
-                            <p>No. of Days Till End of Subscription: <span>@((endDate - DateTime.Now).Days) days</span></p>
-                            @* TODO: MAKE THE BELOW WORK *@
-                            <p>Total Paid To Date: <span>$82.76</span></p>
+                            <p>No. of Days Till End of Subscription: <span>@(HasEnded(endDate) ? "Ended" : (endDate - DateTime.Now).Days) days</span></p>
+                            <p>Monthly Payment: <span>$@subscription.SubscriptionCategory.NewMonthlyPrice</span></p>
                         </div>
                     </td>
                 </tr>
@@ -103,6 +102,11 @@ else
         {
             filteredSubscriptionComponents = MapSubscriptionToComponent(subscriptions!);
         }
+    }
+
+    protected bool HasEnded(DateTime endDate)
+    {
+        return (endDate - DateTime.Now).Days < 0;
     }
 
     protected bool IsHandleButtonActive()

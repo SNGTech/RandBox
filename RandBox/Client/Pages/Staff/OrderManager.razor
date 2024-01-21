@@ -14,20 +14,20 @@ else
         <h3 class="m-0">Orders</h3>
         <div class="position-relative">
             <i class="bi bi-search search-icon position-absolute" />
-            <input class="search-box">
+            <input class="search-box" placeholder="Search Order ID">
         </div>
     </div>
 
     <div class="options-bar col d-flex mb-4">
         <h4 class="option-btn add-btn m-0" @onclick="OpenAddModal">
-            <i class="bi bi-plus-circle" />&nbsp; Add Order
+            Add Order
         </h4>
         <h4 class="option-btn edit-btn m-0 @(IsEditButtonActive() ? "" : "inactive")" @onclick="OpenEditModal">
-            <i class="bi bi-pencil" />&nbsp; Edit Order
+            Edit Order
         </h4>
         
         <h4 class="option-btn delete-btn m-0 @(IsDeleteButtonActive() ? "" : "inactive")" @onclick="OpenDeleteModal">
-            <i class="bi bi-dash-circle" />&nbsp; Remove Order 
+            Remove Order 
         </h4>
     </div>
 
@@ -49,11 +49,11 @@ else
             @foreach (var component in OrderComponents!)
             {
                 var order = component.Order;
-                var items = component.Order.OrderItems;
-                var totalPrice = order.OrderItems?.Sum(item => item.Qty * item.Product.DiscountedPrice) ?? 0;
+                var items = component.Order!.OrderItems;
+                var totalPrice = order!.OrderItems?.Sum(item => item.Qty * item.Product!.DiscountedPrice) ?? 0;
 
                 <tr class="body-row @(component.Selected ? "selected" : "")" @onclick="@(() => SelectOrder(component))">
-                    <td>@order.OrderID</td>
+                    <td class="edge-cell-left">@order.OrderID</td>
                     <td>@order.DateTimeCheckout.ToString("dd.MM.yy")</td>
                     <td>$@totalPrice</td>
                     
@@ -62,38 +62,32 @@ else
                         @(order.Staff == null ? "Needs an IC" : order.Staff.FirstName)
                     </td>
                     <td class="edge-cell-right"></td>
-                </tr>
-
-                @if (component.Selected)
-                {
-                   
-
-                            <table class="table">
-                                <thead>
+                    <td class="additional-info collapsible @(component.Selected ? "expand" : "" )">
+                        <table class="table additional-info-table m-0">
+                            <thead>
+                                <tr>
+                                    <th class="edge-cell-left" scope="col">Product Id</th>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th class="edge-cell-right" scope="col">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in items!)
+                                {
                                     <tr>
-                                        <th scope="col">Product Id</th>
-                                        <th scope="col">Product Name</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Quantity</th>
-                                        <th class="edge-cell-right" scope="col">Total</th>
+                                        <td class="edge-cell-left">@item.Product!.ProductID</td>
+                                        <td>@item.Product!.Name</td>
+                                        <td>@item.Product!.DiscountedPrice</td>
+                                        <td>@item.Qty</td>
+                                        <td class="edge-cell-right">$@(item.Product!.DiscountedPrice * item.Qty)</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in items!)
-                                    {
-                                        <tr>
-                                            <td>@item.Product!.ProductID</td>
-                                            <td>@item.Product!.Name</td>
-                                            <td>@item.Product!.DiscountedPrice</td>
-                                            <td>@item.Qty</td>
-                                            <td>$@(item.Product!.DiscountedPrice * item.Qty)</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        
-                    
-                }
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

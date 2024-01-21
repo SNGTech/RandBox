@@ -32,16 +32,16 @@
     user-select: none;
 }
 
-.extend-btn {
+.add-btn {
     color: #2cb67d;
 }
 
-.unsubscribe-btn {
-    color: #f55353;
+.edit-btn {
+    color: #e2bf3a;
 }
 
-.handle-btn {
-    color: #4c6ac8;
+.delete-btn {
+    color: #f55353;
 }
 
 thead {

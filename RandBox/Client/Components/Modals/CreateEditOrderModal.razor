@@ -1,116 +1,112 @@
 ﻿@inject IGenericService<Orders> OrderService
+@inject IGenericService<Customer> CustomerService
 @inject IGenericService<Staff> StaffService
 @inject IGenericService<Product> ProductService
 @inject IOrderItemService OrderItemService
 
-<div class="modal modal-dialog-centered @(show ? "show" : "inactive")" id="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content p-4">
-            <i class="close-btn bi bi-x" @onclick=Close></i>
+@if (!(customers == null || staffs == null || productList == null))
+{
+    <div class="modal modal-dialog-centered @(show ? "show" : "inactive")" id="modal" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content p-5 m-0">
+                <div class="col d-flex justify-content-between align-items-center mx-5 mb-5 flex-grow-0">
+                    <i class="close-btn bi bi-chevron-left" @onclick=Close> Close without Saving</i>
+                    <h2 class="modal-title">@(isCreate ? "Add" : "Edit") Order</h2>
+                    <i class="close-btn inactive bi bi-chevron-left"> Close without Saving</i>
+                </div>
+                <div class="form-content px-4 mx-auto">
+                    <EditForm Model="@input" OnValidSubmit="@SubmitCallback" FormName="@($"OrderForm")">
+                        <DataAnnotationsValidator />
 
-            <div class="col d-flex justify-content-between align-items-center mb-3">
-                <h5 class="modal-title">@(isCreate ? "Add" : "Edit") Order</h5>
-                <i class="inactive bi bi-chevron-left"></i>
-            </div>
-            <div class="px-4">
-                <EditForm Model="@input" OnValidSubmit="@SubmitCallback" FormName="@($"OrderForm")">
-                    <DataAnnotationsValidator />
-
-                    <div class="row mb-3">
-                        <label class="form-label">
-                            Customer ID:
-                        </label>
-                        <div class="">
-                            @if (isCreate)
-                            {
-                                <InputNumber class="randbox-form-input" @bind-Value="input!.CustomerID"></InputNumber>
-                            }
-                            else
-                            {
-                                <div class="readonly-field">@input?.CustomerID</div>
-                            }
-                            <ValidationMessage For="@(() => input.CustomerID)" class="mt-1 text-danger" />
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <label class="form-label">
-                            Staff:
-                        </label>
-                        <div>
-                            <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.StaffID">
-                                @if (staffList != null)
-                                {
-                                    @foreach (var staff in staffList)
+                        <div class="row mb-3">
+                            <label class="form-label">
+                                Customer
+                            </label>
+                            <div>
+                                <InputSelect class="dropdown randbox-form-input" disabled=@(!isCreate) @bind-Value="input!.CustomerID">
+                                    <option value="" disabled selected>Select Customer</option>
+                                    @foreach (var customer in customers!)
                                     {
-                                        @if (staff != null && staff.FirstName != null && staff.LastName != null)
+                                        <option value="@customer.CustID">@customer.CustID - @customer.FirstName @customer.LastName</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => input.CustomerID)" class="mt-1 text-danger" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="form-label">
+                                Staff
+                            </label>
+                            <div>
+                                <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.StaffID">
+                                    <option value="" disabled selected>Select Staff</option>
+                                    @foreach (var staff in staffs!)
+                                    {
+                                        <option value="@staff.StaffID">@staff.StaffID - @staff.FirstName @staff.LastName</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => input.StaffID)" class="mt-1 text-danger" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="form-label">
+                                Product
+                            </label>
+                            <div>
+                                <InputSelect class="dropdown randbox-form-input" @bind-Value="selectedProductID">
+                                    @if (productList != null)
+                                    {
+                                        @foreach (var product in productList)
                                         {
-                                            <option value="@staff.StaffID">@($"{staff.FirstName} {staff.LastName}")</option>
+                                            if (product != null && product.Name != null)
+                                            {
+                                                <option value="@product.ProductID">@product.Name</option>
+                                            }
                                         }
                                     }
-                                }
-                            </InputSelect>
-                            <ValidationMessage For="@(() => input.StaffID)" class="mt-1 text-danger" />
+                                </InputSelect>
+                                <ValidationMessage For="@(() => selectedProductID)" class="mt-1 text-danger" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row mb-3">
-                        <label class="form-label">
-                            Product:
-                        </label>
-                        <div>
-                            <InputSelect class="dropdown randbox-form-input" @bind-Value="selectedProductID">
-                                @if (productList != null)
-                                {
-                                    @foreach (var product in productList)
-                                    {
-                                        if (product != null && product.Name != null)
-                                        {
-                                            <option value="@product.ProductID">@product.Name</option>
-                                        }
-                                    }
-                                }
-                            </InputSelect>
-                            <ValidationMessage For="@(() => selectedProductID)" class="mt-1 text-danger" />
+                        <div class="row mb-3">
+                            <label class="form-label">
+                                Quantity
+                            </label>
+                            <div>
+                                <InputNumber class="randbox-form-input" @bind-Value="selectedQuantity"></InputNumber>
+                                <ValidationMessage For="@(() => selectedQuantity)" class="mt-1 text-danger" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row mb-3">
-                        <label class="form-label">
-                            Quantity:
-                        </label>
-                        <div>
-                            <InputNumber class="randbox-form-input" @bind-Value="selectedQuantity"></InputNumber>
-                            <ValidationMessage For="@(() => selectedQuantity)" class="mt-1 text-danger" />
-                        </div>
-                    </div>
-
-                    <!-- Display the list of order items -->
-                    <ul class="list-unstyled">
-                        @if (orderItems != null)
-                        {
-                            @for (var i = 0; i < orderItems.Count; i++)
+                        <!-- Display the list of order items -->
+                        <ul class="list-unstyled">
+                            @if (orderItems != null)
                             {
-                                <li>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>@($"{orderItems[i].ProductName} - Qty: {orderItems[i].Quantity}")</span>
-                                        <div class="d-flex">
-                                            <button type="button" class="btn btn-sm btn-warning me-2" @onclick="() => EditOrderItem(i)">Edit</button>
-                                            <button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveOrderItem(i)">Remove</button>
+                                @for (var i = 0; i < orderItems.Count; i++)
+                                {
+                                    <li>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>@($"{orderItems[i].ProductName} - Qty: {orderItems[i].Quantity}")</span>
+                                            <div class="d-flex">
+                                                <button type="button" class="btn btn-sm btn-warning me-2" @onclick="() => EditOrderItem(i)">Edit</button>
+                                                <button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveOrderItem(i)">Remove</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
+                                    </li>
+                                }
                             }
-                        }
-                    </ul>
+                        </ul>
 
-                    <button type="submit" class="btn btn-submit w-100 mt-2 mb-2" @onclick="SubmitCallback">Confirm Changes</button>
-                    <button type="button" class="btn btn-secondary w-100 mt-2" @onclick=Close>Close</button>
-                </EditForm>
+                        <button type="submit" class="btn btn-submit w-100 mt-2 mb-2" @onclick="SubmitCallback">Confirm Changes</button>
+                    </EditForm>
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
 
 @code {
     [Parameter]
@@ -118,31 +114,33 @@
 
     private EventCallback SubmitCallback { get; set; }
 
+    private List<Customer>? customers { get; set; }
+    private List<Staff>? staffs { get; set; }
+
     private InputModel? input { get; set; }
     private bool show = false;
     private bool isCreate { get; set; }
 
-    private List<Staff>? staffList;
     private List<Product>? productList;
 
     private int selectedProductID { get; set; }
     private int selectedQuantity { get; set; }
 
-    private List<OrderItemModel>? orderItems;
+    private List<OrderItemModel>? orderItems = new List<OrderItemModel>();
 
     protected override async Task OnInitializedAsync()
     {
         input = new InputModel();
-        staffList = await StaffService.GetAll();
         productList = await ProductService.GetAll();
-        orderItems = new List<OrderItemModel>();
+        customers = await CustomerService.GetAll();
+        staffs = await StaffService.GetAll();
     }
 
     public void OpenInAddMode()
     {
         SubmitCallback = EventCallback.Factory.Create(this, SubmitInAddMode);
         isCreate = true;
-        input = new InputModel { };
+        input = new InputModel();
         ResetProductSelection();
         show = true;
         StateHasChanged();
@@ -162,7 +160,7 @@
                 };
             orderItems = order.OrderItems?.Select(oi => new OrderItemModel
                 {
-                    ProductName = oi.Product?.Name ?? "Product Not Available",
+                    ProductName = oi.Product!.Name,
                     Quantity = oi.Qty
                 }).ToList() ?? new List<OrderItemModel>();
         }
@@ -229,12 +227,12 @@
             {
                 DateTimeCheckout = DateTime.Now,
                 DeliveryStatus = false,
-                CustomerID = input.CustomerID ?? 0, // Use the entered CustomerID
+                CustomerID = null,
                 OrderItems = new List<OrderItem>()
             };
 
         var addedOrder = await OrderService.Insert(newOrder);
-        input.OrderID = addedOrder.OrderID;
+        input!.OrderID = addedOrder.OrderID;
 
         // Find the selected product based on the ID
         var selectedProduct = productList?.FirstOrDefault(p => p.ProductID == selectedProductID);
@@ -250,7 +248,7 @@
                 {
                     Qty = selectedQuantity,
                     ProductID = selectedProductID,
-                    OrderID = input.OrderID ?? 0
+                    OrderID = input.OrderID
                 };
 
             var addedOrderItem = await OrderItemService.Insert(orderItem);
@@ -263,9 +261,9 @@
     {
         var order = new Orders
             {
-                OrderID = input?.OrderID ?? 0,
-                CustomerID = input?.CustomerID ?? 0,
-                StaffID = input?.StaffID ?? 0,
+                OrderID = input!.OrderID,
+                CustomerID = input!.CustomerID,
+                StaffID = input!.StaffID,
                 OrderItems = orderItems?.Select(oi => new OrderItem
                 {
                     ProductID = productList!.FirstOrDefault(p => p.Name == oi.ProductName)?.ProductID ?? 0,
@@ -280,14 +278,17 @@
 
     public class InputModel
     {
-        public int? OrderID { get; set; }
+        public int OrderID { get; set; }
+        [Required]
         public int? CustomerID { get; set; }
         public int? StaffID { get; set; }
     }
 
     public class OrderItemModel
     {
+        [Required]
         public string? ProductName { get; set; }
+        [Required]
         public int? Quantity { get; set; }
     }
 }

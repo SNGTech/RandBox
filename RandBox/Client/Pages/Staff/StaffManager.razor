@@ -2,26 +2,30 @@
 @inject IGenericService<Staff> StaffService
 @inject NavigationManager Navigation
 
-<h3>Staff Manager</h3>
-
-@if (StaffComponents == null)
+@if (staff == null || filteredStaffComponents == null)
 {
     <h4>Loading Staff</h4>
 }
 else
 {
-    <div class="info-bar col d-flex justify-content-start align-items-center">
-        <div class="edit-options col d-flex">
-            <h4 class="option-btn add-btn m-0" @onclick="OpenAddModal">
-                <i class="bi bi-plus-circle" />&nbsp; Add Staff
-            </h4>
-            <h4 class="option-btn edit-btn m-0 @(IsEditButtonActive() ? "" : "inactive")" @onclick="OpenEditModal">
-                <i class="bi bi-pencil" />&nbsp; Edit Staff
-            </h4>
-            <h4 class="option-btn delete-btn m-0 @(IsDeleteButtonActive() ? "" : "inactive")" @onclick="OpenDeleteModal">
-                <i class="bi bi-dash-circle" />&nbsp; Remove Staff
-            </h4>
+    <div class="col d-flex justify-content-between align-items-center mb-4">
+        <h3 class="m-0">Staff</h3>
+        <div class="position-relative">
+            <i class="bi bi-search search-icon position-absolute" />
+            <input class="search-box" placeholder="Search Staff Name" @oninput=FilterStaff />
         </div>
+    </div>
+
+    <div class="options-bar col d-flex mb-4">
+        <h4 class="option-btn add-btn m-0" @onclick=OpenAddModal>
+            Add Staff
+        </h4>
+        <h4 class="option-btn edit-btn m-0 @(IsEditButtonActive() ? "": "inactive")" @onclick=OpenEditModal>
+            Edit Staff
+        </h4>
+        <h4 class="option-btn delete-btn m-0 @(IsDeleteButtonActive() ? "" : "inactive")" @onclick=OpenDeleteModal>
+            Remove Staff
+        </h4>
     </div>
 
     <CreateEditStaffModal @ref="Modal" OnSuccessfulSubmit="RefreshStaff" />
@@ -40,7 +44,7 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (var staffMember in StaffComponents!)
+                @foreach (var staffMember in filteredStaffComponents!)
                 {
                     var staff = staffMember.Staff;
                     <tr class="@(staffMember.Selected ? "selected" : "")" @onclick="@(() => SelectStaff(staffMember))">
@@ -48,7 +52,7 @@ else
                         <td>@staff!.FirstName</td>
                         <td>@staff!.LastName</td>
                         <td>@staff!.Email</td>
-                        <td>@staff!.DateOfBirth.ToString("yyyy-MM-dd")</td>
+                        <td>@staff!.DateOfBirth.ToString("dd.MM.yy", CultureInfo.InvariantCulture)</td>
                         <td>@staff!.ContactNumber</td>
                     </tr>
                 }
@@ -58,7 +62,8 @@ else
 }
 
 @code {
-    private List<StaffComponent>? StaffComponents { get; set; }
+    private List<Staff>? staff { get; set; }
+    private List<StaffComponent>? filteredStaffComponents { get; set; }
 
     private CreateEditStaffModal? Modal;
     private DeleteModal? DeleteModal;
@@ -73,14 +78,28 @@ else
         component.Selected = !component.Selected;
     }
 
+    private void FilterStaff(ChangeEventArgs e)
+    {
+        string? search = e.Value!.ToString();
+        if (search != null && search != "")
+        {
+            var filtered = staff!.FindAll(x => (x.FirstName + " " + x.LastName).Contains(search!));
+            filteredStaffComponents = MapStaffToComponent(filtered);
+        }
+        else
+        {
+            filteredStaffComponents = MapStaffToComponent(staff!);
+        }
+    }
+
     protected bool IsEditButtonActive()
     {
-        return StaffComponents!.Count(x => x.Selected) == 1;
+        return filteredStaffComponents!.Count(x => x.Selected) == 1;
     }
 
     protected bool IsDeleteButtonActive()
     {
-        return StaffComponents!.Count(x => x.Selected) >= 1;
+        return filteredStaffComponents!.Count(x => x.Selected) >= 1;
     }
 
     protected void OpenAddModal()
@@ -94,7 +113,7 @@ else
         {
             return;
         }
-        var staffMember = StaffComponents!.FirstOrDefault(x => x.Selected)!.Staff;
+        var staffMember = filteredStaffComponents!.FirstOrDefault(x => x.Selected)!.Staff;
         Modal!.OpenInEditMode(staffMember!);
     }
 
@@ -107,9 +126,18 @@ else
         DeleteModal!.Open();
     }
 
+    private List<StaffComponent> MapStaffToComponent(List<Staff> staff)
+    {
+        return staff.Select(x => new StaffComponent
+            {
+                Staff = x,
+                Selected = false
+            }).ToList();
+    }
+
     protected async Task DeleteSelectedStaff()
     {
-        var selectedStaff = StaffComponents!.FindAll(x => x.Selected).Select(x => x.Staff).ToList();
+        var selectedStaff = filteredStaffComponents!.FindAll(x => x.Selected).Select(x => x.Staff).ToList();
 
         foreach (var staffMember in selectedStaff)
         {
@@ -121,20 +149,8 @@ else
 
     protected async Task RefreshStaff()
     {
-        var staffMembers = await StaffService.GetAll();
-        if (staffMembers == null)
-        {
-            StaffComponents = null;
-        }
-        else
-        {
-            StaffComponents = staffMembers!.Select(x => new StaffComponent
-                {
-                    Staff = x,
-                    Selected = false
-                }
-            ).ToList();
-        }
+        staff = await StaffService.GetAll();
+        filteredStaffComponents = MapStaffToComponent(staff);
     }
 
     protected class StaffComponent
