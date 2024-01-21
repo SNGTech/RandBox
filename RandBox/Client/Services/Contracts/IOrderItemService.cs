@@ -2,9 +2,14 @@
 
 namespace RandBox.Client.Services.Contracts
 {
-    public interface IOrderItemService : IGenericService<OrderItem>
+    public interface IOrderItemService
     {
-        public Task<List<OrderItem>> GetItemsByOrderId(int orderId);
-        public Task<List<OrderItem>> InsertRange(List<OrderItem> newItems);
+        Task<List<OrderItem>> GetAllByOrder(int orderId);
+        Task<OrderItem> GetById(int id);
+        Task<List<OrderItem>> InsertRange(List<OrderItem> newItems);
+        Task<OrderItem> Update(OrderItem updatedItem);
+        Task<string> DeleteById(int id);
+        Task<List<OrderItem>> GetAll();
+        Task<OrderItem> Insert(OrderItem entity);
     }
 }

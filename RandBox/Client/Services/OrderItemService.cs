@@ -1,9 +1,6 @@
 ﻿using RandBox.Client.Services.Contracts;
 using RandBox.Shared.Domain;
-using System.Net;
 using System.Net.Http.Json;
-using System.Numerics;
-using System.Text.Json;
 
 namespace RandBox.Client.Services
 {
@@ -18,15 +15,60 @@ namespace RandBox.Client.Services
             _httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
         }
 
-        public async Task<string> DeleteById(int id)
+        public async Task<List<OrderItem>> GetAllByOrder(int orderId)
         {
             try
             {
-                var response = await _httpClient_Public.DeleteAsync($"api/OrderItem/{id}");
+                var response = await _httpClient_Public.GetAsync($"api/OrderItem/order/{orderId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<OrderItem>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status: {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task<List<OrderItem>> GetAll()
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync("api/OrderItem");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsStringAsync();
+                    return await response.Content.ReadFromJsonAsync<List<OrderItem>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public Task<OrderItem> GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<OrderItem> Insert(OrderItem entity)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PostAsJsonAsync("api/OrderItem", entity);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<OrderItem>();
                 }
                 else
                 {
@@ -60,82 +102,12 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
-        // Can be accessed Anonymously
-        public async Task<List<OrderItem>> GetAll()
+
+        public async Task<OrderItem> Update(OrderItem updatedItem)
         {
             try
             {
-                var response = await _httpClient_Public.GetAsync("api/OrderItem");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    /*if (response.StatusCode == HttpStatusCode.NoContent)
-					{
-						return Enumerable.Empty<OrderItem>().ToList();
-					}*/
-                    return await response.Content.ReadFromJsonAsync<List<OrderItem>>();
-                }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public Task<OrderItem> GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<OrderItem>> GetItemsByOrderId(int orderId)
-        {
-            try
-            {
-                var response = await _httpClient_Public.GetAsync($"api/OrderItem/Order/{orderId}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    try
-                    {
-                        return JsonSerializer.Deserialize<List<OrderItem>>(content, new JsonSerializerOptions
-                        {
-                            PropertyNameCaseInsensitive = true
-                        });
-                    }
-                    catch (JsonException ex)
-                    {
-                        // Log or handle the JSON deserialization exception
-                        throw new Exception($"Error deserializing JSON: {ex.Message}");
-                    }
-                }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the general exception
-                throw new Exception($"Error in GetItemsByOrderId: {ex.Message}");
-            }
-        }
-
-
-
-
-
-        public async Task<OrderItem> Insert(OrderItem entity)
-        {
-            try
-            {
-                var response = await _httpClient_Public.PostAsJsonAsync("api/OrderItem", entity);
+                var response = await _httpClient_Public.PutAsJsonAsync($"api/OrderItem/{updatedItem.OrderItemID}", updatedItem);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -153,15 +125,15 @@ namespace RandBox.Client.Services
             }
         }
 
-        public async Task<OrderItem> Update(OrderItem entity)
+        public async Task<string> DeleteById(int id)
         {
             try
             {
-                var response = await _httpClient_Public.PutAsJsonAsync($"api/OrderItem/{entity.OrderItemID}", entity);
+                var response = await _httpClient_Public.DeleteAsync($"api/OrderItem/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<OrderItem>();
+                    return await response.Content.ReadAsStringAsync();
                 }
                 else
                 {
@@ -173,12 +145,6 @@ namespace RandBox.Client.Services
             {
                 throw;
             }
-        }
-
-        Task<string> IGenericService<OrderItem>.DeleteById(int id)
-        {
-            throw new NotImplementedException();
         }
     }
-   
 }

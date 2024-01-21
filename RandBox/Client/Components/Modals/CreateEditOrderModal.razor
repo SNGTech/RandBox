@@ -4,7 +4,7 @@
 @inject IGenericService<Product> ProductService
 @inject IOrderItemService OrderItemService
 
-@if (!(customers == null || staffs == null || productList == null))
+@if (!(customers == null || staffs == null || products == null))
 {
     <div class="modal modal-dialog-centered @(show ? "show" : "inactive")" id="modal" tabindex="-1">
         <div class="modal-dialog modal-fullscreen">
@@ -55,19 +55,14 @@
                                 Product
                             </label>
                             <div>
-                                <InputSelect class="dropdown randbox-form-input" @bind-Value="selectedProductID">
-                                    @if (productList != null)
+                                <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.ProductID">
+                                    <option value="" disabled selected>Select Product</option>
+                                    @foreach (var product in products!)
                                     {
-                                        @foreach (var product in productList)
-                                        {
-                                            if (product != null && product.Name != null)
-                                            {
-                                                <option value="@product.ProductID">@product.Name</option>
-                                            }
-                                        }
+                                        <option value="@product.ProductID">@product.Name</option>
                                     }
                                 </InputSelect>
-                                <ValidationMessage For="@(() => selectedProductID)" class="mt-1 text-danger" />
+                                <ValidationMessage For="@(() => input.ProductID)" class="mt-1 text-danger" />
                             </div>
                         </div>
 
@@ -76,43 +71,35 @@
                                 Quantity
                             </label>
                             <div>
-                                <InputNumber class="randbox-form-input" @bind-Value="selectedQuantity"></InputNumber>
-                                <ValidationMessage For="@(() => selectedQuantity)" class="mt-1 text-danger" />
+                                <InputNumber class="randbox-form-input" @bind-Value="input.Quantity"></InputNumber>
+                                <ValidationMessage For="@(() => input.Quantity)" class="mt-1 text-danger" />
                             </div>
                         </div>
-
-
-                        <!-- Display the list of order items -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                <button type="button" class="btn btn-sm btn-success" @onclick="AddOrderItem">Add Item</button>
+                            </div>
+                        </div>
                         <ul class="list-unstyled">
                             @if (orderItems != null)
                             {
-                                @for (var i = 0; i < orderItems.Count; i++)
+                                @foreach (var item in orderItems)
                                 {
                                     <li>
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" @bind="orderItems[i].Selected" />
-                                            </div>
-                                            <span>@($"{orderItems[i].ProductName} - Qty: {orderItems[i].Quantity}")</span>
+                                            <span>@($"{item.ProductName} - Qty: {item.Quantity}")</span>
                                             <div class="d-flex">
-                                                <button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveOrderItem(i)">Remove</button>
+                                                <button type="button" class="btn btn-sm btn-danger" @onclick="(e) => RemoveOrderItem(item)">Remove</button>
+                                                <button type="button" class="btn btn-sm btn-warning ms-2" @onclick="(e) => EditOrderItem(item)">Edit</button>
                                             </div>
                                         </div>
                                     </li>
                                 }
                             }
                         </ul>
+                       
+                        <button type="submit" class="btn btn-submit w-100 mt-2 mb-2" @onclick="SubmitCallback" disabled="@IsSubmitDisabled">Confirm Changes</button>
 
-
-                        <div class="row mb-3">
-                            <div class="col">
-                                <button type="button" class="btn btn-sm btn-success" @onclick="AddOrderItem">Add Item</button>
-                            </div>
-                            <div class="col">
-                                
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-submit w-100 mt-2 mb-2" @onclick="SubmitCallback">Confirm Changes</button>
                     </EditForm>
                 </div>
             </div>
@@ -123,129 +110,134 @@
 @code {
     [Parameter]
     public EventCallback OnSuccessfulSubmit { get; set; }
-
     private EventCallback SubmitCallback { get; set; }
-
     private List<Customer>? customers { get; set; }
     private List<Staff>? staffs { get; set; }
+    private List<Product>? products { get; set; }
     private List<OrderItemModel>? orderItems;
-
-    private InputModel? input { get; set; }
+    private InputModel input = new InputModel();
     private bool show = false;
     private bool isCreate { get; set; }
+    private bool isEdit { get; set; }
+    private bool isSubmitting = false;
 
-    private List<Product>? productList;
+    private bool IsSubmitDisabled => !IsFormValid();
 
-    private int selectedProductID { get; set; }
-    private int selectedQuantity { get; set; }
-
-  
-
-    protected override async Task OnInitializedAsync()
+    private bool IsFormValid()
     {
-        input = new InputModel();
-        productList = await ProductService.GetAll();
-        customers = await CustomerService.GetAll();
-        staffs = await StaffService.GetAll();
-        orderItems = new List<OrderItemModel>();
-    }
+        if (input.CustomerID == null || input.StaffID == null  || orderItems == null || orderItems.Count == 0)
+        {
+            return false;
+        }
 
+        return true;
+    }
     public void OpenInAddMode()
     {
         SubmitCallback = EventCallback.Factory.Create(this, SubmitInAddMode);
         isCreate = true;
         input = new InputModel();
-        ResetProductSelection();
         show = true;
         StateHasChanged();
     }
 
-  
-    private void ResetProductSelection()
+    protected override async Task OnInitializedAsync()
     {
-        selectedProductID = 0;
-        selectedQuantity = 0;
+        products = await ProductService.GetAll();
+        customers = await CustomerService.GetAll();
+        staffs = await StaffService.GetAll();
+        orderItems = new List<OrderItemModel>();
     }
 
     private void AddOrderItem()
     {
-        if (selectedProductID > 0 && selectedQuantity > 0)
+        if (products != null && input.ProductID != null && input.Quantity > 0)
         {
-            var product = productList!.FirstOrDefault(p => p.ProductID == selectedProductID);
-            if (product != null)
+            var selectedProduct = products.FirstOrDefault(p => p.ProductID == input.ProductID);
+            if (selectedProduct != null)
             {
-                orderItems!.Add(new OrderItemModel
+                var newOrderItem = new OrderItemModel
                     {
-                        
-                        ProductName = product.Name,
-                        Quantity = selectedQuantity
-                    });
+                        ProductID = selectedProduct.ProductID,
+                        ProductName = selectedProduct.Name,
+                        Quantity = input.Quantity
+                    };
 
-                // Clear the selection
-                ResetProductSelection();
+                orderItems.Add(newOrderItem);
+
+                input.ProductID = null;
+                input.Quantity = 0;
             }
         }
     }
 
 
-    public void Close()
+    private void RemoveOrderItem(OrderItemModel orderItem)
     {
-        input = new InputModel();
-        ResetProductSelection();
+        if (orderItem != null)
+        {
+            orderItems.Remove(orderItem);
+            StateHasChanged();
+        }
+    }
+
+
+
+
+    private void Close()
+    {
+        input.ProductID = null;
+        input.Quantity = 0;
         orderItems = new List<OrderItemModel>();
         show = false;
-        StateHasChanged();
     }
-    private bool isSubmitting = false;
+
+
 
     protected async Task SubmitInAddMode()
     {
         if (isSubmitting)
         {
-
             return;
         }
 
         try
         {
             isSubmitting = true;
-            var newOrder = new Orders
+
+            var order = new Orders
                 {
+                    CustomerID = input.CustomerID,
+                    StaffID = input.StaffID,
                     DateTimeCheckout = DateTime.Now,
-                    DeliveryStatus = false,
-                    CustomerID = input!.CustomerID,
-                    StaffID = input!.StaffID,
-                    OrderItems = new List<OrderItem>()
                 };
 
-            var addedOrder = await OrderService.Insert(newOrder);
-            input!.OrderID = addedOrder.OrderID;
+            var orderItemsForOrder = new List<OrderItem>();
 
-            // Add order items
-            foreach (var orderItemModel in orderItems)
+            foreach (var tempOrderItem in orderItems)
             {
-                var selectedProduct = productList?.FirstOrDefault(p => p.Name == orderItemModel.ProductName);
+                var product = await ProductService.GetById(tempOrderItem.ProductID ?? 0);
 
-                if (selectedProduct != null)
+                if (product != null)
                 {
-                    // Update product stock
-                    selectedProduct.StockNo -= orderItemModel.Quantity.GetValueOrDefault();
-                    await ProductService.Update(selectedProduct);
-
-                    // Insert order item
                     var orderItem = new OrderItem
                         {
-                            Qty = orderItemModel.Quantity,
-                            ProductID = selectedProduct.ProductID,
-                            OrderID = input.OrderID
+                            ProductID = tempOrderItem.ProductID ?? 0,
+                            Qty = tempOrderItem.Quantity ?? 0
                         };
 
-                    await OrderItemService.Insert(orderItem);
+                    orderItemsForOrder.Add(orderItem);
                 }
             }
 
-            await OnSuccessfulSubmit.InvokeAsync();
+            order.OrderItems = orderItemsForOrder;
+
+            await OrderService.Insert(order);
+
+            orderItems = new List<OrderItemModel>();
+
             Close();
+            await OnSuccessfulSubmit.InvokeAsync();
         }
         finally
         {
@@ -253,19 +245,54 @@
         }
     }
 
-    public void RemoveOrderItem(int index)
+    private void EditOrderItem(OrderItemModel orderItem)
     {
-        if (index >= 0 && index < orderItems.Count)
+        if (orderItems != null && orderItem != null)
         {
-            // Remove the order item from the list
-            orderItems.RemoveAt(index);
+            // Populate the input fields with existing information
+            input.ProductID = orderItem.ProductID;
+            input.Quantity = orderItem.Quantity;
 
-            // Trigger a refresh of the component asynchronously
-            InvokeAsync(StateHasChanged);
+            // Set the edit mode flag
+            isEdit = true;
+
+            // Remove the order item from the list
+            orderItems.Remove(orderItem);
+            orderItems = new List<OrderItemModel>(orderItems); // Reassign the list to force a re-render
+            StateHasChanged();
         }
     }
 
 
+    private void ConfirmEdit()
+    {
+        var editedOrderItem = new OrderItemModel
+            {
+                ProductID = input.ProductID,
+                Quantity = input.Quantity
+            };
+
+        // Find the index of the edited order item in the list
+        var index = orderItems.FindIndex(item => item.ProductID == editedOrderItem.ProductID);
+
+        if (index != -1)
+        {
+            // Replace the existing order item with the edited one
+            orderItems[index] = editedOrderItem;
+        }
+        else
+        {
+            // If not found, add the edited order item to the list
+            orderItems.Add(editedOrderItem);
+        }
+
+        // Reset input fields and flags
+        input.ProductID = null;
+        input.Quantity = 0;
+        isEdit = false;
+
+        // Note: Don't add the edited order to the orders list here
+    }
 
 
     public class InputModel
@@ -273,17 +300,21 @@
         public int OrderID { get; set; }
         [Required]
         public int? CustomerID { get; set; }
+        [Required]
         public int? StaffID { get; set; }
+
+        public int? ProductID { get; set; }
+        
+        public int? Quantity { get; set; }
     }
 
     public class OrderItemModel
     {
+        public int? ProductID { get; set; }
         public int OrderItemID { get; set; }
         [Required]
         public string? ProductName { get; set; }
         [Required]
         public int? Quantity { get; set; }
-        public bool Selected { get; set; } // Add this line
     }
-
 }

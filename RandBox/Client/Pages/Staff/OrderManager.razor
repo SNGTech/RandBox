@@ -1,4 +1,5 @@
 ﻿@page "/staff/purchases"
+@using System.Reflection;
 @inject IGenericService<Orders> OrderService
 @inject IOrderItemService OrderItemService
 @inject IGenericService<Customer> CustomerService
@@ -149,11 +150,22 @@ else
 
         foreach (var order in selectedOrders)
         {
+            // Fetch all order items associated with the current order
+            var orderItemsToDelete = await OrderItemService.GetAllByOrder(order!.OrderID);
+
+            foreach (var orderItem in orderItemsToDelete)
+            {
+                await OrderItemService.DeleteById(orderItem.OrderItemID);
+            }
+
+            // Then delete the order itself
             await OrderService.DeleteById(order!.OrderID);
         }
 
         await RefreshOrders();
     }
+
+
 
     protected async Task RefreshOrders()
     {
