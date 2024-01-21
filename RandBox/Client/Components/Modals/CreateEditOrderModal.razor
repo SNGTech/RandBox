@@ -18,6 +18,7 @@
                     <EditForm Model="@input" OnValidSubmit="@SubmitCallback" FormName="@($"OrderForm")">
                         <DataAnnotationsValidator />
 
+                        <!-- Change the Customer & Staff dropdown -->
                         <div class="row mb-3">
                             <label class="form-label">Customer</label>
                             <div>
@@ -45,6 +46,7 @@
                                 <ValidationMessage For="@(() => input.StaffID)" class="mt-1 text-danger" />
                             </div>
                         </div>
+
 
                         <div class="row mb-3">
                             <label class="form-label">Product</label>
@@ -133,7 +135,7 @@
         StateHasChanged();
     }
 
-    
+
 
 
     public void OpenInEditMode(Orders order)
@@ -143,9 +145,10 @@
         // Initialize input properties with values from the order object
         input = new InputModel
             {
-                OrderID = order.OrderID,
                 CustomerID = order.CustomerID,
                 StaffID = order.StaffID,
+                OrderID = order.OrderID,
+             
                 // Populate other properties as needed
             };
 
@@ -279,9 +282,13 @@
             // Set the order's OrderItems property to the new list
             order.OrderItems = newOrderItems;
 
-            // Update other order details as needed
-            order.CustomerID = input.CustomerID;  // Update input.CustomerID or use existing value if null
-            order.StaffID = input.StaffID;            // Update input.StaffID or use existing value if null
+            // Fetch the selected customer and staff
+            var selectedCustomer = await CustomerService.GetById(input.CustomerID ?? 0);
+            var selectedStaff = await StaffService.GetById(input.StaffID ?? 0);
+
+            // Update other order details including customer and staff
+            order.Customer = selectedCustomer;
+            order.Staff = selectedStaff;
             await OrderService.Update(order);
 
             // Clear the order items list in the modal
@@ -301,7 +308,6 @@
             isSubmitting = false;
         }
     }
-
 
 
 
