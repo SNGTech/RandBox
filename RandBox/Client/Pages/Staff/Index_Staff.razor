@@ -1,23 +1,55 @@
 ﻿@page "/staff"
+@inject IGenericService<Customer> CustomerService
+@inject IOrderService OrderService
+@inject IGenericService<SubscriptionPlan> SubscriptionService
 @* @attribute [Authorize(Roles = "Staff")] *@
 
-<section class="">
-    <h4 class="mb-4">Welcome Mr Lim</h4>
+@if (customers == null || subscriptions == null || orders == null)
+{
+    <h4>> Loading Dashboard</h4>
+}
+else {
+    <section class="">
+        <h4 class="mb-4">Welcome Staff</h4>
 
-    <div class="col d-flex justify-content-between">
-        <div class="subContainer text-center">
-            <div class="info">Total Subscriptions</div>
-            <div class="info-number">247</div>
-        </div>
+        <div class="col d-flex justify-content-between">
+            <div class="subContainer text-center">
+                <div class="info">Total Subscriptions</div>
+                <div class="info-number">@subscriptions.Count</div>
+            </div>
 
-        <div class="usersContainer text-center">
-            <div class="info">Total No. of Users</div>
-            <div class="info-number">23498</div>
-        </div>
+            <div class="usersContainer text-center">
+                <div class="info">Total No. of Users</div>
+                <div class="info-number">@customers!.Count</div>
+            </div>
 
-        <div class="salesContainer text-center">
-            <div class="info">Total Sales</div>
-            <div class="info-number">$1632.32</div>
+            <div class="salesContainer text-center">
+                <div class="info">Total Product Sales</div>
+                <div class="info-number">$@totalIncome</div>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+}
+
+@code {
+    private List<Customer>? customers;
+    private List<Orders>? orders;
+    private List<SubscriptionPlan>? subscriptions;
+
+    private decimal totalIncome = 0M;
+
+    protected override async Task OnInitializedAsync()
+    {
+        CustomerService._httpInterceptorService.RegisterEvent();
+        OrderService._httpInterceptorService.RegisterEvent();
+        SubscriptionService._httpInterceptorService.RegisterEvent();
+
+        customers = await CustomerService.GetAll();
+        orders = await OrderService.GetAll();
+        subscriptions = await SubscriptionService.GetAll();
+
+        decimal totalFromOrders = await OrderService.GetTotalIncomeFromOrders();
+        decimal totalFromSubscriptions = 0M;
+        totalIncome = totalFromOrders + totalFromSubscriptions; 
+    }
+}

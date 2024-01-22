@@ -90,6 +90,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        SubscriptionService._httpInterceptorService.RegisterEvent();
+
         await RefreshSubscriptions();
     }
 

@@ -48,6 +48,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        CategoryService._httpInterceptorService.RegisterEvent();
+        SubscriptionCategoryService._httpInterceptorService.RegisterEvent();
+
         await RefreshCategories();
     }
 

@@ -90,6 +90,8 @@
 
     protected override void OnInitialized()
     {
+        CustomerService._httpInterceptorService.RegisterEvent();
+
         input = new InputModel();
     }
 

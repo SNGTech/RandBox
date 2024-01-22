@@ -61,6 +61,9 @@
 
     protected override void OnInitialized()
     {
+        CountryService._httpInterceptorService.RegisterEvent();
+        ProductService._httpInterceptorService.RegisterEvent();
+
         input = new InputModel();
     }
 

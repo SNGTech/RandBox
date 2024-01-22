@@ -1,4 +1,5 @@
-﻿using RandBox.Client.Services.Contracts;
+﻿using Microsoft.AspNetCore.Components;
+using RandBox.Client.Services.Contracts;
 using RandBox.Shared.Domain;
 using System.Net;
 using System.Net.Http.Json;
@@ -10,10 +11,15 @@ namespace RandBox.Client.Services
         private readonly HttpClient _httpClient_Public;
         private readonly HttpClient _httpClient_Private;
 
-        public ProductService(IHttpClientFactory clientFactory)
+        [Inject]
+        public HttpInterceptorService _httpInterceptorService { get; set; }
+
+        public ProductService(IHttpClientFactory clientFactory, HttpInterceptorService interceptorService)
         {
             _httpClient_Public = clientFactory.CreateClient("RandBox.ServerAPI.public");
             _httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
+
+            _httpInterceptorService = interceptorService;
         }
 
         public async Task<string> DeleteById(int id)
@@ -130,5 +136,7 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
-    }
+
+		public void Dispose() => _httpInterceptorService.DisposeEvent();
+	}
 }

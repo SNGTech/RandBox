@@ -4,7 +4,9 @@ namespace RandBox.Client.Services.Contracts
 {
     public interface IOrderItemService
     {
-        Task<List<OrderItem>> GetAllByOrder(int orderId);
+		public HttpInterceptorService _httpInterceptorService { get; set; }
+
+		Task<List<OrderItem>> GetAllByOrder(int orderId);
         Task<OrderItem> GetById(int id);
         Task<List<OrderItem>> InsertRange(List<OrderItem> newItems);
         Task<OrderItem> Update(OrderItem updatedItem);

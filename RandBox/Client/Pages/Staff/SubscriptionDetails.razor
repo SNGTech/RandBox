@@ -45,6 +45,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        SubscriptionService._httpInterceptorService.RegisterEvent();
+
         subscription = await SubscriptionService.GetById(SubscriptionPlanId);
     }
 

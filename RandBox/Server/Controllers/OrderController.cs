@@ -92,6 +92,28 @@ namespace RandBox.Server.Controllers
             }
             return Ok(newOrder);
         }
+
+        [HttpGet("total")]
+        public async Task<ActionResult<decimal>> GetTotalIncome()
+
+        {
+            var orders = await _unitOfWork.OrderRepository.GetAll(
+                includes: q => q.Include(x => x.OrderItems!)!.ThenInclude(x => x.Product!));
+            if (orders == null)
+            {
+                return NotFound();
+            }
+
+            decimal totalIncome = 0M;
+
+            foreach (var order in orders) 
+            {
+                decimal totalPerOrder = order.OrderItems!.Sum(x => x.Product!.DiscountedPrice * x.Qty)!.Value;
+                totalIncome += totalPerOrder;
+            }
+
+            return Ok(totalIncome);
+        }
     }
 }
 
