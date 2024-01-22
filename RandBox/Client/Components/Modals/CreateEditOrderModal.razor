@@ -148,7 +148,7 @@
         return true;
     }
 
- 
+
     public void OpenInAddMode()
     {
         isCreate = true;
@@ -157,11 +157,6 @@
         show = true;
         StateHasChanged();
     }
-
-
-
-
-
 
     public void OpenInEditMode(Orders order)
     {
@@ -187,7 +182,8 @@
         SubmitCallback = EventCallback.Factory.Create(this, async () => await SubmitInEditMode(order));
         show = true;
         StateHasChanged();
-    // Method to submit the form in add mode
+    }
+
 
     // Method to submit the form in add mode
     protected async Task SubmitInAddMode()
@@ -242,8 +238,7 @@
         {
             isSubmitting = false;
         }
-
-
+    }
 
     protected async Task SubmitInEditMode(Orders order)
     {
@@ -325,20 +320,7 @@
             editedOrderItem = orderItem;
             orderItems.Remove(orderItem);
         }
-
-
-
-
-   
-
-
-
-
-
-
-
-   
-
+    }
 
     private void AddOrderItem()
     {
@@ -354,18 +336,11 @@
                         Quantity = input.Quantity
                     };
 
-
-
-
-
                 input.ProductID = null;
                 input.Quantity = 0;
             }
         }
     }
-
-
-
 
     public class InputModel
     {
