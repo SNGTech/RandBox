@@ -108,7 +108,6 @@
     private List<Customer>? customers { get; set; }
     private List<Staff>? staffs { get; set; }
     private List<Product>? products { get; set; }
-    private List<OrderItemModel>? orderItems;
     private InputModel input = new InputModel();
     private bool show = false;
     private bool isCreate { get; set; }
@@ -116,6 +115,7 @@
     private bool isSubmitting = false;
     private OrderItemModel editedOrderItem;
     private bool IsSubmitDisabled => !IsFormValid();
+    private List<OrderItemModel> orderItems = new List<OrderItemModel>();
 
     private bool IsFormValid()
     {
