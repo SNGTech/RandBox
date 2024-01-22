@@ -2,7 +2,7 @@
 @page "/product-details/{ProductId:int}"
 @inject IGenericService<Product> ProductService
 @inject IOrderItemService OrderItemService
-@inject IGenericService<Orders> OrderService
+@inject IOrderService OrderService
 <h2 class="text-center">Product Description</h2>
 <div class="row">
     @* Left side: Product Image *@
@@ -81,6 +81,10 @@
 
     protected override void OnInitialized()
     {
+        ProductService._httpInterceptorService.RegisterEvent();
+        OrderItemService._httpInterceptorService.RegisterEvent();
+        OrderService._httpInterceptorService.RegisterEvent();
+
         input = new InputModel();
     }
 

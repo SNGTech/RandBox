@@ -48,6 +48,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        CountryService._httpInterceptorService.RegisterEvent();
+
         await Refreshcountries();
     }
 

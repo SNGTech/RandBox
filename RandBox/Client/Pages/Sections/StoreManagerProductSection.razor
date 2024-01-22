@@ -44,6 +44,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        ProductService._httpInterceptorService.RegisterEvent();
+
         await RefreshProducts();
     }
 

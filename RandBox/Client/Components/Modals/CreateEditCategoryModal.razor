@@ -59,6 +59,9 @@
     
     protected override void OnInitialized()
     {
+        CategoryService._httpInterceptorService.RegisterEvent();
+        SubscriptionCategoryService._httpInterceptorService.RegisterEvent();
+
         input = new InputModel();
     }
 

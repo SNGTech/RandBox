@@ -1,4 +1,5 @@
-﻿using RandBox.Client.Services.Contracts;
+﻿using Microsoft.AspNetCore.Components;
+using RandBox.Client.Services.Contracts;
 using RandBox.Shared.Domain;
 using System.Net.Http.Json;
 
@@ -9,10 +10,15 @@ namespace RandBox.Client.Services
         private readonly HttpClient _httpClient_Public;
         private readonly HttpClient _httpClient_Private;
 
-        public SubscriptionPlanService(IHttpClientFactory clientFactory)
+        [Inject]
+        public HttpInterceptorService _httpInterceptorService { get; set; }
+
+        public SubscriptionPlanService(IHttpClientFactory clientFactory, HttpInterceptorService interceptorService)
         {
             _httpClient_Public = clientFactory.CreateClient("RandBox.ServerAPI.public");
             _httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
+
+            _httpInterceptorService = interceptorService;
         }
 
         public async Task<string> DeleteById(int id)
@@ -61,8 +67,24 @@ namespace RandBox.Client.Services
 
         public async Task<SubscriptionPlan> GetById(int id)
         {
-            var response = await _httpClient_Public.GetAsync($"api/SubscriptionPlan/{id}");
-            return await response.Content.ReadFromJsonAsync<SubscriptionPlan>();
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/SubscriptionPlan/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<SubscriptionPlan>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<SubscriptionPlan> Insert(SubscriptionPlan entity)
@@ -108,5 +130,7 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
-    }
+
+		public void Dispose() => _httpInterceptorService.DisposeEvent();
+	}
 }

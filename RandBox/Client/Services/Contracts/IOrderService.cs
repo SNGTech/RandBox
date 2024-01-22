@@ -6,6 +6,6 @@ namespace RandBox.Client.Services.Contracts
 {
     public interface IOrderService : IGenericService<Orders>
     {
-        Task<List<Orders>> GetOrdersByStaffId(int staffId);
+        public Task<decimal> GetTotalIncomeFromOrders();
     }
 }

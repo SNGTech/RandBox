@@ -70,6 +70,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        StaffService._httpInterceptorService.RegisterEvent();
+
         await RefreshStaff();
     }
 

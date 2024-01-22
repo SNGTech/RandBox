@@ -1,4 +1,4 @@
-﻿@inject IGenericService<Orders> OrderService
+﻿@inject IOrderService OrderService
 @inject IGenericService<Customer> CustomerService
 @inject IGenericService<Staff> StaffService
 @inject IGenericService<Product> ProductService
@@ -129,14 +129,15 @@
     private List<OrderItemModel> orderItems = new List<OrderItemModel>();
     private bool IsSubmitDisabled => !IsFormValid();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        products = await ProductService.GetAll();
-        customers = await CustomerService.GetAll();
-        staffs = await StaffService.GetAll();
+        ProductService._httpInterceptorService.RegisterEvent();
+        StaffService._httpInterceptorService.RegisterEvent();
+        CustomerService._httpInterceptorService.RegisterEvent();
+        OrderItemService._httpInterceptorService.RegisterEvent();
+        OrderService._httpInterceptorService.RegisterEvent();
     }
 
-    //check if form is valid before submitting
     private bool IsFormValid()
     {
         if (input.CustomerID == null || input.StaffID == null || orderItems == null || orderItems.Count == 0)
@@ -157,7 +158,11 @@
         StateHasChanged();
     }
 
-    // Method to open the modal in edit mode
+
+
+
+
+
     public void OpenInEditMode(Orders order)
     {
         isCreate = false;
@@ -182,7 +187,7 @@
         SubmitCallback = EventCallback.Factory.Create(this, async () => await SubmitInEditMode(order));
         show = true;
         StateHasChanged();
-    }
+    // Method to submit the form in add mode
 
     // Method to submit the form in add mode
     protected async Task SubmitInAddMode()
@@ -237,9 +242,9 @@
         {
             isSubmitting = false;
         }
-    }
 
-    // Method to submit the form in edit mode
+
+
     protected async Task SubmitInEditMode(Orders order)
     {
         if (isSubmitting)
@@ -320,9 +325,21 @@
             editedOrderItem = orderItem;
             orderItems.Remove(orderItem);
         }
-    }
 
-    // Method to add an order item to the temporary list of order items in the modal
+
+
+
+   
+
+
+
+
+
+
+
+   
+
+
     private void AddOrderItem()
     {
         if (products != null && input.ProductID != null && input.Quantity > 0)
@@ -337,7 +354,9 @@
                         Quantity = input.Quantity
                     };
 
-                orderItems.Add(newOrderItem);
+
+
+
 
                 input.ProductID = null;
                 input.Quantity = 0;
@@ -345,7 +364,9 @@
         }
     }
 
-    // Input model for the order entity
+
+
+
     public class InputModel
     {
         public int OrderID { get; set; }

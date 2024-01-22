@@ -70,6 +70,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        CustomerService._httpInterceptorService.RegisterEvent();
+
         await RefreshCustomers();
     }
 

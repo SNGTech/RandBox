@@ -74,6 +74,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        ProductSerivce._httpInterceptorService.RegisterEvent();
+        SubscriptionItemService._httpInterceptorService.RegisterEvent();
+
         var products = await ProductSerivce.GetAll();
         productComponents = products.Select(x => new ProductComponent
         {

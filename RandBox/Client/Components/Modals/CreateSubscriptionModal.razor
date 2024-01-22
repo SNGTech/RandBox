@@ -95,6 +95,11 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SubscriptionCategoryService._httpInterceptorService.RegisterEvent();
+        CustomerService._httpInterceptorService.RegisterEvent();
+        StaffService._httpInterceptorService.RegisterEvent();
+        SubscriptionService._httpInterceptorService.RegisterEvent();
+
         input = new InputModel();
         subscriptionCategories = await SubscriptionCategoryService.GetAll();
         customers = await CustomerService.GetAll();

@@ -53,6 +53,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        StaffService._httpInterceptorService.RegisterEvent();
+        SubscriptionService._httpInterceptorService.RegisterEvent();
+
         input = new InputModel();
         staffs = await StaffService.GetAll();
     }

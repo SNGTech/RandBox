@@ -2,8 +2,6 @@
 @page "/cart"
 @inject IGenericService<Product> ProductService
 
-
-
 <h1 class="text-center">Your Cart</h1>
 <h6 class="text-center">4 Items</h6>
 
@@ -67,4 +65,9 @@
 
     private Product? product;
     private Category? category;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProductService._httpInterceptorService.RegisterEvent();
+    }
 }

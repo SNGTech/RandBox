@@ -1,6 +1,6 @@
 ﻿@page "/staff/purchases"
 @using System.Reflection;
-@inject IGenericService<Orders> OrderService
+@inject IOrderService OrderService
 @inject IOrderItemService OrderItemService
 @inject IGenericService<Customer> CustomerService
 @inject NavigationManager Navigation
@@ -102,6 +102,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        OrderService._httpInterceptorService.RegisterEvent();
+        OrderItemService._httpInterceptorService.RegisterEvent();
+        CustomerService._httpInterceptorService.RegisterEvent();
+
         await RefreshOrders();
     }
 
@@ -137,7 +141,6 @@ else
         Modal!.OpenInEditMode(order!);
     }
 
-
     protected void OpenDeleteModal()
     {
         if (!IsDeleteButtonActive())
@@ -167,8 +170,6 @@ else
 
         await RefreshOrders();
     }
-
-
 
     protected async Task RefreshOrders()
     {

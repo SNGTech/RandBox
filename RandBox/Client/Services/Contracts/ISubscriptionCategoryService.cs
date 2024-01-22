@@ -4,7 +4,9 @@ namespace RandBox.Client.Services.Contracts
 {
     public interface ISubscriptionCategoryService
     {
-        public Task<List<SubscriptionCategory>> GetAll();
+		public HttpInterceptorService _httpInterceptorService { get; set; }
+
+		public Task<List<SubscriptionCategory>> GetAll();
         public Task<List<SubscriptionCategory>> GetAllBaseCategory();
         public Task<List<SubscriptionCategory>> GetAllByProductCategoryId(int categoryId);
         public Task<List<SubscriptionCategory>> GetAllByDuration(int duration);

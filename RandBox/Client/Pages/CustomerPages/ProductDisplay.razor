@@ -83,6 +83,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        CategoryService._httpInterceptorService.RegisterEvent();
+        CountryService._httpInterceptorService.RegisterEvent();
+        ProductService._httpInterceptorService.RegisterEvent();
+
         categories = await CategoryService.GetAll();
         countries = await CountryService.GetAll();
         products = await ProductService.GetAll();

@@ -55,6 +55,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        CategoryService._httpInterceptorService.RegisterEvent();
+        SubscriptionCategoryService._httpInterceptorService.RegisterEvent();
+
         categories = await CategoryService.GetAll();
         subscriptionCategories = await SubscriptionCategoryService.GetAllByProductCategoryId(productCategoryId);
     }

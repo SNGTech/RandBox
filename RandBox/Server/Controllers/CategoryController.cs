@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RandBox.Client.Shared.Error;
 using RandBox.Server.Repositories.Contracts;
 using RandBox.Shared.Domain;
 
@@ -22,7 +23,7 @@ namespace RandBox.Server.Controllers
 		{
 			var categories = await _unitOfWork.CategoryRepository.GetAll();
 
-			if (categories == null)
+            if (categories == null)
 			{
 				return NotFound();
 			}
