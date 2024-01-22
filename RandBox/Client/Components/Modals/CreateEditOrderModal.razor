@@ -328,8 +328,13 @@
                         Quantity = input.Quantity
                     };
 
+                orderItems.Add(newOrderItem); // Add the new order item to the collection
+
+                // Reset input values
                 input.ProductID = null;
                 input.Quantity = 0;
+
+                StateHasChanged(); // Update the UI
             }
         }
     }
