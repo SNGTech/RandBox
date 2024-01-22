@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RandBox.Server.Data;
 
 #nullable disable
 
-namespace RandBox.Server.Data.Migrations
+namespace RandBox.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240121082410_orderitemservice1")]
-    partial class orderitemservice1
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -435,7 +432,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CategoryID = 1,
                             BadgeColour = "#78A54E",
-                            DateTimeCreated = new DateTime(2024, 1, 21, 16, 24, 10, 262, DateTimeKind.Local).AddTicks(3503),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 561, DateTimeKind.Local).AddTicks(4568),
                             Description = "Experience local snacks and treats, all while helping to support local family owned businesses!",
                             Name = "Snacks"
                         },
@@ -443,7 +440,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CategoryID = 2,
                             BadgeColour = "#D48250",
-                            DateTimeCreated = new DateTime(2024, 1, 21, 16, 24, 10, 262, DateTimeKind.Local).AddTicks(3506),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 561, DateTimeKind.Local).AddTicks(4571),
                             Description = "Dress up as people from all over the globe! From Kimonos to Hanboks, get a fresh look every month!",
                             Name = "Clothing"
                         },
@@ -451,7 +448,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CategoryID = 3,
                             BadgeColour = "#D45A50",
-                            DateTimeCreated = new DateTime(2024, 1, 21, 16, 24, 10, 262, DateTimeKind.Local).AddTicks(3508),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 561, DateTimeKind.Local).AddTicks(4572),
                             Description = "Unleash your artistic creativity with arts and crafts from all over the world!",
                             Name = "Arts and Crafts"
                         });
@@ -486,7 +483,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CountryID = 1,
                             BadgeColour = "#78A54E",
-                            DateTimeCreated = new DateTime(2024, 1, 21, 16, 24, 10, 379, DateTimeKind.Local).AddTicks(8462),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(7028),
                             Description = "Bring the well-known festivities and nightlife of Germany to your own home!",
                             Name = "Germany"
                         },
@@ -494,7 +491,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CountryID = 2,
                             BadgeColour = "#D45A50",
-                            DateTimeCreated = new DateTime(2024, 1, 21, 16, 24, 10, 379, DateTimeKind.Local).AddTicks(8467),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(7035),
                             Description = "The land of the rising sun, experience the iconic cultures and long-standing traditions of Japan! ",
                             Name = "Japan"
                         },
@@ -502,7 +499,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CountryID = 3,
                             BadgeColour = "#D48250",
-                            DateTimeCreated = new DateTime(2024, 1, 21, 16, 24, 10, 379, DateTimeKind.Local).AddTicks(8468),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(7114),
                             Description = "With many diverse ethnic groups, experience the traditional tastes and cultures of the worlds largest island country.",
                             Name = "Indonesia"
                         });
@@ -553,11 +550,11 @@ namespace RandBox.Server.Data.Migrations
                             CustID = 1,
                             Address = "Lane Road 2",
                             DateOfBirth = new DateTime(2005, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateTimeCreated = new DateTime(2024, 1, 21, 16, 24, 10, 200, DateTimeKind.Local).AddTicks(8221),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 504, DateTimeKind.Local).AddTicks(7564),
                             Email = "cout.sngtech@gmail.com",
                             FirstName = "Titus",
                             LastName = "Lim",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMxybmv/LVF0KWkFsMLK/wa/rbZzAzn1pQyqAne0MtoehwUCunxbtFnr0vJZd4o+3A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFidAIQje/bMOH3preHS4nmzxWx+BV+DaVHPXmI26KSrxWe9BFA099SnM24W0WtGIw==",
                             PostalCode = "342352",
                             UnitNo = "04-06"
                         },
@@ -566,11 +563,11 @@ namespace RandBox.Server.Data.Migrations
                             CustID = 2,
                             Address = "Hoppa Avenue 8",
                             DateOfBirth = new DateTime(2005, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateTimeCreated = new DateTime(2024, 1, 21, 16, 24, 10, 262, DateTimeKind.Local).AddTicks(2330),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 561, DateTimeKind.Local).AddTicks(3422),
                             Email = "patrick_wu@gmail.com",
                             FirstName = "Patrick",
                             LastName = "Wu",
-                            PasswordHash = "AQAAAAIAAYagAAAAELMOUgtP64rLpGe4MeoSRO6M2BKS6R0eKNB8cCCcS1UpiulubiwhsQKIQHGY6WV2Fg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEObFig4GYlYoCv0R/DCEZU/5+UajJdJZRKHEXuH68gd7qeqUF3MK+bWNXaVpcoxCPA==",
                             PostalCode = "442532",
                             UnitNo = "23-45"
                         });
@@ -651,7 +648,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             OrderID = 1,
                             CustomerID = 1,
-                            DateTimeCheckout = new DateTime(2024, 1, 21, 16, 24, 10, 379, DateTimeKind.Local).AddTicks(6391),
+                            DateTimeCheckout = new DateTime(2024, 1, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(5145),
                             DeliveryStatus = true,
                             StaffID = 1
                         },
@@ -659,7 +656,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             OrderID = 2,
                             CustomerID = 2,
-                            DateTimeCheckout = new DateTime(2024, 1, 21, 16, 24, 10, 379, DateTimeKind.Local).AddTicks(6405),
+                            DateTimeCheckout = new DateTime(2024, 1, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(5179),
                             DeliveryStatus = false,
                             StaffID = 2
                         });
@@ -837,7 +834,7 @@ namespace RandBox.Server.Data.Migrations
                             Email = "Shan2209@gmail.com",
                             FirstName = "Shan",
                             LastName = "Lim",
-                            PasswordHash = "AQAAAAIAAYagAAAAEP+pjnhY9IkptjQBbW1rWXYdsYfLJB1xXyzAkVkwe5q+0qRXojL5tEYBu64k8rC2SQ=="
+                            PasswordHash = "AQAAAAIAAYagAAAAEPBTZypMMlY0Ge0iAypfaqfeWQEcL+eeswA2h9VtHH+O2SHdMrnrxIjHBloQksXcAQ=="
                         },
                         new
                         {
@@ -847,7 +844,7 @@ namespace RandBox.Server.Data.Migrations
                             Email = "AtuTriyoso@gmail.com",
                             FirstName = "Atu",
                             LastName = "Triyoso",
-                            PasswordHash = "AQAAAAIAAYagAAAAEN2mCPFbNLILY9p3DyxhThrzNxZxV0D052385oQH1knPMqjH6GszUuDxR0qcNPm1GA=="
+                            PasswordHash = "AQAAAAIAAYagAAAAEB/mgil3P/bvOBIIG9JI69Qw4JH+PtI5PS4wsYvWbxBwBWuq6y4Uo086odaCRoqT9g=="
                         });
                 });
 
@@ -1089,14 +1086,14 @@ namespace RandBox.Server.Data.Migrations
                         {
                             SubscriptionPlanID = 1,
                             CustomerID = 1,
-                            SubscribedDateTime = new DateTime(2024, 1, 21, 16, 24, 10, 379, DateTimeKind.Local).AddTicks(8700),
+                            SubscribedDateTime = new DateTime(2024, 1, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(7908),
                             SubscriptionCategoryID = 12
                         },
                         new
                         {
                             SubscriptionPlanID = 2,
                             CustomerID = 2,
-                            SubscribedDateTime = new DateTime(2023, 11, 21, 16, 24, 10, 379, DateTimeKind.Local).AddTicks(8702),
+                            SubscribedDateTime = new DateTime(2023, 11, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(7917),
                             SubscriptionCategoryID = 5
                         });
                 });
