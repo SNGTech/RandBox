@@ -82,6 +82,7 @@ else
         }).ToList();
     }
 
+    //set all product componenets selected attribute to false
     protected void ResetSelection()
     {
         productComponents = productComponents!.Select(x => new ProductComponent
@@ -91,6 +92,7 @@ else
             }).ToList();
     }
 
+    //when selecting one product 
     protected void SelectSingle(int productId)
     {
         productComponents = productComponents!.Select(x => new ProductComponent
@@ -100,6 +102,7 @@ else
             }).ToList();
     }
 
+    //if adding can select multiple, if editing only select one product 
     protected void SelectProduct(ProductComponent component)
     {
         // If in edit mode, only select one selection
@@ -118,6 +121,7 @@ else
         return productComponents!.FindAll(x => x.Selected).Count;
     }
 
+    //open with empty model
     public void OpenInAddMode(SubscriptionPlan subscription, List<SubscriptionItem>? monthItems, int monthNo)
     {
         SubmitCallback = EventCallback.Factory.Create(this, SubmitInAddMode);
@@ -130,6 +134,7 @@ else
         StateHasChanged();
     }
 
+    //open with initalised model from selected sub plan
     public void OpenInEditMode(SubscriptionPlan subscription, List<SubscriptionItem>? monthItems, SubscriptionItem item)
     {
         SubmitCallback = EventCallback.Factory.Create(this, SubmitInEditMode);
@@ -181,6 +186,7 @@ else
         await OnSuccessfulSubmit.InvokeAsync();
     }
 
+    //make a product component so that product entity can be selected or deselected
     protected class ProductComponent
     {
         public Product? Product { get; set; }

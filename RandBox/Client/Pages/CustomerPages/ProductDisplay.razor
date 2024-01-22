@@ -91,6 +91,7 @@ else
         countryCheckboxes = countries.Select(c => new CountryCheckbox { Country = c, IsChecked = false }).ToList();
     }
 
+    //when i type filter the products by name
     private void OnSearchInputChange(ChangeEventArgs e)
     {
         searchTerm = e.Value!.ToString()!.ToLower();
@@ -98,7 +99,7 @@ else
     }
 
 
-
+    //reset all the checboxes
     private void ResetFilter()
     {
         foreach (var checkbox in categoryCheckboxes)
@@ -115,7 +116,7 @@ else
         ApplyFilter();
     }
 
-
+    //filter country by country and/or category and search
     private void ApplyFilter()
     {
         var selectedCategories = categoryCheckboxes.Where(c => c.IsChecked).Select(c => c.Category.Name);

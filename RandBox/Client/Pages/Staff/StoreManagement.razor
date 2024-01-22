@@ -57,6 +57,7 @@ else
 }
 
 @code {
+    //initalise the sections
     enum StoreSection
     {
         Products,
@@ -76,17 +77,7 @@ else
         products = await ProductService.GetAll();
     }
 
-    /*private async Task LoadStore(StoreSection section)
-    {
-        switch(section)
-        {
-            case StoreSection.Products:
-                products = await ProductService.GetAll();
-                break;
-            default:
-                break;
-        }
-    }*/
+ 
 
     private void SelectedStoreSectionChanged(ChangeEventArgs e)
     {

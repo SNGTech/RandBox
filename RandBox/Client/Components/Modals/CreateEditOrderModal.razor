@@ -6,19 +6,23 @@
 
 @if (!(customers == null || staffs == null || products == null))
 {
+    <!-- Modal for adding or editing orders -->
     <div class="modal modal-dialog-centered @(show ? "show" : "inactive")" id="modal" tabindex="-1">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content p-5 m-0">
+                <!-- Header section with title and close button -->
                 <div class="col d-flex justify-content-between align-items-center mx-5 mb-5 flex-grow-0">
                     <i class="close-btn bi bi-chevron-left" @onclick=Close> Close without Saving</i>
                     <h2 class="modal-title">@(isCreate ? "Add" : "Edit") Order</h2>
                     <i class="close-btn inactive bi bi-chevron-left"> Close without Saving</i>
                 </div>
+                <!-- Form content section -->
                 <div class="form-content px-4 mx-auto">
+                    <!-- EditForm for handling form submission and validation -->
                     <EditForm Model="@input" OnValidSubmit="@SubmitCallback" FormName="@($"OrderForm")">
                         <DataAnnotationsValidator />
 
-                        <!-- Change the Customer & Staff dropdown -->
+                        <!-- Customer dropdown -->
                         <div class="row mb-3">
                             <label class="form-label">Customer</label>
                             <div>
@@ -33,6 +37,7 @@
                             </div>
                         </div>
 
+                        <!-- Staff dropdown -->
                         <div class="row mb-3">
                             <label class="form-label">Staff</label>
                             <div>
@@ -47,7 +52,7 @@
                             </div>
                         </div>
 
-
+                        <!-- Product dropdown -->
                         <div class="row mb-3">
                             <label class="form-label">Product</label>
                             <div>
@@ -62,6 +67,7 @@
                             </div>
                         </div>
 
+                        <!-- Quantity input -->
                         <div class="row mb-3">
                             <label class="form-label">Quantity</label>
                             <div>
@@ -69,11 +75,15 @@
                                 <ValidationMessage For="@(() => input.Quantity)" class="mt-1 text-danger" />
                             </div>
                         </div>
+
+                        <!-- Button to add order item -->
                         <div class="row mb-3">
                             <div class="col">
                                 <button type="button" class="btn btn-sm btn-success" @onclick="(e) => AddOrderItem()">Add Item</button>
                             </div>
                         </div>
+
+                        <!-- List of order items -->
                         <ul class="list-unstyled">
                             @if (orderItems != null)
                             {
@@ -83,7 +93,9 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <span>@($"{item.ProductName} - Qty: {item.Quantity}")</span>
                                             <div class="d-flex">
+                                                <!-- Button to remove order item -->
                                                 <button type="button" class="btn btn-sm btn-danger" @onclick="(e) => RemoveOrderItem(item)">Remove</button>
+                                                <!-- Button to edit order item -->
                                                 <button type="button" class="btn btn-sm btn-warning ms-2" @onclick="(e) => EditOrderItem(item)">Edit</button>
                                             </div>
                                         </div>
@@ -92,8 +104,8 @@
                             }
                         </ul>
 
+                        <!-- Button to confirm changes -->
                         <button type="submit" class="btn btn-submit w-100 mt-2 mb-2" @onclick="SubmitCallback" disabled="@IsSubmitDisabled">Confirm Changes</button>
-
                     </EditForm>
                 </div>
             </div>
@@ -114,9 +126,17 @@
     private bool isEdit { get; set; }
     private bool isSubmitting = false;
     private OrderItemModel editedOrderItem;
-    private bool IsSubmitDisabled => !IsFormValid();
     private List<OrderItemModel> orderItems = new List<OrderItemModel>();
+    private bool IsSubmitDisabled => !IsFormValid();
 
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetAll();
+        customers = await CustomerService.GetAll();
+        staffs = await StaffService.GetAll();
+    }
+
+    //check if form is valid before submitting
     private bool IsFormValid()
     {
         if (input.CustomerID == null || input.StaffID == null || orderItems == null || orderItems.Count == 0)
@@ -126,29 +146,28 @@
 
         return true;
     }
+
+ 
     public void OpenInAddMode()
     {
         isCreate = true;
         input = new InputModel();
-        SubmitCallback = EventCallback.Factory.Create(this, async () => await SubmitInAddMode()); // Use async
+        SubmitCallback = EventCallback.Factory.Create(this, async () => await SubmitInAddMode());
         show = true;
         StateHasChanged();
     }
 
-
-
-
+    // Method to open the modal in edit mode
     public void OpenInEditMode(Orders order)
     {
         isCreate = false;
 
-        // Initialize input properties with values from the order object
+        //initalise order and order items list from the selected order
         input = new InputModel
             {
                 CustomerID = order.CustomerID,
                 StaffID = order.StaffID,
-                OrderID = order.OrderID,
-             
+                OrderID = order.OrderID
                 // Populate other properties as needed
             };
 
@@ -160,46 +179,12 @@
                 Quantity = item.Qty
             }).ToList();
 
-        // Assign the SubmitCallback to the SubmitInEditMode method
         SubmitCallback = EventCallback.Factory.Create(this, async () => await SubmitInEditMode(order));
-
         show = true;
         StateHasChanged();
     }
 
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        products = await ProductService.GetAll();
-        customers = await CustomerService.GetAll();
-        staffs = await StaffService.GetAll();
-
-    }
-
-
-
-    private void RemoveOrderItem(OrderItemModel orderItem)
-    {
-        if (orderItem != null)
-        {
-            orderItems.Remove(orderItem);
-            StateHasChanged();
-        }
-    }
-
-
-
-
-    private void Close()
-    {
-        input.ProductID = null;
-        input.Quantity = 0;
-        orderItems = new List<OrderItemModel>();
-        show = false;
-        StateHasChanged();
-    }
-
+    // Method to submit the form in add mode
     protected async Task SubmitInAddMode()
     {
         if (isSubmitting)
@@ -211,6 +196,7 @@
         {
             isSubmitting = true;
 
+            // Create a new order object
             var order = new Orders
                 {
                     CustomerID = input.CustomerID,
@@ -220,6 +206,7 @@
 
             var orderItemsForOrder = new List<OrderItem>();
 
+            // Create order items from the modal's order items
             foreach (var tempOrderItem in orderItems)
             {
                 var product = await ProductService.GetById(tempOrderItem.ProductID ?? 0);
@@ -238,10 +225,11 @@
 
             order.OrderItems = orderItemsForOrder;
 
+            // Insert the order into the database
             await OrderService.Insert(order);
 
+            // Clear order items list in the modal
             orderItems = new List<OrderItemModel>();
-
             Close();
             await OnSuccessfulSubmit.InvokeAsync();
         }
@@ -251,7 +239,7 @@
         }
     }
 
-
+    // Method to submit the form in edit mode
     protected async Task SubmitInEditMode(Orders order)
     {
         if (isSubmitting)
@@ -291,16 +279,10 @@
             order.Staff = selectedStaff;
             await OrderService.Update(order);
 
-            // Clear the order items list in the modal
+
             orderItems = new List<OrderItemModel>();
-
-            // Close the modal
             Close();
-
-            // Trigger a refresh of orders or perform any other necessary actions
             await OnSuccessfulSubmit.InvokeAsync();
-
-            // Explicitly trigger a re-render
             StateHasChanged();
         }
         finally
@@ -308,35 +290,39 @@
             isSubmitting = false;
         }
     }
+    private void Close()
+    {
+        input.ProductID = null;
+        input.Quantity = 0;
+        orderItems = new List<OrderItemModel>();
+        show = false;
+        StateHasChanged();
+    }
 
-
-
-
+    // Method to remove an order item
+    private void RemoveOrderItem(OrderItemModel orderItem)
+    {
+        if (orderItem != null)
+        {
+            orderItems.Remove(orderItem);
+            StateHasChanged();
+        }
+    }
+   
+    // Method to edit an order item, fill in the fields for that order item and remove it from the list
     private void EditOrderItem(OrderItemModel orderItem)
     {
         if (orderItems != null && orderItem != null)
         {
-            // Populate the input fields with existing information
             input.ProductID = orderItem.ProductID;
             input.Quantity = orderItem.Quantity;
-
-            // Set the edit mode flag
             isEdit = true;
-
-            // Store the edited order item
             editedOrderItem = orderItem;
-
-            // No need to remove the order item from the list
+            orderItems.Remove(orderItem);
         }
     }
 
-
-
-
-
-   
-
-
+    // Method to add an order item to the temporary list of order items in the modal
     private void AddOrderItem()
     {
         if (products != null && input.ProductID != null && input.Quantity > 0)
@@ -359,9 +345,7 @@
         }
     }
 
-
-
-
+    // Input model for the order entity
     public class InputModel
     {
         public int OrderID { get; set; }
@@ -369,12 +353,11 @@
         public int? CustomerID { get; set; }
         [Required]
         public int? StaffID { get; set; }
-
         public int? ProductID { get; set; }
-
         public int? Quantity { get; set; }
     }
 
+    // Input model for the order item entity for the list of order items that will be in each order
     public class OrderItemModel
     {
         public int? ProductID { get; set; }

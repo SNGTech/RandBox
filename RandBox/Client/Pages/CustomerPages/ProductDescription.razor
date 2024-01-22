@@ -109,7 +109,7 @@
                     CustomerID = input.CustomerID, // Use the entered CustomerID
                     OrderItems = new List<OrderItem>()
                 };
-
+            //add the order
             var addedOrder = await OrderService.Insert(newOrder);
             input.OrderID = addedOrder.OrderID;
         }
@@ -122,7 +122,7 @@
                 ProductID = ProductId,
                 OrderID = input.OrderID ?? 0
             };
-
+        //add the order item to the respective order
         var addedOrderItem = await OrderItemService.Insert(orderItem);
 
         await OnSuccessfulSubmit.InvokeAsync();

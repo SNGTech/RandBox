@@ -52,18 +52,17 @@
 @code {
     [Parameter]
     public EventCallback OnSuccessfulSubmit { get; set; }
-
     private EventCallback SubmitCallback { get; set; }
-
     private InputModel? input { get; set; }
     private bool show = false;
     private bool isCreate { get; set; }
-
+    
     protected override void OnInitialized()
     {
         input = new InputModel();
     }
 
+    //open in add mode start with a blank model
     public void OpenInAddMode()
     {
         SubmitCallback = EventCallback.Factory.Create(this, SubmitInAddMode);
@@ -73,6 +72,7 @@
         StateHasChanged();
     }
 
+    //open in edit mode start with an initialized model based on selected entity
     public void OpenInEditMode(Category category)
     {
         SubmitCallback = EventCallback.Factory.Create(this, SubmitInEditMode);
@@ -94,6 +94,7 @@
         StateHasChanged();
     }
 
+
     public void Close()
     {
         input = new InputModel();
@@ -101,6 +102,7 @@
         StateHasChanged();
     }
 
+    //insert entity with input model 
     protected async Task SubmitInAddMode()
     {
         var category = new Category
@@ -116,6 +118,7 @@
         await OnSuccessfulSubmit.InvokeAsync();
     }
 
+    //update entity with input model
     protected async Task SubmitInEditMode()
     {
         var category = new Category
@@ -131,6 +134,7 @@
         await OnSuccessfulSubmit.InvokeAsync();
     }
 
+    //input model 
     public class InputModel
     {
         public int CategoryID { get; set; }
@@ -142,4 +146,5 @@
         [ColourCodeValidator]
         public string? BadgeColour { get; set; }
     }
+    //same logic for country,customer,staff,PlanCategory,Product modal
 }
