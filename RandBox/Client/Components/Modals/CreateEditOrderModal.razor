@@ -105,7 +105,7 @@
                         </ul>
 
                         <!-- Button to confirm changes -->
-                        <button type="submit" class="btn btn-submit w-100 mt-2 mb-2" @onclick="SubmitCallback" disabled="@IsSubmitDisabled">Confirm Changes</button>
+                        <button type="submit" class="btn btn-submit w-100 mt-2 mb-2">Confirm Changes</button>
                     </EditForm>
                 </div>
             </div>
@@ -125,29 +125,21 @@
     private bool isCreate { get; set; }
     private bool isEdit { get; set; }
     private bool isSubmitting = false;
-    private OrderItemModel editedOrderItem;
+    private OrderItemModel? editedOrderItem;
     private List<OrderItemModel> orderItems = new List<OrderItemModel>();
-    private bool IsSubmitDisabled => !IsFormValid();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         ProductService._httpInterceptorService.RegisterEvent();
         StaffService._httpInterceptorService.RegisterEvent();
         CustomerService._httpInterceptorService.RegisterEvent();
         OrderItemService._httpInterceptorService.RegisterEvent();
         OrderService._httpInterceptorService.RegisterEvent();
+
+        products = await ProductService.GetAll();
+        customers = await CustomerService.GetAll();
+        staffs = await StaffService.GetAll();
     }
-
-    private bool IsFormValid()
-    {
-        if (input.CustomerID == null || input.StaffID == null || orderItems == null || orderItems.Count == 0)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
 
     public void OpenInAddMode()
     {
