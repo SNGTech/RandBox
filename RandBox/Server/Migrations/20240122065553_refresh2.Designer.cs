@@ -9,11 +9,11 @@ using RandBox.Server.Data;
 
 #nullable disable
 
-namespace RandBox.Server.Data.Migrations
+namespace RandBox.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231220042414_SeededMoreData_1")]
-    partial class SeededMoreData_1
+    [Migration("20240122065553_refresh2")]
+    partial class refresh2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -191,6 +191,26 @@ namespace RandBox.Server.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "645bb191-486c-4a9e-8f38-2a48b60b8df6",
+                            Name = "Customer",
+                            NormalizedName = "CUSTOMER"
+                        },
+                        new
+                        {
+                            Id = "71741074-bd54-43f9-b837-c0c34c71905e",
+                            Name = "Staff-Guest",
+                            NormalizedName = "STAFF-GUEST"
+                        },
+                        new
+                        {
+                            Id = "910da4f5-6826-419b-b66a-eb995b68bd15",
+                            Name = "Staff",
+                            NormalizedName = "STAFF"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -406,17 +426,7 @@ namespace RandBox.Server.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SubscriptionCategoryID")
-                        .HasColumnType("int");
-
                     b.HasKey("CategoryID");
-
-                    b.HasIndex("ProductID");
-
-                    b.HasIndex("SubscriptionCategoryID");
 
                     b.ToTable("Category");
 
@@ -425,7 +435,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CategoryID = 1,
                             BadgeColour = "#78A54E",
-                            DateTimeCreated = new DateTime(2023, 12, 20, 12, 24, 14, 422, DateTimeKind.Local).AddTicks(4076),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 561, DateTimeKind.Local).AddTicks(4568),
                             Description = "Experience local snacks and treats, all while helping to support local family owned businesses!",
                             Name = "Snacks"
                         },
@@ -433,7 +443,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CategoryID = 2,
                             BadgeColour = "#D48250",
-                            DateTimeCreated = new DateTime(2023, 12, 20, 12, 24, 14, 422, DateTimeKind.Local).AddTicks(4078),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 561, DateTimeKind.Local).AddTicks(4571),
                             Description = "Dress up as people from all over the globe! From Kimonos to Hanboks, get a fresh look every month!",
                             Name = "Clothing"
                         },
@@ -441,7 +451,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CategoryID = 3,
                             BadgeColour = "#D45A50",
-                            DateTimeCreated = new DateTime(2023, 12, 20, 12, 24, 14, 422, DateTimeKind.Local).AddTicks(4080),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 561, DateTimeKind.Local).AddTicks(4572),
                             Description = "Unleash your artistic creativity with arts and crafts from all over the world!",
                             Name = "Arts and Crafts"
                         });
@@ -467,12 +477,7 @@ namespace RandBox.Server.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProductID")
-                        .HasColumnType("int");
-
                     b.HasKey("CountryID");
-
-                    b.HasIndex("ProductID");
 
                     b.ToTable("Country");
 
@@ -481,7 +486,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CountryID = 1,
                             BadgeColour = "#78A54E",
-                            DateTimeCreated = new DateTime(2023, 12, 20, 12, 24, 14, 422, DateTimeKind.Local).AddTicks(7273),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(7028),
                             Description = "Bring the well-known festivities and nightlife of Germany to your own home!",
                             Name = "Germany"
                         },
@@ -489,7 +494,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CountryID = 2,
                             BadgeColour = "#D45A50",
-                            DateTimeCreated = new DateTime(2023, 12, 20, 12, 24, 14, 422, DateTimeKind.Local).AddTicks(7283),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(7035),
                             Description = "The land of the rising sun, experience the iconic cultures and long-standing traditions of Japan! ",
                             Name = "Japan"
                         },
@@ -497,7 +502,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             CountryID = 3,
                             BadgeColour = "#D48250",
-                            DateTimeCreated = new DateTime(2023, 12, 20, 12, 24, 14, 422, DateTimeKind.Local).AddTicks(7285),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(7114),
                             Description = "With many diverse ethnic groups, experience the traditional tastes and cultures of the worlds largest island country.",
                             Name = "Indonesia"
                         });
@@ -529,26 +534,16 @@ namespace RandBox.Server.Data.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OrderID")
-                        .HasColumnType("int");
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PostalCode")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SubscriptionPlanID")
-                        .HasColumnType("int");
-
                     b.Property<string>("UnitNo")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CustID");
-
-                    b.HasIndex("OrderID");
-
-                    b.HasIndex("SubscriptionPlanID");
 
                     b.ToTable("Customer");
 
@@ -558,11 +553,11 @@ namespace RandBox.Server.Data.Migrations
                             CustID = 1,
                             Address = "Lane Road 2",
                             DateOfBirth = new DateTime(2005, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateTimeCreated = new DateTime(2023, 12, 20, 12, 24, 14, 422, DateTimeKind.Local).AddTicks(3841),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 504, DateTimeKind.Local).AddTicks(7564),
                             Email = "cout.sngtech@gmail.com",
                             FirstName = "Titus",
                             LastName = "Lim",
-                            PasswordHash = "",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFidAIQje/bMOH3preHS4nmzxWx+BV+DaVHPXmI26KSrxWe9BFA099SnM24W0WtGIw==",
                             PostalCode = "342352",
                             UnitNo = "04-06"
                         },
@@ -571,61 +566,13 @@ namespace RandBox.Server.Data.Migrations
                             CustID = 2,
                             Address = "Hoppa Avenue 8",
                             DateOfBirth = new DateTime(2005, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateTimeCreated = new DateTime(2023, 12, 20, 12, 24, 14, 422, DateTimeKind.Local).AddTicks(3850),
+                            DateTimeCreated = new DateTime(2024, 1, 22, 14, 55, 53, 561, DateTimeKind.Local).AddTicks(3422),
                             Email = "patrick_wu@gmail.com",
                             FirstName = "Patrick",
                             LastName = "Wu",
-                            PasswordHash = "",
+                            PasswordHash = "AQAAAAIAAYagAAAAEObFig4GYlYoCv0R/DCEZU/5+UajJdJZRKHEXuH68gd7qeqUF3MK+bWNXaVpcoxCPA==",
                             PostalCode = "442532",
                             UnitNo = "23-45"
-                        });
-                });
-
-            modelBuilder.Entity("RandBox.Shared.Domain.Order", b =>
-                {
-                    b.Property<int>("OrderID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderID"));
-
-                    b.Property<int?>("CustomerID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateTimeCheckout")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("DeliveryStatus")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("OrderItemID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StaffID")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderID");
-
-                    b.HasIndex("OrderItemID");
-
-                    b.ToTable("Order");
-
-                    b.HasData(
-                        new
-                        {
-                            OrderID = 1,
-                            CustomerID = 1,
-                            DateTimeCheckout = new DateTime(2023, 12, 20, 12, 24, 14, 422, DateTimeKind.Local).AddTicks(4651),
-                            DeliveryStatus = true,
-                            StaffID = 1
-                        },
-                        new
-                        {
-                            OrderID = 2,
-                            CustomerID = 2,
-                            DateTimeCheckout = new DateTime(2023, 12, 20, 12, 24, 14, 422, DateTimeKind.Local).AddTicks(4653),
-                            DeliveryStatus = false,
-                            StaffID = 2
                         });
                 });
 
@@ -648,6 +595,10 @@ namespace RandBox.Server.Data.Migrations
 
                     b.HasKey("OrderItemID");
 
+                    b.HasIndex("OrderID");
+
+                    b.HasIndex("ProductID");
+
                     b.ToTable("OrderItem");
 
                     b.HasData(
@@ -664,6 +615,53 @@ namespace RandBox.Server.Data.Migrations
                             OrderID = 2,
                             ProductID = 2,
                             Qty = 4
+                        });
+                });
+
+            modelBuilder.Entity("RandBox.Shared.Domain.Orders", b =>
+                {
+                    b.Property<int>("OrderID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderID"));
+
+                    b.Property<int?>("CustomerID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateTimeCheckout")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("DeliveryStatus")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("StaffID")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderID");
+
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("StaffID");
+
+                    b.ToTable("Order");
+
+                    b.HasData(
+                        new
+                        {
+                            OrderID = 1,
+                            CustomerID = 1,
+                            DateTimeCheckout = new DateTime(2024, 1, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(5145),
+                            DeliveryStatus = true,
+                            StaffID = 1
+                        },
+                        new
+                        {
+                            OrderID = 2,
+                            CustomerID = 2,
+                            DateTimeCheckout = new DateTime(2024, 1, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(5179),
+                            DeliveryStatus = false,
+                            StaffID = 2
                         });
                 });
 
@@ -696,9 +694,6 @@ namespace RandBox.Server.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OrderItemID")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("OriginalPrice")
                         .HasColumnType("decimal(5,2)");
 
@@ -710,7 +705,9 @@ namespace RandBox.Server.Data.Migrations
 
                     b.HasKey("ProductID");
 
-                    b.HasIndex("OrderItemID");
+                    b.HasIndex("CategoryID");
+
+                    b.HasIndex("CountryID");
 
                     b.ToTable("Product");
 
@@ -775,7 +772,7 @@ namespace RandBox.Server.Data.Migrations
                         {
                             ProductID = 5,
                             CategoryID = 1,
-                            CountryID = 3,
+                            CountryID = 2,
                             Description = "Unique Red Bean Pancake",
                             DiscountedPrice = 11.79m,
                             ExpiryDate = new DateTime(2023, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -824,20 +821,10 @@ namespace RandBox.Server.Data.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OrderID")
-                        .HasColumnType("int");
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SubscriptionPlanID")
-                        .HasColumnType("int");
-
                     b.HasKey("StaffID");
-
-                    b.HasIndex("OrderID");
-
-                    b.HasIndex("SubscriptionPlanID");
 
                     b.ToTable("Staff");
 
@@ -850,7 +837,7 @@ namespace RandBox.Server.Data.Migrations
                             Email = "Shan2209@gmail.com",
                             FirstName = "Shan",
                             LastName = "Lim",
-                            PasswordHash = ""
+                            PasswordHash = "AQAAAAIAAYagAAAAEPBTZypMMlY0Ge0iAypfaqfeWQEcL+eeswA2h9VtHH+O2SHdMrnrxIjHBloQksXcAQ=="
                         },
                         new
                         {
@@ -860,7 +847,7 @@ namespace RandBox.Server.Data.Migrations
                             Email = "AtuTriyoso@gmail.com",
                             FirstName = "Atu",
                             LastName = "Triyoso",
-                            PasswordHash = ""
+                            PasswordHash = "AQAAAAIAAYagAAAAEB/mgil3P/bvOBIIG9JI69Qw4JH+PtI5PS4wsYvWbxBwBWuq6y4Uo086odaCRoqT9g=="
                         });
                 });
 
@@ -887,12 +874,9 @@ namespace RandBox.Server.Data.Migrations
                     b.Property<decimal>("NewMonthlyPrice")
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<int?>("SubscriptionPlanID")
-                        .HasColumnType("int");
-
                     b.HasKey("SubscriptionCategoryID");
 
-                    b.HasIndex("SubscriptionPlanID");
+                    b.HasIndex("CategoryID");
 
                     b.ToTable("SubscriptionCategory");
 
@@ -1007,6 +991,69 @@ namespace RandBox.Server.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionItem", b =>
+                {
+                    b.Property<int>("SubscriptionItemID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubscriptionItemID"));
+
+                    b.Property<int>("MonthOfYear")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Qty")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubscriptionPlanID")
+                        .HasColumnType("int");
+
+                    b.HasKey("SubscriptionItemID");
+
+                    b.HasIndex("ProductID");
+
+                    b.HasIndex("SubscriptionPlanID");
+
+                    b.ToTable("SubscriptionItem");
+
+                    b.HasData(
+                        new
+                        {
+                            SubscriptionItemID = 1,
+                            MonthOfYear = 12,
+                            ProductID = 4,
+                            Qty = 1,
+                            SubscriptionPlanID = 1
+                        },
+                        new
+                        {
+                            SubscriptionItemID = 2,
+                            MonthOfYear = 12,
+                            ProductID = 2,
+                            Qty = 1,
+                            SubscriptionPlanID = 1
+                        },
+                        new
+                        {
+                            SubscriptionItemID = 3,
+                            MonthOfYear = 11,
+                            ProductID = 3,
+                            Qty = 1,
+                            SubscriptionPlanID = 2
+                        },
+                        new
+                        {
+                            SubscriptionItemID = 4,
+                            MonthOfYear = 1,
+                            ProductID = 2,
+                            Qty = 1,
+                            SubscriptionPlanID = 2
+                        });
+                });
+
             modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionPlan", b =>
                 {
                     b.Property<int>("SubscriptionPlanID")
@@ -1015,7 +1062,7 @@ namespace RandBox.Server.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubscriptionPlanID"));
 
-                    b.Property<int?>("CustID")
+                    b.Property<int?>("CustomerID")
                         .HasColumnType("int");
 
                     b.Property<int?>("StaffID")
@@ -1029,21 +1076,27 @@ namespace RandBox.Server.Data.Migrations
 
                     b.HasKey("SubscriptionPlanID");
 
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("StaffID");
+
+                    b.HasIndex("SubscriptionCategoryID");
+
                     b.ToTable("SubscriptionPlan");
 
                     b.HasData(
                         new
                         {
                             SubscriptionPlanID = 1,
-                            CustID = 1,
-                            SubscribedDateTime = new DateTime(2023, 12, 20, 12, 24, 14, 422, DateTimeKind.Local).AddTicks(4373),
+                            CustomerID = 1,
+                            SubscribedDateTime = new DateTime(2024, 1, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(7908),
                             SubscriptionCategoryID = 12
                         },
                         new
                         {
                             SubscriptionPlanID = 2,
-                            CustID = 2,
-                            SubscribedDateTime = new DateTime(2023, 10, 20, 12, 24, 14, 422, DateTimeKind.Local).AddTicks(4374),
+                            CustomerID = 2,
+                            SubscribedDateTime = new DateTime(2023, 11, 22, 14, 55, 53, 683, DateTimeKind.Local).AddTicks(7917),
                             SubscriptionCategoryID = 5
                         });
                 });
@@ -1099,83 +1152,46 @@ namespace RandBox.Server.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RandBox.Shared.Domain.Category", b =>
-                {
-                    b.HasOne("RandBox.Shared.Domain.Product", null)
-                        .WithMany("Category")
-                        .HasForeignKey("ProductID");
-
-                    b.HasOne("RandBox.Shared.Domain.SubscriptionCategory", null)
-                        .WithMany("Categories")
-                        .HasForeignKey("SubscriptionCategoryID");
-                });
-
-            modelBuilder.Entity("RandBox.Shared.Domain.Country", b =>
-                {
-                    b.HasOne("RandBox.Shared.Domain.Product", null)
-                        .WithMany("Country")
-                        .HasForeignKey("ProductID");
-                });
-
-            modelBuilder.Entity("RandBox.Shared.Domain.Customer", b =>
-                {
-                    b.HasOne("RandBox.Shared.Domain.Order", null)
-                        .WithMany("Customer")
-                        .HasForeignKey("OrderID");
-
-                    b.HasOne("RandBox.Shared.Domain.SubscriptionPlan", null)
-                        .WithMany("Customers")
-                        .HasForeignKey("SubscriptionPlanID");
-                });
-
-            modelBuilder.Entity("RandBox.Shared.Domain.Order", b =>
-                {
-                    b.HasOne("RandBox.Shared.Domain.OrderItem", null)
-                        .WithMany("Order")
-                        .HasForeignKey("OrderItemID");
-                });
-
-            modelBuilder.Entity("RandBox.Shared.Domain.Product", b =>
-                {
-                    b.HasOne("RandBox.Shared.Domain.OrderItem", null)
-                        .WithMany("Product")
-                        .HasForeignKey("OrderItemID");
-                });
-
-            modelBuilder.Entity("RandBox.Shared.Domain.Staff", b =>
-                {
-                    b.HasOne("RandBox.Shared.Domain.Order", null)
-                        .WithMany("Staff")
-                        .HasForeignKey("OrderID");
-
-                    b.HasOne("RandBox.Shared.Domain.SubscriptionPlan", null)
-                        .WithMany("Staff")
-                        .HasForeignKey("SubscriptionPlanID");
-                });
-
-            modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionCategory", b =>
-                {
-                    b.HasOne("RandBox.Shared.Domain.SubscriptionPlan", null)
-                        .WithMany("SubscriptionCategories")
-                        .HasForeignKey("SubscriptionPlanID");
-                });
-
-            modelBuilder.Entity("RandBox.Shared.Domain.Order", b =>
-                {
-                    b.Navigation("Customer");
-
-                    b.Navigation("Staff");
-                });
-
             modelBuilder.Entity("RandBox.Shared.Domain.OrderItem", b =>
                 {
+                    b.HasOne("RandBox.Shared.Domain.Orders", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderID");
+
+                    b.HasOne("RandBox.Shared.Domain.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID");
+
                     b.Navigation("Order");
 
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("RandBox.Shared.Domain.Orders", b =>
+                {
+                    b.HasOne("RandBox.Shared.Domain.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerID");
+
+                    b.HasOne("RandBox.Shared.Domain.Staff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffID");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Staff");
+                });
+
             modelBuilder.Entity("RandBox.Shared.Domain.Product", b =>
                 {
+                    b.HasOne("RandBox.Shared.Domain.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryID");
+
+                    b.HasOne("RandBox.Shared.Domain.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryID");
+
                     b.Navigation("Category");
 
                     b.Navigation("Country");
@@ -1183,16 +1199,61 @@ namespace RandBox.Server.Data.Migrations
 
             modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionCategory", b =>
                 {
-                    b.Navigation("Categories");
+                    b.HasOne("RandBox.Shared.Domain.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryID");
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionItem", b =>
+                {
+                    b.HasOne("RandBox.Shared.Domain.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RandBox.Shared.Domain.SubscriptionPlan", "SubscriptionPlan")
+                        .WithMany("SubscriptionItems")
+                        .HasForeignKey("SubscriptionPlanID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("SubscriptionPlan");
                 });
 
             modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionPlan", b =>
                 {
-                    b.Navigation("Customers");
+                    b.HasOne("RandBox.Shared.Domain.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerID");
+
+                    b.HasOne("RandBox.Shared.Domain.Staff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffID");
+
+                    b.HasOne("RandBox.Shared.Domain.SubscriptionCategory", "SubscriptionCategory")
+                        .WithMany()
+                        .HasForeignKey("SubscriptionCategoryID");
+
+                    b.Navigation("Customer");
 
                     b.Navigation("Staff");
 
-                    b.Navigation("SubscriptionCategories");
+                    b.Navigation("SubscriptionCategory");
+                });
+
+            modelBuilder.Entity("RandBox.Shared.Domain.Orders", b =>
+                {
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("RandBox.Shared.Domain.SubscriptionPlan", b =>
+                {
+                    b.Navigation("SubscriptionItems");
                 });
 #pragma warning restore 612, 618
         }
