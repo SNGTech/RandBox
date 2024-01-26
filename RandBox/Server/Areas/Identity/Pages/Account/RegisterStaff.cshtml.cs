@@ -95,7 +95,7 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [EmailAddress]
-            [RegularExpression(@"@randbox.sg$", ErrorMessage = "Invalid staff email")]
+            [RegularExpression(@"\randbox.sg$", ErrorMessage = "Invalid staff email")]
             [Display(Name = "Email")]
             public string Email { get; set; }
 

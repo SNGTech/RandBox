@@ -124,7 +124,6 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [EmailAddress]
-            [RegularExpression(@"@gmail.com$", ErrorMessage = "Invalid email")]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
