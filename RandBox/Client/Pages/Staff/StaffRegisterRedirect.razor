@@ -1,0 +1,9 @@
+﻿@page "/register/staff"
+@inject NavigationManager navManager
+
+@code {
+	protected override void OnInitialized()
+	{
+		navManager.NavigateTo("authentication/register/staff");
+	}
+}

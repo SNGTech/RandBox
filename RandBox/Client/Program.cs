@@ -48,4 +48,18 @@ builder.Services.AddHttpClientInterceptor();
 
 builder.Services.AddApiAuthorization();
 
+builder.Services.AddAuthorizationCore(options =>
+{
+    options.AddPolicy("StaffPolicy", policy => policy.RequireRole("Staff"));
+    options.AddPolicy("CustomerPolicy", policy => policy.RequireRole("Customer"));
+    options.AddPolicy("UserOrCustomerPolicy", policy =>
+        policy.RequireAssertion(context =>
+        {
+            bool isNotAuthenticated = !context.User.Identity!.IsAuthenticated;
+            bool isCustomer = context.User.IsInRole("Customer");
+            return isCustomer || isNotAuthenticated;
+        })
+    );
+});
+
 await builder.Build().RunAsync();

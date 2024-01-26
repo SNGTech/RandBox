@@ -33,7 +33,16 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options => {
+        // Readd Role Parameter to Claims
+        options.IdentityResources["openid"].UserClaims.Add("role");
+        options.ApiResources.Single().UserClaims.Add("role");
+    }
+);
+
+// Need to do this as it maps "role" to ClaimTypes.Role and causes issues
+System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler
+    .DefaultInboundClaimTypeMap.Remove("role");
 
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
@@ -42,6 +51,20 @@ StripeConfiguration.ApiKey = "sk_test_51OPpJqKZqzi7Rqy6Q0lSWfKkH5qofg04MVGZxsD7D
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IStripeCustomerService, StripeCustomerService>();
+
+builder.Services.AddAuthorizationCore(options =>
+{
+    options.AddPolicy("StaffPolicy", policy => policy.RequireRole("Staff"));
+    options.AddPolicy("CustomerPolicy", policy => policy.RequireRole("Customer"));
+    options.AddPolicy("UserOrCustomerPolicy", policy =>
+        policy.RequireAssertion(context =>
+        {
+            bool isNotAuthenticated = !context.User.Identity!.IsAuthenticated;
+            bool isCustomer = context.User.IsInRole("Customer");
+            return isCustomer || isNotAuthenticated;
+        })
+    );
+});
 
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(op =>
@@ -76,10 +99,8 @@ app.UseIdentityServer();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
-
 
 app.Run();

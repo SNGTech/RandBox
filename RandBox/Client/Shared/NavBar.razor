@@ -1,7 +1,7 @@
 ﻿@inject NavigationManager Navigation
-@attribute [Authorize(Roles = "Customer")]
+@inject IJSRuntime JSRuntime
 
-<header class="navbar d-flex justify-content-end align-items-center">
+<header class="navbar navbar-user d-flex justify-content-end align-items-center">
 	<div class="randbox-title col d-flex">
 		<h1 class="randbox-title-1 m-0">rand</h1>
 		<h1 class="randbox-title-2 m-0">Box</h1>
@@ -36,6 +36,12 @@
 </header>
 
 @code {
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+			await JSRuntime.InvokeVoidAsync("changeOnScroll");
+	}
+
 	protected void Logout()
 	{
 		Navigation.NavigateToLogout("authentication/logout");

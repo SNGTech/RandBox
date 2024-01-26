@@ -1,53 +1,36 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
 using RandBox.Server.Models;
-using RandBox.Server.Services;
-using RandBox.Server.Services.Contracts;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace RandBox.Server.Areas.Identity.Pages.Account
 {
-    public class RegisterModel : PageModel
+    public class RegisterStaffModel : PageModel
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IUserStore<ApplicationUser> _userStore;
-        private readonly IUserEmailStore<ApplicationUser> _emailStore;
+        private readonly SignInManager<ApplicationStaff> _signInManager;
+        private readonly UserManager<ApplicationStaff> _userManager;
+        private readonly IUserStore<ApplicationStaff> _userStore;
+        private readonly IUserEmailStore<ApplicationStaff> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        private readonly IStripeCustomerService _stripeCustomerService;
-
-        public RegisterModel(
-            UserManager<ApplicationUser> userManager,
-            IUserStore<ApplicationUser> userStore,
-            SignInManager<ApplicationUser> signInManager,
+        public RegisterStaffModel(
+            UserManager<ApplicationStaff> userManager,
+            IUserStore<ApplicationStaff> userStore,
+            SignInManager<ApplicationStaff> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager,
-            IStripeCustomerService stripeCustomerService)
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -56,8 +39,6 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
-
-            _stripeCustomerService = stripeCustomerService;
         }
 
         /// <summary>
@@ -102,21 +83,11 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
             [Display(Name = "Date of Birth")]
             public System.DateTime DateOfBirth { get; set; }
 
-            // randBox Field: Address
-            [Required(ErrorMessage = "Address required")]
-            [Display(Name = "Address")]
-            public string Address { get; set; }
-
-            // randBox Field: Unit No
-            [Required(ErrorMessage = "Unit No. required")]
-            [Display(Name = "Unit No.")]
-            public string UnitNo { get; set; }
-
-            // randBox Field: Postal Code
-            [Required(ErrorMessage = "Postal code required")]
-            [RegularExpression(@"\d{6}", ErrorMessage = "Invalid Postal Code")]
-            [Display(Name = "Postal Code")]
-            public string PostalCode { get; set; }
+            [Required]
+            [StringLength(8, ErrorMessage = "Invalid Contact No.", MinimumLength = 8)]
+            [DataType(DataType.PhoneNumber)]
+            [Display(Name = "Contact Number")]
+            public string ContactNo { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -124,7 +95,7 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [EmailAddress]
-            [RegularExpression(@"@gmail.com$", ErrorMessage = "Invalid email")]
+            [RegularExpression(@"@randbox.sg$", ErrorMessage = "Invalid staff email")]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
@@ -157,7 +128,7 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
+            returnUrl ??= Url.Content("~/staff");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
@@ -166,30 +137,22 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
                 user.DateOfBirth = Input.DateOfBirth;
-                user.Address = Input.Address;
-                user.UnitNo = Input.UnitNo;
-                user.PostalCode = Input.PostalCode;
+                user.ContactNo = Input.ContactNo;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                var result = await _userManager.CreateAsync(user, Input.Password!);
 
                 if (result.Succeeded)
                 {
                     // Add role to user based one Email Suffix
-                    var role = "Customer";
+                    var role = "Staff";
                     if (role != null)
                     {
                         IdentityResult roleResult = await _userManager.AddToRoleAsync(user, role);
                         if (roleResult.Succeeded)
                         {
                             _logger.LogInformation("Assigned {RoleName} Role to user.", role);
-
-                            /*// Add Stripe Customer if Role is Customer
-                            if (role.Name == "Customer")
-                            {
-                                await _stripeCustomerService.CreateCustomerAsync(user);
-                            }*/
                         }
                         else
                         {
@@ -221,7 +184,7 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        // Create claims for Customer Role
+                        // Create claims for Staff Role
                         var claims = new Claim[]
                         {
                             new Claim(ClaimTypes.Email, user.Email),
@@ -246,7 +209,7 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
                             user.Email, DateTime.UtcNow);
 
                         return LocalRedirect(returnUrl);
-                    }   
+                    }
                 }
                 foreach (var error in result.Errors)
                 {
@@ -258,27 +221,27 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private ApplicationUser CreateUser()
+        private ApplicationStaff CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<ApplicationUser>();
+                return Activator.CreateInstance<ApplicationStaff>();
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationStaff)}'. " +
+                    $"Ensure that '{nameof(ApplicationStaff)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
 
-        private IUserEmailStore<ApplicationUser> GetEmailStore()
+        private IUserEmailStore<ApplicationStaff> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
-            return (IUserEmailStore<ApplicationUser>)_userStore;
+            return (IUserEmailStore<ApplicationStaff>)_userStore;
         }
     }
 }
