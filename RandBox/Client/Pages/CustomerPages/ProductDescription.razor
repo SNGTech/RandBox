@@ -1,11 +1,13 @@
-﻿@using System.ComponentModel;
-@page "/product-details/{ProductId:int}"
+﻿@page "/product-details/{ProductId:int}"
 @inject IGenericService<Product> ProductService
 @inject IOrderItemService OrderItemService
 @inject IOrderService OrderService
+@inject IGenericService<Customer> CustomerService
+
 <h2 class="text-center">Product Description</h2>
+
 <div class="row">
-    @* Left side: Product Image *@
+    <!-- Left side: Product Image -->
     <div class="col-md-6">
         @if (product != null)
         {
@@ -20,7 +22,7 @@
         }
     </div>
 
-    @* Right side: Product Details *@
+    <!-- Right side: Product Details -->
     <div class="col-md-6">
         <div style="margin-left:1.5em;">
             @if (product != null)
@@ -46,102 +48,122 @@
 </div>
 
 <div>
-    <label for="orderCustomerId">Customer ID:</label>
-    <input type="number" id="orderCustomerId" name="orderCustomerId" @bind="input.CustomerID" />
+    <label for="customerId">Customer:</label>
+    <select id="customerId" name="customerId" @bind="input.CustomerID">
+        <option value="">Select Customer</option>
+        @if (customers != null)
+        {
+            foreach (var customer in customers)
+            {
+                <option value="@customer.CustID">@customer.FirstName</option>
+            }
+        }
+    </select>
 </div>
 
+
 <div>
-    <label for="orderId">Order ID:</label>
-    <input type="number" id="orderId" name="orderId" @bind="input.OrderID" />
+    <label for="orderId">Order:</label>
+    <select id="orderId" name="orderId" @bind="input.OrderID">
+        <option value="" selected disabled>Select Order</option>
+        @if (input.CustomerID != null && orders != null)
+        {
+            var customerOrders = orders.Where(o => o.CustomerID == input.CustomerID);
+            foreach (var order in customerOrders)
+            {
+                <option value="@order.OrderID">@order.OrderID</option>
+            }
+        }
+    </select>
 </div>
 
 <button type="button" class="btn btn-primary" @onclick="() => AddToCart(quantity)">Add to Cart</button>
 
-
 @code {
     [Parameter]
     public int ProductId { get; set; }
-    private List<Orders>? order;
+    private List<Orders>? orders;
+    private List<Customer>? customers;
     private Product? product;
-    private Category? category;
 
     protected override async Task OnInitializedAsync()
-    {
-        order = await OrderService.GetAll();
-        product = await ProductService.GetById(ProductId);
-    }
-    [Parameter]
-    public EventCallback OnSuccessfulSubmit { get; set; }
-
-    private EventCallback SubmitCallback { get; set; }
-
-    private InputModel? input { get; set; }
-    private bool show = false;
-    private bool isCreate { get; set; }
-
-    protected override void OnInitialized()
     {
         ProductService._httpInterceptorService.RegisterEvent();
         OrderItemService._httpInterceptorService.RegisterEvent();
         OrderService._httpInterceptorService.RegisterEvent();
+        CustomerService._httpInterceptorService.RegisterEvent();
 
-        input = new InputModel();
+        product = await ProductService.GetById(ProductId);
+        orders = await OrderService.GetAll();
+        customers = await CustomerService.GetAll();
     }
 
+    [Parameter]
+    public EventCallback OnSuccessfulSubmit { get; set; }
+    private EventCallback SubmitCallback { get; set; }
 
+    private InputModel input = new InputModel();
     private int quantity = 0;
+
     protected async Task AddToCart(int quantity)
     {
         var message = $"Added {quantity} {product!.Name}(s) to the cart.";
         Console.WriteLine(message);
 
-        // Check if the entered OrderID already exists in the list of orders
-        var existingOrder = order.FirstOrDefault(o => o.OrderID == input.OrderID);
-
-        if (existingOrder != null)
+        if (input.CustomerID != null)
         {
-            // Use the existing order
-            input.OrderID = existingOrder.OrderID;
-        }
-        else
-        {
-            // Create a new order
-            var newOrder = new Orders
-                {
-                    DateTimeCheckout = DateTime.Now,
-                    DeliveryStatus = false,
-                    CustomerID = input.CustomerID, // Use the entered CustomerID
-                    OrderItems = new List<OrderItem>()
-                };
-            //add the order
-            var addedOrder = await OrderService.Insert(newOrder);
-            input.OrderID = addedOrder.OrderID;
-        }
-        product.StockNo -= quantity;
-        await ProductService.Update(product);
-
-        var orderItem = new OrderItem
+            if (input.OrderID == null)
             {
-                Qty = quantity,
-                ProductID = ProductId,
-                OrderID = input.OrderID ?? 0
-            };
-        //add the order item to the respective order
-        var addedOrderItem = await OrderItemService.Insert(orderItem);
+                // If no order is selected, create a new order and add the order item
+                var newOrder = new Orders
+                    {
+                        DateTimeCheckout = DateTime.Now,
+                        DeliveryStatus = false,
+                        CustomerID = input.CustomerID.Value,
+                        OrderItems = new List<OrderItem>
+                {
+                    new OrderItem
+                    {
+                        Qty = quantity,
+                        ProductID = ProductId
+                    }
+                }
+                    };
 
-        await OnSuccessfulSubmit.InvokeAsync();
+                await OrderService.Insert(newOrder);
+            }
+            else
+            {
+                // If an order is selected, find the order and add the order item to its list
+                var selectedOrder = orders.FirstOrDefault(o => o.OrderID == input.OrderID.Value);
+
+                if (selectedOrder != null)
+                {
+                    selectedOrder.OrderItems ??= new List<OrderItem>();
+
+                    var orderItem = new OrderItem
+                        {
+                            Qty = quantity,
+                            ProductID = ProductId,
+                            OrderID = input.OrderID.Value
+                        };
+
+                    selectedOrder.OrderItems.Add(orderItem);
+                    await OrderService.Update(selectedOrder);
+                }
+            }
+
+            product.StockNo -= quantity;
+            await ProductService.Update(product);
+
+            await OnSuccessfulSubmit.InvokeAsync();
+        }
     }
+
 
     public class InputModel
     {
-
-        public int CustomerID  { get; set; }
-        public int OrderItemID { get; set; }
-        [Required]
-        public int? Qty { get; set; }
-        [Required]
+        public int? CustomerID { get; set; }
         public int? OrderID { get; set; }
-        [Required]
-        public int? ProductID { get; set; }
     }
 }

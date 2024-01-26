@@ -22,15 +22,19 @@
                     <EditForm Model="@input" OnValidSubmit="@SubmitCallback" FormName="@($"OrderForm")">
                         <DataAnnotationsValidator />
 
+
                         <!-- Customer dropdown -->
                         <div class="row mb-3">
                             <label class="form-label">Customer</label>
                             <div>
                                 <InputSelect class="dropdown randbox-form-input" @bind-Value="input.CustomerID">
                                     <option value="" disabled>Select Customer</option>
-                                    @foreach (var customer in customers!)
+                                    @if (customers != null)
                                     {
-                                        <option value="@customer.CustID">@customer.CustID - @customer.FirstName @customer.LastName</option>
+                                        foreach (var customer in customers!)
+                                        {
+                                            <option value="@customer.CustID">@($"{customer.CustID} - {customer.FirstName} {customer.LastName}")</option>
+                                        }
                                     }
                                 </InputSelect>
                                 <ValidationMessage For="@(() => input.CustomerID)" class="mt-1 text-danger" />
@@ -43,9 +47,12 @@
                             <div>
                                 <InputSelect class="dropdown randbox-form-input" @bind-Value="input.StaffID">
                                     <option value="" disabled>Select Staff</option>
-                                    @foreach (var staff in staffs!)
+                                    @if (staffs != null)
                                     {
-                                        <option value="@staff.StaffID">@staff.StaffID - @staff.FirstName @staff.LastName</option>
+                                        foreach (var staff in staffs!)
+                                        {
+                                            <option value="@staff.StaffID">@($"{staff.StaffID} - {staff.FirstName} {staff.LastName}")</option>
+                                        }
                                     }
                                 </InputSelect>
                                 <ValidationMessage For="@(() => input.StaffID)" class="mt-1 text-danger" />
@@ -58,14 +65,18 @@
                             <div>
                                 <InputSelect class="dropdown randbox-form-input" @bind-Value="input!.ProductID">
                                     <option value="" disabled selected>Select Product</option>
-                                    @foreach (var product in products!)
+                                    @if (products != null)
                                     {
-                                        <option value="@product.ProductID">@product.Name</option>
+                                        foreach (var product in products!)
+                                        {
+                                            <option value="@product.ProductID">@product.Name</option>
+                                        }
                                     }
                                 </InputSelect>
                                 <ValidationMessage For="@(() => input.ProductID)" class="mt-1 text-danger" />
                             </div>
                         </div>
+
 
                         <!-- Quantity input -->
                         <div class="row mb-3">
@@ -144,7 +155,12 @@
     public void OpenInAddMode()
     {
         isCreate = true;
-        input = new InputModel();
+        input = new InputModel
+            {
+                CustomerID = null,
+                StaffID = null,
+                
+            }; 
         SubmitCallback = EventCallback.Factory.Create(this, async () => await SubmitInAddMode());
         show = true;
         StateHasChanged();
