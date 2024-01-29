@@ -159,6 +159,29 @@ namespace RandBox.Client.Services
             }
         }
 
+        public async Task<Orders> MarkDelivered(int id)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PutAsync($"api/Order/mark-delivered/{id}", null);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<Orders>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 		public void Dispose() => _httpInterceptorService.DisposeEvent();
-	}
+
+    }
 }

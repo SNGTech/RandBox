@@ -1,10 +1,14 @@
-﻿@page "/pricing/checkout/{id:int}"
+﻿@page "/pricing/checkout/{cat_id:int}"
 @inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
 @inject IPaymentIntentService PaymentIntentService
-@* @attribute [Authorize] *@
+@inject IGenericService<SubscriptionPlan> SubscriptionService
+@attribute [Authorize(Policy = "CustomerPolicy")]
 
 <section class="row d-flex justify-content-center align-items-center">
-    <form class="row d-flex justify-content-center w-50" @onsubmit=Checkout id="payment-form">
+    <h3>Processing Subscription Purchase...</h3>
+
+    @* <form class="row d-flex justify-content-center w-50" @onsubmit=Checkout id="payment-form">
         <div id="link-authentication-element">
             <!--Stripe.js injects the Link Element-->
         </div>
@@ -19,23 +23,33 @@
             <span id="button-text">Checkout</span>
         </button>
         <div id="payment-message" class="hidden"></div>
-    </form>
+    </form> *@
 </section>
 
 @code {
     [Parameter]
-    public int id { get; set; }
+    public int cat_id { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var email = "test.sngtech@gmail.com";/* await CustomerService.GetCurrentCustomerEmail(); */
+        /*var email = "test.sngtech@gmail.com";
         var response = await PaymentIntentService.CreatePaymentIntent(id, email);
 
-        await JSRuntime.InvokeVoidAsync("SubscriptionCheckout.initialise", response);
+        await JSRuntime.InvokeVoidAsync("SubscriptionCheckout.initialise", response); */
+        var newSubscription = new SubscriptionPlan {
+            SubscribedDateTime = DateTime.Now,
+            SubscriptionCategoryID = cat_id,
+            CustomerID = 1,
+            StaffID = null
+        };
+
+        await SubscriptionService.Insert(newSubscription);
+
+        Navigation.NavigateTo("pricing");
     }
 
-    protected async Task Checkout(EventArgs e)
+    /*protected async Task Checkout(EventArgs e)
     {
         await JSRuntime.InvokeVoidAsync("SubscriptionCheckout.handleSubmit", e);
-    }
+    }*/
 }

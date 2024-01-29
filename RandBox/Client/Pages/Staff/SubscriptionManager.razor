@@ -29,9 +29,6 @@ else
         <h4 class="option-btn add-btn m-0 @(IsHandleButtonActive() ? "": "inactive")" @onclick=OpenAssignmentModal>
             Assign Staff
         </h4>
-        <h4 class="option-btn handle-btn m-0 @(IsHandleButtonActive() ? "": "inactive")">
-            Mark Delivered
-        </h4>
     </div>
 
     <table class="table">
@@ -42,8 +39,7 @@ else
                 <th scope="col">End Date</th>
                 <th scope="col">Monthly Price</th>
                 <th scope="col">Customer</th>
-                <th scope="col">Staff In-charge</th>
-                <th class="edge-cell-right" scope="col">Delivery Status (cur. month)</th>
+                <th class="edge-cell-right" scope="col">Staff In-charge</th>
             </tr>
         </thead>
         <tbody>
@@ -59,10 +55,9 @@ else
                     </td>
                     <td>$@subscription.SubscriptionCategory!.NewMonthlyPrice</td>
                     <td>@subscription.Customer!.FirstName</td>
-                    <td class="@(subscription.Staff == null ? "warn" : "")">
+                    <td class="edge-cell-right @(subscription.Staff == null ? "warn" : "")">
                         @(subscription.Staff == null ? "Needs an IC" : subscription.Staff.FirstName)
                     </td>
-                    <td class="edge-cell-right"></td>
                     <td class="additional-info collapsible @(component.Selected ? "expand" : "")">
                         <div class="col d-flex justify-content-between">
                             <p>Subscription Duration: <span>@subscription.SubscriptionCategory.Duration month@(subscription.SubscriptionCategory.Duration > 1 ? "s" : "")</span></p>

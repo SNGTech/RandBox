@@ -114,6 +114,34 @@ namespace RandBox.Server.Controllers
 
             return Ok(totalIncome);
         }
+
+        [HttpPut("mark-delivered/{id:int}")]
+        public async Task<ActionResult> MarkDelivered(int id)
+        {
+            var order = await _unitOfWork.OrderRepository.GetById(id);
+
+            if (order == null)
+            {
+                return BadRequest();
+            }
+
+            order.DeliveryStatus = true;
+
+            _unitOfWork.OrderRepository.Update(order);
+
+            try
+            {
+                await _unitOfWork.Save();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await OrderExists(id))
+                {
+                    return NotFound();
+                }
+            }
+            return Ok(order);
+        }
     }
 }
 

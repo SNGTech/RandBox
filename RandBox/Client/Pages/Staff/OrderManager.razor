@@ -26,9 +26,11 @@ else
         <h4 class="option-btn edit-btn m-0 @(IsEditButtonActive() ? "" : "inactive")" @onclick="OpenEditModal">
             Edit Order
         </h4>
-        
         <h4 class="option-btn delete-btn m-0 @(IsDeleteButtonActive() ? "" : "inactive")" @onclick="OpenDeleteModal">
             Remove Order 
+        </h4>
+        <h4 class="option-btn mark-btn m-0 @(IsDeleteButtonActive() ? "": "inactive")" @onclick=MarkDelivered>
+            Mark Delivered
         </h4>
     </div>
 
@@ -43,7 +45,7 @@ else
                 <th scope="col">Total Price</th>
                 <th scope="col">Customer</th>
                 <th scope="col">Staff In-charge</th>
-                <th class="edge-cell-right" scope="col">Delivery Status (cur. month)</th>
+                <th class="edge-cell-right" scope="col">Delivery Status</th>
             </tr>
         </thead>
         <tbody>
@@ -61,7 +63,7 @@ else
                     <td class="@(order.Staff == null ? "warn" : "")">
                         @(order.Staff == null ? "Needs an IC" : order.Staff.FirstName)
                     </td>
-                    <td class="edge-cell-right"></td>
+                    <td class="edge-cell-right @(order.DeliveryStatus ? "delivered" : "not-delivered")">@(order.DeliveryStatus ? "Delivered" : "Not Delivered")</td>
                     <td class="additional-info collapsible @(component.Selected ? "expand" : "" )">
                         <table class="table additional-info-table m-0">
                             <thead>
@@ -84,7 +86,6 @@ else
                                         <td class="edge-cell-right">$@((item.Product != null) ? (item.Product.DiscountedPrice * item.Qty).ToString() : "N/A")</td>
                                     </tr>
                                 }
-
                             </tbody>
                         </table>
                     </td>
@@ -171,6 +172,18 @@ else
         await RefreshOrders();
     }
 
+    public async Task MarkDelivered()
+    {
+        var selectedOrders = OrderComponents!.FindAll(x => x.Selected).Select(x => x.Order).ToList();
+
+        foreach (var order in selectedOrders)
+        {
+            await OrderService.MarkDelivered(order!.OrderID);
+        }
+
+        await RefreshOrders();
+    }
+
     protected async Task RefreshOrders()
     {
         var orders = await OrderService.GetAll();
@@ -188,6 +201,7 @@ else
             ).ToList();
         }
     }
+
     public class OrderComponent
     {
         public Orders? Order { get; set; }
