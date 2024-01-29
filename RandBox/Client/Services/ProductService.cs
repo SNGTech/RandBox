@@ -140,7 +140,7 @@ namespace RandBox.Client.Services
         {
             try
             {
-                var response = await _httpClient_Public.PutAsJsonAsync($"api/Product/safe-delete/{entity.CountryID}", entity);
+                var response = await _httpClient_Public.PutAsJsonAsync($"api/Product/safe-delete-country/{entity.CountryID}", entity);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -157,6 +157,29 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
+
+        public async Task<List<Product>> UpdateCategoryToNullOnProduct(Category entity)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PutAsJsonAsync($"api/Product/safe-delete-category/{entity.CategoryID}", entity);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<Product>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public void Dispose() => _httpInterceptorService.DisposeEvent();
 	}
 }

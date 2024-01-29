@@ -1,5 +1,6 @@
 ﻿@inject IGenericService<Category> CategoryService
 @inject ISubscriptionCategoryService SubscriptionCategoryService
+@inject IProductService ProductService
 
 @if (categoryComponents == null)
 {
@@ -101,6 +102,7 @@ else
         {
             // Delete related entities first (Subscription Category)
             await SubscriptionCategoryService.DeleteByCategoryId(category!.CategoryID);
+            await ProductService.UpdateCategoryToNullOnProduct(category!);
 
             // Now delete Category
             await CategoryService.DeleteById(category!.CategoryID);
