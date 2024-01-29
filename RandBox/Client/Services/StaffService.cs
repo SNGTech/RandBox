@@ -111,6 +111,7 @@ namespace RandBox.Client.Services
             }
         }
 
+
         public async Task<Staff> Update(Staff entity)
         {
             try
@@ -132,7 +133,29 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
+        public async Task<List<Orders>> GetOrdersByStaffId(int staffId)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/Staff/{staffId}/Orders"); // Assuming there is an endpoint for getting orders by StaffID
 
-		public void Dispose() => _httpInterceptorService.DisposeEvent();
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<Orders>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        public void Dispose() => _httpInterceptorService.DisposeEvent();
 	}
 }

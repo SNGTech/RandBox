@@ -1,7 +1,8 @@
 ﻿@page "/staff/staff"
-@inject IGenericService<Staff> StaffService
+@inject IStaffService StaffService
+@inject IOrderService OrderService
 @inject NavigationManager Navigation
-
+@attribute [AllowAnonymous]
 @if (staff == null || filteredStaffComponents == null)
 {
     <h4>Loading Staff</h4>
@@ -10,7 +11,7 @@ else
 {
     <div class="col d-flex justify-content-between align-items-center mb-4">
         <h3 class="m-0">Staff</h3>
-        <div class="position-relative">
+        <div class="position-relative">em
             <i class="bi bi-search search-icon position-absolute" />
             <input class="search-box" placeholder="Search Staff Name" @oninput=FilterStaff />
         </div>
@@ -143,11 +144,40 @@ else
 
         foreach (var staffMember in selectedStaff)
         {
+            // Update associated orders with null StaffID
+            await UpdateOrdersWithNullStaffId(staffMember!.StaffID);
+        }
+
+        // Now, delete the staff members
+        foreach (var staffMember in selectedStaff)
+        {
+            // Delete the staff member
             await StaffService.DeleteById(staffMember!.StaffID);
         }
 
         await RefreshStaff();
     }
+
+    private async Task UpdateOrdersWithNullStaffId(int staffId)
+    {
+        try
+        {
+            // Fetch orders with the given staffId
+            var ordersToUpdate = await StaffService.GetOrdersByStaffId(staffId);
+
+            foreach (var order in ordersToUpdate)
+            {
+                order.StaffID = null;
+ 
+                await OrderService.Update(order);
+            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
 
     protected async Task RefreshStaff()
     {
