@@ -1,5 +1,6 @@
 ﻿@inject IGenericService<Category> CategoryService
 @inject ISubscriptionCategoryService SubscriptionCategoryService
+@inject IJSRuntime JSRuntime
 
 @if (categoryComponents == null)
 {
@@ -99,11 +100,16 @@ else
 
         foreach (var category in categories)
         {
-            // Delete related entities first (Subscription Category)
-            await SubscriptionCategoryService.DeleteByCategoryId(category!.CategoryID);
+            try
+            {
 
-            // Now delete Category
-            await CategoryService.DeleteById(category!.CategoryID);
+                await CategoryService.DeleteById(category!.CategoryID);
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception when referential constraint is violated
+                await JSRuntime.InvokeVoidAsync("alert", $"Failed to delete {category?.Name} as it is related to other entities");
+            }
         }
 
         await RefreshCategories();

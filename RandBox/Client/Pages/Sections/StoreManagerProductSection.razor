@@ -1,5 +1,5 @@
 ﻿@inject IGenericService<Product> ProductService
-
+@inject IJSRuntime JSRuntime
 @if (productComponents == null)
 {
     <h4>> Loading Products</h4>
@@ -94,8 +94,17 @@ else
 
         foreach (var product in products)
         {
-          
-            await ProductService.DeleteById(product!.ProductID);
+            try
+            {
+                await ProductService.DeleteById(product!.ProductID);
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception when referential constraint is violated
+                await JSRuntime.InvokeVoidAsync("alert", $"Failed to delete product {product?.Name} as it is related to other entities");
+            }
+
+           
         }
 
         await RefreshProducts();

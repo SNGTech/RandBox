@@ -1,4 +1,5 @@
 ﻿@inject IGenericService<Country> CountryService
+@inject IJSRuntime JSRuntime
 
 
 @if (CountryComponents == null)
@@ -98,10 +99,16 @@ else
 
         foreach (var Country in countries)
         {
-           
-
-           
-            await CountryService.DeleteById(Country!.CountryID);
+            try
+            {
+                await CountryService.DeleteById(Country!.CountryID);
+                
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception when referential constraint is violated
+                await JSRuntime.InvokeVoidAsync("alert", $"Failed to delete {Country?.Name} as it is related to other entities");
+            }
         }
 
         await Refreshcountries();
