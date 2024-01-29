@@ -2,7 +2,7 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
 @inject IPaymentIntentService PaymentIntentService
-@inject IGenericService<SubscriptionPlan> SubscriptionService
+@inject ISubscriptionPlanService SubscriptionService
 @attribute [Authorize(Policy = "CustomerPolicy")]
 
 <section class="row d-flex justify-content-center align-items-center">
