@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 
 namespace RandBox.Client.Services
 {
-    public class StaffService : IGenericService<Staff>
+    public class StaffService : IStaffService
     {
         private readonly HttpClient _httpClient_Public;
         private readonly HttpClient _httpClient_Private;

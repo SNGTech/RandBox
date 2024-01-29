@@ -42,7 +42,7 @@ builder.Services.AddScoped<IGenericService<Country>, CountryService>();
 builder.Services.AddScoped<ISubscriptionItemService, SubscriptionItemService>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IGenericService<Staff>, StaffService>();
+builder.Services.AddScoped<IStaffService, StaffService>();
 
 builder.Services.AddHttpClientInterceptor();
 
