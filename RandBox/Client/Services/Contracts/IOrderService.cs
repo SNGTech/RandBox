@@ -8,5 +8,6 @@ namespace RandBox.Client.Services.Contracts
     {
         public Task<decimal> GetTotalIncomeFromOrders();
         public Task<List<Orders>> UpdateStaffToNullOnOrder(Staff entity);
+        public Task<Orders> MarkDelivered(int id);
     }
 }

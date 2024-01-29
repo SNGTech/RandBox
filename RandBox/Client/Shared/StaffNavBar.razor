@@ -1,4 +1,6 @@
-﻿<div class="navbar vh-100 p-0">
+﻿@inject NavigationManager Navigation
+
+<div class="navbar vh-100 p-0">
 	<div class="inner-navbar row d-flex align-content-between vh-100">
 		<div class="randbox-title col d-flex px-3">
 			<h1 class="m-0">rand<span>Box</span></h1>
@@ -13,9 +15,12 @@
 				<li><a href="staff/staff">Manage Staff</a></li>
 			</ul>
 		</nav>
-		<div class="profile col d-flex align-items-center p-0">
-			<a><img src="images/pfp.png" class="rounded-circle" height="40" /></a>
-			<h4 class="m-0 mx-3">Patrick Wu</h4>
+		<div class="profile col d-flex align-items-center p-0 position-relative">
+			<div class="logout-dropdown position-absolute @(pressedUserBtn ? "expand" : "")" @onclick=Logout>
+				<p>Logout</p>
+			</div>
+			<a><img src="images/pfp.png" class="rounded-circle" height="40" @onclick=ToggleLogoutBtn /></a>
+			<h4 class="m-0 mx-3" @onclick=ToggleLogoutBtn>Patrick Wu</h4>
 		</div>
 	</div>
 	<div class="collapse-layer vh-100 col d-flex align-items-center">
@@ -24,5 +29,15 @@
 </div>
 
 @code {
+	private bool pressedUserBtn = false;
 
+	protected void ToggleLogoutBtn()
+	{
+		pressedUserBtn = !pressedUserBtn;
+	}
+
+	protected void Logout()
+	{
+		Navigation.NavigateToLogout("authentication/logout");
+	}
 }

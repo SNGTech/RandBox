@@ -44,6 +44,10 @@
     color: #f55353;
 }
 
+.mark-btn {
+    color: #4c6ac8;
+}
+
 thead {
     border-bottom-color: #25242d;
     border-bottom-width: 4px;
@@ -140,4 +144,14 @@ td {
 
 .additional-info-table {
     font-size: 0.7em;
+}
+
+.not-delivered {
+    color: #f55353;
+    opacity: 80%;
+}
+
+.delivered {
+    color: #2cb67d;
+    opacity: 100%;
 }

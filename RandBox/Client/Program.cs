@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -30,6 +31,8 @@ builder.Services.AddHttpClient("RandBox.ServerAPI.public", (sp,
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("RandBox.ServerAPI.private"));
+
+builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<HttpInterceptorService>();
 builder.Services.AddScoped<IGenericService<Category>, CategoryService>();
