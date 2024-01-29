@@ -176,7 +176,7 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     // Add role to user based one Email Suffix
-                    var role = "Customer";
+                    var role = GetRoleByEmailSuffix(Input.Email);
                     if (role != null)
                     {
                         IdentityResult roleResult = await _userManager.AddToRoleAsync(user, role);
@@ -278,6 +278,11 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
             return (IUserEmailStore<ApplicationUser>)_userStore;
+        }
+
+        private string GetRoleByEmailSuffix(string email)
+        {
+            return email.EndsWith("@randbox.sg") ? "Staff" : "Customer";
         }
     }
 }

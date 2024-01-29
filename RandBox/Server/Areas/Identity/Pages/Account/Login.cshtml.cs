@@ -118,6 +118,14 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    // If Staff, go to staff page
+                    if (Input.Email.EndsWith("@randbox.sg"))
+                    {
+                        return LocalRedirect(Url.Content("~/staff"));
+                    }
+                    // if Customer, go to customer page
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
