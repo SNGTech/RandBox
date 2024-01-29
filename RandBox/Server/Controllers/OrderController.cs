@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RandBox.Client.Pages.CustomerPages.Order;
+using RandBox.Client.Services;
 using RandBox.Server.Repositories.Contracts;
 using RandBox.Shared.Domain;
 
@@ -113,6 +115,24 @@ namespace RandBox.Server.Controllers
             }
 
             return Ok(totalIncome);
+        }
+
+        [HttpPut("safe-delete/{StaffID:int}")]
+        public async Task<ActionResult<IEnumerable<Orders>>> UpdateStaffToNullOnOrder(int StaffID)
+        {
+            var orders = await _unitOfWork.OrderRepository.GetAll();
+            var ordersToUpdate = orders!.Where(order => order.StaffID == StaffID).ToList();
+
+            foreach (var order in ordersToUpdate)
+            {
+                // Set StaffID to null for the order
+                order.StaffID = null;
+                _unitOfWork.OrderRepository.Update(order);
+                
+               
+            }
+            await _unitOfWork.Save();
+            return Ok(orders);
         }
     }
 }

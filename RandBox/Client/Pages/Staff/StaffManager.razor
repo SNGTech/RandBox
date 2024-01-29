@@ -11,7 +11,7 @@ else
 {
     <div class="col d-flex justify-content-between align-items-center mb-4">
         <h3 class="m-0">Staff</h3>
-        <div class="position-relative">em
+        <div class="position-relative">s
             <i class="bi bi-search search-icon position-absolute" />
             <input class="search-box" placeholder="Search Staff Name" @oninput=FilterStaff />
         </div>
@@ -63,6 +63,7 @@ else
 }
 
 @code {
+    private List<Orders>? orders { get; set; }
     private List<Staff>? staff { get; set; }
     private List<StaffComponent>? filteredStaffComponents { get; set; }
 
@@ -72,7 +73,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         StaffService._httpInterceptorService.RegisterEvent();
-
+        orders = await OrderService.GetAll();
         await RefreshStaff();
     }
 
@@ -141,43 +142,15 @@ else
     protected async Task DeleteSelectedStaff()
     {
         var selectedStaff = filteredStaffComponents!.FindAll(x => x.Selected).Select(x => x.Staff).ToList();
-
-        foreach (var staffMember in selectedStaff)
+        foreach (var staff in selectedStaff)
         {
-           
-            await UpdateOrdersWithNullStaffId(staffMember!.StaffID);
+            await OrderService.UpdateStaffToNullOnOrder(staff!);
+            await StaffService.DeleteById(staff!.StaffID);
         }
 
- 
-        foreach (var staffMember in selectedStaff)
-        {
-        
-            await StaffService.DeleteById(staffMember!.StaffID);
-        }
-
+        // Refresh staff list
         await RefreshStaff();
     }
-
-    private async Task UpdateOrdersWithNullStaffId(int staffId)
-    {
-        try
-        {
-            // Fetch orders with the given staffId
-            var ordersToUpdate = await StaffService.GetOrdersByStaffId(staffId);
-
-            foreach (var order in ordersToUpdate)
-            {
-                order.StaffID = null;
- 
-                await OrderService.Update(order);
-            }
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
 
     protected async Task RefreshStaff()
     {
