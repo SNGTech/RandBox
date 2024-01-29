@@ -244,6 +244,11 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
                         _logger.LogInformation("User {Email} logged in at {Time}.",
                             user.Email, DateTime.UtcNow);
 
+                        if (role == "Staff")
+                        {
+                            return LocalRedirect(Url.Content("~/staff/dashboard"));
+                        }
+
                         return LocalRedirect(returnUrl);
                     }   
                 }

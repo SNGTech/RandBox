@@ -122,7 +122,7 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
                     // If Staff, go to staff page
                     if (Input.Email.EndsWith("@randbox.sg"))
                     {
-                        return LocalRedirect(Url.Content("~/staff"));
+                        return LocalRedirect(Url.Content("~/staff/dashboard"));
                     }
                     // if Customer, go to customer page
 
