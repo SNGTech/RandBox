@@ -90,5 +90,29 @@ namespace RandBox.Server.Controllers
 		{
 			return await _unitOfWork.CategoryRepository.GetById(id) != null;
 		}
+
+        [HttpGet("ReferenceExistInAnyEntity/{id:int}")]
+        public async Task<ActionResult<bool>> ReferenceExistInAnyEntity(int id)
+        {
+            var products = await _unitOfWork.ProductRepository.GetAll();
+			var subcategories = await _unitOfWork.SubscriptionCategoryRepository.GetAll();
+
+            if (products == null || subcategories == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                // Check if the countryId is referenced in any of the products
+                bool isReferenced = products.Any(p => p.CategoryID == id) || subcategories.Any(s => s.CategoryID == id);
+
+                if (isReferenced)
+                {
+                    return Ok(true);
+                }
+
+                return Ok(false);
+            }
+        }
     }
 }

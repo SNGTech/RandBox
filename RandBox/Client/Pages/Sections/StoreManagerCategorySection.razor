@@ -1,4 +1,4 @@
-﻿@inject IGenericService<Category> CategoryService
+﻿@inject ICategoryService CategoryService
 @inject ISubscriptionCategoryService SubscriptionCategoryService
 @inject IJSRuntime JSRuntime
 @inject IProductService ProductService
@@ -102,15 +102,24 @@ else
         foreach (var category in categories)
         {
             try
-            {
+        {
+            bool isReferenced = await CategoryService.IsCategoryReferenced(category!.CategoryID);
 
+            if (isReferenced)
+            {
+                // Handle the case where the category is referenced
+                await JSRuntime.InvokeVoidAsync("alert", $"{category?.Name} is referenced in other entities and cannot be deleted");
+            }
+            else
+            {
                 await CategoryService.DeleteById(category!.CategoryID);
             }
-            catch (Exception ex)
-            {
-                // Handle the exception when referential constraint is violated
-                await JSRuntime.InvokeVoidAsync("alert", $"Failed to delete {category?.Name} as it is related to other entities");
-            }
+        }
+        catch (Exception ex)
+        {
+            // Handle other exceptions if needed
+            await JSRuntime.InvokeVoidAsync("alert", $"Error checking {category?.Name}: {ex.Message}");
+        }
         }
 
         await RefreshCategories();

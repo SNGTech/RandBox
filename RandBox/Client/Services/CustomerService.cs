@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 
 namespace RandBox.Client.Services
 {
-    public class CustomerService : IGenericService<Customer>
+    public class CustomerService : ICustomerService
     {
         private readonly HttpClient _httpClient_Public;
         private readonly HttpClient _httpClient_Private;
@@ -136,5 +136,28 @@ namespace RandBox.Client.Services
         }
 
         public void Dispose() => _httpInterceptorService.DisposeEvent();
+
+        public async Task<bool> IsCustomerReferenced(int customerId)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/Customer/ReferenceExistInAnyEntity/{customerId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<bool>();
+                    return result;
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

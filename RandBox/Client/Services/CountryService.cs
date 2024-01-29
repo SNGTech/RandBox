@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 
 namespace RandBox.Client.Services
 {
-    public class CountryService : IGenericService<Country>
+    public class CountryService : ICountryService
     {
         private readonly HttpClient _httpClient_Public;
         private readonly HttpClient _httpClient_Private;
@@ -53,10 +53,7 @@ namespace RandBox.Client.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    /*if (response.StatusCode == HttpStatusCode.NoContent)
-					{
-						return Enumerable.Empty<Country>().ToList();
-					}*/
+                 
                     return await response.Content.ReadFromJsonAsync<List<Country>>();
                 }
                 else
@@ -138,5 +135,35 @@ namespace RandBox.Client.Services
         }
 
 		public void Dispose() => _httpInterceptorService.DisposeEvent();
-	}
+
+
+        public async Task<bool> IsCountryReferenced(int countryId)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/Country/ReferenceExistInAnyEntity/{countryId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<bool>();
+                    return result;
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        
+
+
+
+
+    }
 }

@@ -141,14 +141,35 @@ namespace RandBox.Server.Controllers
             {
                 return NotFound();
             }
-
-            // Disable the product by setting IsDisabled to true
-            product.IsDisabled = true;
             _unitOfWork.ProductRepository.Update(product);
 
             await _unitOfWork.Save();
             return Ok(product);
         }
+
+        [HttpGet("ReferenceExistInAnyEntity/{id:int}")]
+        public async Task<ActionResult<bool>> ReferenceExistInAnyEntity(int id)
+        {
+            var orderItems = await _unitOfWork.OrderItemRepository.GetAll();
+
+            if (orderItems == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                // Check if the productId is referenced in any of the order items
+                bool productIdReferenced = orderItems.Any(oi => oi.ProductID == id);
+
+                if (productIdReferenced)
+                {
+                    return Ok(true);
+                }
+
+                return Ok(false);
+            }
+        }
+
 
 
     }

@@ -1,4 +1,4 @@
-﻿@inject IGenericService<Country> CountryService
+﻿@inject ICountryService CountryService
 @inject IProductService ProductService
 @inject IJSRuntime JSRuntime
 
@@ -101,18 +101,29 @@ else
         {
             try
             {
-                await CountryService.DeleteById(Country!.CountryID);
-                
+              
+                bool isReferenced = await CountryService.IsCountryReferenced(Country!.CountryID);
+
+                if (isReferenced)
+                {
+                    // Handle the case where the country is referenced
+                    await JSRuntime.InvokeVoidAsync("alert", $"{Country?.Name} is referenced in other entities and cannot be deleted");
+                }
+                else
+                {
+                    await CountryService.DeleteById(Country!.CountryID);
+                }
             }
             catch (Exception ex)
             {
-                // Handle the exception when referential constraint is violated
-                await JSRuntime.InvokeVoidAsync("alert", $"Failed to delete {Country?.Name} as it is related to other entities");
+                // Handle other exceptions if needed
+                await JSRuntime.InvokeVoidAsync("alert", $"Error checking {Country?.Name}: {ex.Message}");
             }
         }
 
         await Refreshcountries();
     }
+
 
     protected async Task Refreshcountries()
     {

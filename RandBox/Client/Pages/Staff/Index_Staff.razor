@@ -1,5 +1,5 @@
 ﻿@page "/staff/dashboard"
-@inject IGenericService<Customer> CustomerService
+@inject ICustomerService CustomerService
 @inject IOrderService OrderService
 @inject ISubscriptionPlanService SubscriptionService
 @attribute [Authorize(Policy = "StaffPolicy")]

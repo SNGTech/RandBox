@@ -100,23 +100,33 @@ else
         {
             try
             {
-                await ProductService.DeleteById(product!.ProductID);
+                bool isReferenced = await ProductService.IsProductReferenced(product!.ProductID);
+
+                if (isReferenced)
+                {
+                    // Handle the case where the product is referenced
+                    await JSRuntime.InvokeVoidAsync("alert", $"{product?.Name} is referenced in other entities and cannot be deleted");
+                }
+                else
+                {
+                    // Proceed with deletion if the product is not referenced
+                    await ProductService.DeleteById(product!.ProductID);
+                }
             }
             catch (Exception ex)
             {
-                // Handle the exception when referential constraint is violated
-                await JSRuntime.InvokeVoidAsync("alert", $"Failed to delete product {product?.Name} as it is related to other entities");
+                // Handle other exceptions if needed
+                await JSRuntime.InvokeVoidAsync("alert", $"Error deleting {product?.Name}: {ex.Message}");
             }
-
-           
         }
 
         await RefreshProducts();
     }
 
+
     protected async Task RefreshProducts()
     {
-        var products = await ProductService.GetAll(includeDisabled: false);
+        var products = await ProductService.GetAll();
         productComponents = products!.Select(x => new ProductComponent
             {
                 Product = x,

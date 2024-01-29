@@ -7,6 +7,9 @@ namespace RandBox.Client.Services.Contracts
         public Task<List<Product>> UpdateCategoryToNullOnProduct(Category entity);
         public Task<List<Product>> UpdateCountryToNullOnProduct(Country entity);
         public Task<string> DisableProductById(int id);
-        public Task<List<Product>> GetAll(bool includeDisabled = false);
+
+        public Task<bool> IsProductReferenced(int productId);
+
+
     }
 }

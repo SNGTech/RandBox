@@ -35,13 +35,13 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<HttpInterceptorService>();
-builder.Services.AddScoped<IGenericService<Category>, CategoryService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ISubscriptionPlanService, SubscriptionPlanService>();
 builder.Services.AddScoped<ISubscriptionCategoryService, SubscriptionCategoryService>();
 builder.Services.AddScoped<IPaymentIntentService, PaymentIntentService>();
-builder.Services.AddScoped<IGenericService<Customer>, CustomerService>();
-builder.Services.AddScoped<IGenericService<Country>, CountryService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<ISubscriptionItemService, SubscriptionItemService>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<IOrderService, OrderService>();

@@ -1,5 +1,6 @@
 ﻿@page "/staff/customers"
-@inject IGenericService<Customer> CustomerService
+@inject ICustomerService CustomerService
+@inject IJSRuntime JSRuntime
 
 @if (customers == null || filteredCustomerComponents == null)
 {
@@ -143,11 +144,30 @@ else
 
         foreach (var customer in customers)
         {
-            await CustomerService.DeleteById(customer!.CustID);
+            try
+            {
+                bool isReferenced = await CustomerService.IsCustomerReferenced(customer!.CustID);
+
+                if (isReferenced)
+                {
+                    // Handle the case where the customer is referenced
+                    await JSRuntime.InvokeVoidAsync("alert", $"{customer?.FirstName} is referenced in other entities and cannot be deleted");
+                }
+                else
+                {
+                    await CustomerService.DeleteById(customer!.CustID);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions if needed
+                await JSRuntime.InvokeVoidAsync("alert", $"Error checking {customer?.FirstName}: {ex.Message}");
+            }
         }
 
         await RefreshCustomers();
     }
+
 
     protected async Task RefreshCustomers()
     {

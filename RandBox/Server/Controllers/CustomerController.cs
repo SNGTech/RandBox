@@ -104,6 +104,30 @@ namespace RandBox.Server.Controllers
             return Ok(user!.Email);
         }*/
 
+        [HttpGet("ReferenceExistInAnyEntity/{id:int}")]
+        public async Task<ActionResult<bool>> ReferenceExistInAnyEntity(int id)
+        {
+            var orders = await _unitOfWork.OrderRepository.GetAll();
+            var plans = await _unitOfWork.PlanRepository.GetAll();
+
+            if (orders == null || plans == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                // Check if the customerId is referenced in any of the orders or plans
+                bool customerIdReferencedInOrders = orders.Any(o => o.CustomerID == id);
+                bool customerIdReferencedInPlans = plans.Any(p => p.CustomerID == id);
+
+                if (customerIdReferencedInOrders || customerIdReferencedInPlans)
+                {
+                    return Ok(true);
+                }
+
+                return Ok(false);
+            }
+        }
 
     }
 }

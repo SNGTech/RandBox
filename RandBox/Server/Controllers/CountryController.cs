@@ -89,5 +89,35 @@ namespace RandBox.Server.Controllers
         {
             return await _unitOfWork.CountryRepository.GetById(id) != null;
         }
+
+
+
+
+
+        [HttpGet("ReferenceExistInAnyEntity/{id:int}")]
+        public async Task<ActionResult<bool>> ReferenceExistInAnyEntity(int id)
+        {
+            var products = await _unitOfWork.ProductRepository.GetAll();
+
+            if (products == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                // Check if the countryId is referenced in any of the products
+                bool countryIdReferenced = products.Any(p => p.CountryID == id);
+
+                if (countryIdReferenced)
+                {
+                    return Ok(true);
+                }
+
+                return Ok(false);
+            }
+        }
+
+
     }
+
 }

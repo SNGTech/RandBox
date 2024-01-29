@@ -71,30 +71,6 @@ namespace RandBox.Client.Services
             }
         }
 
-        public async Task<List<Product>> GetAll(bool includeDisabled = false)
-        {
-            try
-            {
-                var response = await _httpClient_Public.GetAsync("api/Product");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var products = await response.Content.ReadFromJsonAsync<List<Product>>();
-
-                    // Filter out disabled products if includeDisabled is false
-                    return includeDisabled ? products : products?.Where(p => !p.IsDisabled).ToList();
-                }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
 
         public async Task<Product> GetById(int id)
         {
@@ -214,6 +190,28 @@ namespace RandBox.Client.Services
                 if (response.IsSuccessStatusCode)
                 {
                     return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task<bool> IsProductReferenced(int productId)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/Country/ReferenceExistInAnyEntity/{productId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<bool>();
+                    return result;
                 }
                 else
                 {
