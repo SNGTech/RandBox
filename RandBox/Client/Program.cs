@@ -36,7 +36,7 @@ builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<HttpInterceptorService>();
 builder.Services.AddScoped<IGenericService<Category>, CategoryService>();
-builder.Services.AddScoped<IGenericService<Product>, ProductService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ISubscriptionPlanService, SubscriptionPlanService>();
 builder.Services.AddScoped<ISubscriptionCategoryService, SubscriptionCategoryService>();
 builder.Services.AddScoped<IPaymentIntentService, PaymentIntentService>();

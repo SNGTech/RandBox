@@ -2,7 +2,7 @@
 @inject NavigationManager Navigation
 @inject IGenericService<Category> CategoryService
 @inject IGenericService<Country> CountryService
-@inject IGenericService<Product> ProductService
+@inject IProductService ProductService
 
 <div class="row d-flex justify-content-center mb-5 text-center position-relative">
     <div class="gradient-backdrop"></div>
@@ -86,11 +86,12 @@ else
         CategoryService._httpInterceptorService.RegisterEvent();
         CountryService._httpInterceptorService.RegisterEvent();
         ProductService._httpInterceptorService.RegisterEvent();
+        filteredProducts = products.Where(p => !p.IsDisabled).ToList();
 
         categories = await CategoryService.GetAll();
         countries = await CountryService.GetAll();
         products = await ProductService.GetAll();
-        filteredProducts = products;
+       
         categoryCheckboxes = categories.Select(c => new CategoryCheckbox { Category = c, IsChecked = false }).ToList();
         countryCheckboxes = countries.Select(c => new CountryCheckbox { Country = c, IsChecked = false }).ToList();
     }

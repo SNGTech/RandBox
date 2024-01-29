@@ -59,20 +59,27 @@
                             {
                                 <div class="col mb-1">
                                     <div class="row mb-4">
-                                        <label class="form-label">
-                                            @adjustedCategoryPrice.Category!.Name
-                                        </label>
-                                        <div>
-                                            <div class="col d-flex align-items-center">
-                                                <p class="dollar-prefix">$</p>
-                                                <InputNumber class="randbox-form-input" @bind-Value="adjustedCategoryPrice!.AdjustedPrice"></InputNumber>
+                                        @if (adjustedCategoryPrice.Category != null)
+                                        {
+                                            <label class="form-label">
+                                                @adjustedCategoryPrice.Category!.Name
+                                            </label>
+                                            <div>
+                                                <div class="col d-flex align-items-center">
+                                                    <p class="dollar-prefix">$</p>
+                                                    <InputNumber class="randbox-form-input" @bind-Value="adjustedCategoryPrice!.AdjustedPrice"></InputNumber>
+                                                </div>
+                                                <ValidationMessage For="@(() => adjustedCategoryPrice.AdjustedPrice)" class="mt-1 text-danger" />
                                             </div>
-                                            <ValidationMessage For="@(() => adjustedCategoryPrice.AdjustedPrice)" class="mt-1 text-danger" />
-                                        </div>
+                                        }
+                                        else
+                                        {
+                                        }
                                     </div>
                                 </div>
                             }
                         </div>
+
                     }
                     <button type="submit" class="btn btn-submit w-100 mt-2 mb-2">Confirm Changes</button>
                 </EditForm>
@@ -162,20 +169,30 @@
 
     protected async Task SubmitInEditMode()
     {
-        var newSubscriptionCategories = input!.AdjustedPrices!.Select(x => new SubscriptionCategory
+        if (input!.AdjustedPrices != null)
         {
-            SubscriptionCategoryID = x.SubscriptionCategoryID,
-            Description = input!.Description,
-            Duration = input!.Duration,
-            BaseMonthlyPrice = input!.BaseMonthlyPrice,
-            NewMonthlyPrice = x.AdjustedPrice,
-            CategoryID = x.Category!.CategoryID
-        }).ToList();
+            var newSubscriptionCategories = input.AdjustedPrices.Select(x => new SubscriptionCategory
+                {
+                    SubscriptionCategoryID = x.SubscriptionCategoryID,
+                    Description = input.Description,
+                    Duration = input.Duration,
+                    BaseMonthlyPrice = input.BaseMonthlyPrice,
+                    NewMonthlyPrice = x.AdjustedPrice,
+                    CategoryID = x.Category!.CategoryID
+                }).ToList();
 
-        await SubscriptionCategoryService.Update(input.Duration, newSubscriptionCategories);
-        Close();
-        await OnSuccessfulSubmit.InvokeAsync();
+            await SubscriptionCategoryService.Update(input.Duration, newSubscriptionCategories);
+            Close();
+            await OnSuccessfulSubmit.InvokeAsync();
+        }
+        else
+        {
+            // Log a message or handle the case when AdjustedPrices is null
+            Console.WriteLine("AdjustedPrices is null. Handle the case accordingly.");
+            // You might want to log or throw an exception, or handle it based on your application logic
+        }
     }
+
 
     protected async Task SubmitInAddMode()
     {

@@ -224,7 +224,29 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
+    
+        public async Task<List<SubscriptionCategory>> UpdateCategoryToNullOnSubscriptionCategory(Category entity)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PutAsJsonAsync($"api/SubscriptionCategory/safe-delete-category/{entity.CategoryID}", entity);
 
-		public void Dispose() => _httpInterceptorService.DisposeEvent();
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<SubscriptionCategory>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void Dispose() => _httpInterceptorService.DisposeEvent();
 	}
 }

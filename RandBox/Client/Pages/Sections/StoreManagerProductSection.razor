@@ -1,5 +1,7 @@
 ﻿@inject IGenericService<Product> ProductService
 @inject IJSRuntime JSRuntime
+@inject IProductService ProductService
+
 @if (productComponents == null)
 {
     <h4>> Loading Products</h4>
@@ -31,6 +33,8 @@ else
             }
         </ul>
     </div>
+
+
 
     <CreateEditProductModal @ref="Modal" OnSuccessfulSubmit="RefreshProducts" />
     <DeleteModal @ref="DeleteModal" OnSuccessfulConfirm="DeleteSelectedProducts" />
@@ -112,13 +116,12 @@ else
 
     protected async Task RefreshProducts()
     {
-        var products = await ProductService.GetAll();
+        var products = await ProductService.GetAll(includeDisabled: false);
         productComponents = products!.Select(x => new ProductComponent
-        {
-            Product = x,
-            Selected = false
-        }
-        ).ToList();
+            {
+                Product = x,
+                Selected = false
+            }).ToList();
     }
 
     protected class ProductComponent

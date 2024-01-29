@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 
 namespace RandBox.Client.Services
 {
-    public class ProductService : IGenericService<Product>
+    public class ProductService : IProductService
     {
         private readonly HttpClient _httpClient_Public;
         private readonly HttpClient _httpClient_Private;
@@ -58,6 +58,31 @@ namespace RandBox.Client.Services
 						return Enumerable.Empty<Product>().ToList();
 					}*/
                     return await response.Content.ReadFromJsonAsync<List<Product>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<Product>> GetAll(bool includeDisabled = false)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync("api/Product");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var products = await response.Content.ReadFromJsonAsync<List<Product>>();
+
+                    // Filter out disabled products if includeDisabled is false
+                    return includeDisabled ? products : products?.Where(p => !p.IsDisabled).ToList();
                 }
                 else
                 {
@@ -136,7 +161,72 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
+        public async Task<List<Product>> UpdateCountryToNullOnProduct(Country entity)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PutAsJsonAsync($"api/Product/safe-delete-country/{entity.CountryID}", entity);
 
-		public void Dispose() => _httpInterceptorService.DisposeEvent();
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<Product>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<Product>> UpdateCategoryToNullOnProduct(Category entity)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PutAsJsonAsync($"api/Product/safe-delete-category/{entity.CategoryID}", entity);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<Product>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task<string> DisableProductById(int id)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PutAsJsonAsync<object>($"api/Product/disable-product/{id}", null);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void Dispose() => _httpInterceptorService.DisposeEvent();
 	}
 }

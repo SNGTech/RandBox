@@ -15,7 +15,15 @@
         <p class="stock-info mb-4">Stock: @Product!.StockNo</p>
 
         <div class="bottom-info d-flex justify-content-between">
-            <p class="category-name mb-0">@Product.Category!.Name</p>
+            @if (Product.Category == null)
+            {
+                <p class="category-name mb-0">No Category</p>
+            }
+            else
+            {
+                <p class="category-name mb-0">@Product.Category!.Name</p>
+            }
+    
             <p class="price mb-0">$@Product!.DiscountedPrice</p>
         </div>
     </div>

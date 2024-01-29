@@ -180,5 +180,23 @@ namespace RandBox.Server.Controllers
 
             return NoContent();
         }
+        [HttpPut("safe-delete-category/{CategoryID:int}")]
+        public async Task<ActionResult<IEnumerable<SubscriptionCategory>>> UpdateCategoryToNullOnSubCategory(int CategoryID)
+        {
+            var subscriptionCategories = await _unitOfWork.SubscriptionCategoryRepository.GetAll();
+            var subscriptionCategoriesToUpdate = subscriptionCategories!.Where(category => category.CategoryID == CategoryID).ToList();
+
+            foreach (var subscriptionCategory in subscriptionCategoriesToUpdate)
+            {
+                // Set CategoryID to null for the subscription category
+                subscriptionCategory.CategoryID = null;
+                _unitOfWork.SubscriptionCategoryRepository.Update(subscriptionCategory);
+            }
+
+            await _unitOfWork.Save();
+            return Ok(subscriptionCategories);
+        }
+
+
     }
 }
