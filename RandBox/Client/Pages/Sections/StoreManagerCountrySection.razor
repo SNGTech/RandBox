@@ -1,5 +1,5 @@
 ﻿@inject IGenericService<Country> CountryService
-
+@inject IProductService ProductService
 
 @if (CountryComponents == null)
 {
@@ -98,9 +98,7 @@ else
 
         foreach (var Country in countries)
         {
-           
-
-           
+            await ProductService.UpdateCountryToNullOnProduct(Country!);
             await CountryService.DeleteById(Country!.CountryID);
         }
 

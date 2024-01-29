@@ -47,11 +47,7 @@ namespace RandBox.Server.Controllers
             return Ok(Product);
         }
 
-        /*[HttpPatch("{countryId:int}")]
-        public async Task<ActionResult<IEnumerable<Product>>> RemoveCountryFromProducts(int countryId)
-        {
-            var products = await _unitOfWork.ProductRepository.GetAll(q => q.CountryID == countryId);
-        }*/
+       
 
         [HttpPost]
         public async Task<ActionResult> AddProduct(Product Product)
@@ -98,6 +94,24 @@ namespace RandBox.Server.Controllers
         protected async Task<bool> ProductExists(int id)
         {
             return await _unitOfWork.ProductRepository.GetById(id) != null;
+        }
+
+        [HttpPut("safe-delete/{CountryID:int}")]
+        public async Task<ActionResult<IEnumerable<Product>>> UpdateCountryToNullOnProduct(int CountryID)
+        {
+            var products = await _unitOfWork.ProductRepository.GetAll();
+            var productsToUpdate = products!.Where(product => product.CountryID == CountryID).ToList();
+
+            foreach (var product in productsToUpdate)
+            {
+                // Set StaffID to null for the order
+                product.CountryID = null;
+                _unitOfWork.ProductRepository.Update(product);
+
+
+            }
+            await _unitOfWork.Save();
+            return Ok(products);
         }
     }
 }

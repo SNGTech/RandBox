@@ -1,5 +1,8 @@
-﻿<!-- purchases.razor -->
-@page "/purchases"
+﻿@page "/purchases"
+@inject IOrderService OrderService
+@inject IOrderItemService OrderItemService
+@inject IProductService ProductService
+
 
 
 <div style="margin-top: 50px;"></div>
@@ -25,5 +28,20 @@
 
 
 @code {
+    public int OrderId { get; set; }
+    private Orders? order;
+    private List<Product>? products;
+    private List<OrderItem>? orderitems;
 
+    protected override async Task OnInitializedAsync()
+    {
+        ProductService._httpInterceptorService.RegisterEvent();
+        OrderItemService._httpInterceptorService.RegisterEvent();
+        OrderService._httpInterceptorService.RegisterEvent();
+                                                                                
+        order = await OrderService.GetById(OrderId);
+
+
+
+    }
 }

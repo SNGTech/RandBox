@@ -1,8 +1,7 @@
 ﻿@page "/view-order/{OrderId:int}"
 @inject IOrderService OrderService
+@inject IProductService ProductService
 @inject IOrderItemService OrderItemService
-@inject IGenericService<Product> ProductService
-
 
 <h2 class="text-center">Order Details</h2>
 
