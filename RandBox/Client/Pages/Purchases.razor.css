@@ -1,0 +1,22 @@
+﻿/* text-styles.css */
+
+.white-text {
+    color: white;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+
+.subscription-box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    background-color: black;
+    border: 1px solid #686868;
+    margin-left: 200px;
+    margin-right: 200px;
+}
