@@ -5,7 +5,7 @@
     ViewData["Title"] = "Registration";
 }
 
-<h1 class="text-center m-4">rand<span>Box</span> @ViewData["Title"]</h1>
+<h1 class="title text-center m-4">rand<span>Box</span> @ViewData["Title"]</h1>
 
 <div class="row">
     <div class="align-content-center">
@@ -50,11 +50,11 @@
                     <div class="input-group mb-3">
                         <span class="input-group-text">#</span>
                         <div class="form-floating col">
-                            <input asp-for="Input.UnitNo" class="form-control" autocomplete="" aria-required="true" placeholder="01-01" />
+                            <input asp-for="Input.UnitNo" class="form-control input-with-group" autocomplete="" aria-required="true" placeholder="01-01" />
                             <label asp-for="Input.UnitNo">Unit No.</label>
-                            <span asp-validation-for="Input.UnitNo" class="text-danger"></span>
                         </div>
                     </div>
+                    <span asp-validation-for="Input.UnitNo" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-floating mb-3">
@@ -72,7 +72,9 @@
                 <label asp-for="Input.ConfirmPassword">Confirm Password</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <div class="text-center">
+                <button id="registerSubmit" type="submit" class="w-100 btn btn-custom">Register</button>
+            </div>
         </form>
     </div>
     @* <div class="col-md-6 col-md-offset-2">
