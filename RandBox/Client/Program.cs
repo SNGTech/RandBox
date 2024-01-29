@@ -34,7 +34,7 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 builder.Services.AddScoped<HttpInterceptorService>();
 builder.Services.AddScoped<IGenericService<Category>, CategoryService>();
 builder.Services.AddScoped<IGenericService<Product>, ProductService>();
-builder.Services.AddScoped<IGenericService<SubscriptionPlan>, SubscriptionPlanService>();
+builder.Services.AddScoped<ISubscriptionPlanService, SubscriptionPlanService>();
 builder.Services.AddScoped<ISubscriptionCategoryService, SubscriptionCategoryService>();
 builder.Services.AddScoped<IPaymentIntentService, PaymentIntentService>();
 builder.Services.AddScoped<IGenericService<Customer>, CustomerService>();

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RandBox.Server.Repositories.Contracts;
 using RandBox.Shared.Domain;
+using Stripe;
 
 namespace RandBox.Server.Controllers
 {
@@ -88,6 +89,24 @@ namespace RandBox.Server.Controllers
             return NoContent();
         }
 
+
+        [HttpPut("safe-delete/{StaffID:int}")]
+        public async Task<ActionResult<IEnumerable<Subscription>>> UpdateStaffToNullOnSubscriptionPlan(int StaffID)
+        {
+            var plans = await _unitOfWork.PlanRepository.GetAll();
+            var planToUpdate = plans!.Where(plan => plan.StaffID == StaffID).ToList();
+
+            foreach (var plan in planToUpdate)
+            {
+                // Set StaffID to null for the order
+                plan.StaffID = null;
+                _unitOfWork.PlanRepository.Update(plan);
+
+
+            }
+            await _unitOfWork.Save();
+            return Ok(plans);
+        }
         protected async Task<bool> SubscriptionExists(int id)
         {
             return await _unitOfWork.PlanRepository.GetById(id) != null;

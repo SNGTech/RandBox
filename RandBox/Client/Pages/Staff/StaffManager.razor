@@ -1,6 +1,7 @@
 ﻿@page "/staff/staff"
 @inject IStaffService StaffService
 @inject IOrderService OrderService
+@inject ISubscriptionPlanService PlanService
 @inject NavigationManager Navigation
 @attribute [AllowAnonymous]
 @if (staff == null || filteredStaffComponents == null)
@@ -144,6 +145,7 @@ else
         var selectedStaff = filteredStaffComponents!.FindAll(x => x.Selected).Select(x => x.Staff).ToList();
         foreach (var staff in selectedStaff)
         {
+            await PlanService.UpdateStaffToNullOnSubscriptionPlan(staff!);
             await OrderService.UpdateStaffToNullOnOrder(staff!);
             await StaffService.DeleteById(staff!.StaffID);
         }
