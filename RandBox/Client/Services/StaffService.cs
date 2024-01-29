@@ -137,7 +137,7 @@ namespace RandBox.Client.Services
         {
             try
             {
-                var response = await _httpClient_Public.GetAsync($"api/Staff/{staffId}/Orders"); // Assuming there is an endpoint for getting orders by StaffID
+                var response = await _httpClient_Public.GetAsync($"api/Staff/{staffId}/Orders"); 
 
                 if (response.IsSuccessStatusCode)
                 {

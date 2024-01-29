@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 
 namespace RandBox.Client.Services
 {
-    public class SubscriptionPlanService : IGenericService<SubscriptionPlan>
+    public class SubscriptionPlanService : ISubscriptionPlanService
     {
         private readonly HttpClient _httpClient_Public;
         private readonly HttpClient _httpClient_Private;
@@ -130,7 +130,29 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
+        public async Task<List<SubscriptionPlan>> UpdateStaffToNullOnSubscriptionPlan(Staff entity)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PutAsJsonAsync($"api/SubscriptionPlan/safe-delete/{entity.StaffID}", entity);
 
-		public void Dispose() => _httpInterceptorService.DisposeEvent();
-	}
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<SubscriptionPlan>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public void Dispose() => _httpInterceptorService.DisposeEvent();
+
+        
+    }
 }

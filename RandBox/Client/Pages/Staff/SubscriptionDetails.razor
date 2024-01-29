@@ -1,5 +1,5 @@
 ﻿@page "/staff/subscriptions/{SubscriptionPlanId:int}"
-@inject IGenericService<SubscriptionPlan> SubscriptionService
+@inject ISubscriptionPlanService SubscriptionService
 @inject NavigationManager Navigation
 
 @if (items == null || subscription == null)
