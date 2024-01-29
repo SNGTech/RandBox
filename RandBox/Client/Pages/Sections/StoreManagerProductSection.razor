@@ -32,6 +32,8 @@ else
         </ul>
     </div>
 
+
+
     <CreateEditProductModal @ref="Modal" OnSuccessfulSubmit="RefreshProducts" />
     <DeleteModal @ref="DeleteModal" OnSuccessfulConfirm="DeleteSelectedProducts" />
 }
@@ -94,8 +96,9 @@ else
 
         foreach (var product in products)
         {
-          
-            await ProductService.DeleteById(product!.ProductID);
+
+            await ProductService.DisableProductById(product!.ProductID);
+            StateHasChanged();
         }
 
         await RefreshProducts();
@@ -103,13 +106,12 @@ else
 
     protected async Task RefreshProducts()
     {
-        var products = await ProductService.GetAll();
+        var products = await ProductService.GetAll(includeDisabled: false);
         productComponents = products!.Select(x => new ProductComponent
-        {
-            Product = x,
-            Selected = false
-        }
-        ).ToList();
+            {
+                Product = x,
+                Selected = false
+            }).ToList();
     }
 
     protected class ProductComponent

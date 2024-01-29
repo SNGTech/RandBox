@@ -132,6 +132,25 @@ namespace RandBox.Server.Controllers
             return Ok(products);
         }
 
+        [HttpPut("disable-product/{id:int}")]
+        public async Task<ActionResult<IEnumerable<Product>>> DisableProduct(int id)
+        {
+            var product = await _unitOfWork.ProductRepository.GetById(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            // Disable the product by setting IsDisabled to true
+            product.IsDisabled = true;
+            _unitOfWork.ProductRepository.Update(product);
+
+            await _unitOfWork.Save();
+            return Ok(product);
+        }
+
+
     }
 }
 

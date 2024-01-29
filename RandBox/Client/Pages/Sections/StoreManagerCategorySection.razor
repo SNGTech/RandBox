@@ -102,6 +102,7 @@ else
         {
             // Delete related entities first (Subscription Category)
             await SubscriptionCategoryService.DeleteByCategoryId(category!.CategoryID);
+            await SubscriptionCategoryService.UpdateCategoryToNullOnSubscriptionCategory(category!);
             await ProductService.UpdateCategoryToNullOnProduct(category!);
 
             // Now delete Category
