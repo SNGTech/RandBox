@@ -180,7 +180,7 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
-        public async Task<string> DisableProductById(int id)
+        /*public async Task<string> DisableProductById(int id)
         {
             try
             {
@@ -201,7 +201,8 @@ namespace RandBox.Client.Services
             {
                 throw;
             }
-        }
+        }*/
+
         public async Task<bool> IsProductReferenced(int productId)
         {
             try

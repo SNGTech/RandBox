@@ -60,5 +60,101 @@ img {
     opacity: 20%;
 }
 
+table {
+    color: #E7E7E7;
+    border-color: #25242d;
+}
 
+thead tr th {
+    border: none;
+}
 
+thead {
+    border-bottom-color: #25242d;
+    border-bottom-width: 4px;
+}
+
+tr {
+    border-color: #25242d;
+}
+
+th {
+    text-align: center;
+    font-weight: 700;
+}
+
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.item-col {
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
+
+.item-col .item-info p {
+    color: #686868;
+    font-weight: 500;
+    margin: 0;
+}
+
+    .item-col img {
+        position: relative;
+        width: 7rem;
+        height: 7rem;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+
+.btn-decrement {
+    color: #acacac;
+    font-size: 1.25rem;
+    padding: 0.15rem 0.65rem;
+    background-color: #1f1d21;
+    border: 1px solid #e5e5e510;
+    transition: background-color 100ms ease;
+}
+
+    .btn-decrement:hover {
+        background-color: #0f0d11;
+    }
+
+.qty {
+    color: #acacac;
+    font-size: 1.15rem;
+    font-weight: 700;
+    padding: 0.15rem 0.65rem;
+    background-color: #1f1d21;
+    border: 1px solid #e5e5e510;
+    width: 3rem;
+}
+
+.btn-increment {
+    color: #acacac;
+    font-size: 1.25rem;
+    padding: 0.15rem 0.65rem;
+    background-color: #1f1d21;
+    border: 1px solid #e5e5e510;
+    transition: background-color 100ms ease;
+}
+
+.btn-increment:hover {
+    background-color: #0f0d11;
+}
+
+.remove-btn {
+    color: #de5252;
+    padding: 0.35rem 0.6rem;
+    font-size: 1.25rem;
+    background-color: #25242d;
+    border-radius: 10px;
+    transition: background-color 100ms ease;
+}
+
+    .remove-btn:hover {
+        background-color: #1f1d21;
+    }

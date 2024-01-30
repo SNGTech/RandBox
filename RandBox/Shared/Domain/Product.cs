@@ -23,7 +23,6 @@ namespace RandBox.Shared.Domain
         public virtual Country? Country { get; set; }
         public int? CategoryID { get; set; }
         public virtual Category? Category { get; set; }
-        public bool IsDisabled { get; set; }
 
     }
 }

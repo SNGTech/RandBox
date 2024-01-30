@@ -1,7 +1,7 @@
 ﻿@page "/products"
 @inject NavigationManager Navigation
 @inject ICategoryService CategoryService
-@inject IGenericService<Country> CountryService
+@inject ICountryService CountryService
 @inject IProductService ProductService
 
 <div class="row d-flex justify-content-center mb-5 text-center position-relative">
@@ -11,7 +11,7 @@
     <h5>View your loot pool here, or buy an item you<br>just can't get enough of!</h5>
 </div>
 
-@if(products == null || categories == null || countries == null)
+@if(filteredProducts == null || categories == null || countries == null)
 {
     <h4>Loading Product Info</h4>
 }
@@ -86,12 +86,13 @@ else
         CategoryService._httpInterceptorService.RegisterEvent();
         CountryService._httpInterceptorService.RegisterEvent();
         ProductService._httpInterceptorService.RegisterEvent();
-        filteredProducts = products.Where(p => !p.IsDisabled).ToList();
 
         categories = await CategoryService.GetAll();
         countries = await CountryService.GetAll();
         products = await ProductService.GetAll();
-       
+
+        filteredProducts = products;
+
         categoryCheckboxes = categories.Select(c => new CategoryCheckbox { Category = c, IsChecked = false }).ToList();
         countryCheckboxes = countries.Select(c => new CountryCheckbox { Country = c, IsChecked = false }).ToList();
     }
@@ -135,7 +136,6 @@ else
             )
             .ToList();
     }
-
 
 
     // Helper classes to store the checkbox state

@@ -3,6 +3,8 @@
 @inject IOrderItemService OrderItemService
 @inject IOrderService OrderService
 @inject ICustomerService CustomerService
+@inject ICartService CartService
+@inject NavigationManager Navigation
 
 <h2 class="text-center">Product Description</h2>
 
@@ -47,7 +49,7 @@
     <input type="number" id="quantity" name="quantity" min="1" @bind="quantity" />
 </div>
 
-<div>
+@* <div>
     <label for="customerId">Customer:</label>
     <select id="customerId" name="customerId" @bind="input.CustomerID">
         <option value="">Select Customer</option>
@@ -75,9 +77,9 @@
             }
         }
     </select>
-</div>
+</div> *@
 
-<button type="button" class="btn btn-primary" @onclick="() => AddToCart(quantity)">Add to Cart</button>
+<button type="button" class="btn btn-primary" @onclick="() => AddToCart()">Add to Cart</button>
 
 @code {
     [Parameter]
@@ -85,27 +87,37 @@
     private List<Orders>? orders;
     private List<Customer>? customers;
     private Product? product;
+    private InputModel input = new InputModel();
+    private int quantity = 0;
 
     protected override async Task OnInitializedAsync()
     {
         ProductService._httpInterceptorService.RegisterEvent();
-        OrderItemService._httpInterceptorService.RegisterEvent();
-        OrderService._httpInterceptorService.RegisterEvent();
+        //OrderItemService._httpInterceptorService.RegisterEvent();
+        //OrderService._httpInterceptorService.RegisterEvent();
         CustomerService._httpInterceptorService.RegisterEvent();
 
         product = await ProductService.GetById(ProductId);
-        orders = await OrderService.GetAll();
+        //orders = await OrderService.GetAll();
         customers = await CustomerService.GetAll();
     }
 
-    [Parameter]
-    public EventCallback OnSuccessfulSubmit { get; set; }
-    private EventCallback SubmitCallback { get; set; }
+    protected async Task AddToCart()
+    {
+        var orderItem = new OrderItem
+        {
+            OrderID = null,
+            ProductID = product!.ProductID,
+            Product = product!,
+            Qty = quantity
+        };
 
-    private InputModel input = new InputModel();
-    private int quantity = 0;
+        await CartService.Insert(orderItem);
 
-    protected async Task AddToCart(int quantity)
+        Navigation.NavigateTo("/cart");
+    }
+
+    /*protected async Task AddToCart(int quantity)
     {
         var message = $"Added {quantity} {product!.Name}(s) to the cart.";
         Console.WriteLine(message);
@@ -158,7 +170,7 @@
 
             await OnSuccessfulSubmit.InvokeAsync();
         }
-    }
+    }*/
 
 
     public class InputModel

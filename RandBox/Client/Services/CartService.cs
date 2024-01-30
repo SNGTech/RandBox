@@ -5,7 +5,7 @@ using RandBox.Shared.Domain;
 
 namespace RandBox.Client.Services
 {
-	public class CartService : ICartService
+    public class CartService : ICartService
 	{
 		[Inject]
 		public ILocalStorageService _localStorage { get; set; }
@@ -17,9 +17,10 @@ namespace RandBox.Client.Services
             _localStorage = localStorage;
         }
 
-        public Task<string> DeleteById(int id)
+        public async Task RemoveItem(OrderItem item)
 		{
-			throw new NotImplementedException();
+			cartItems.Remove(item);
+			await _localStorage.SetItemAsync("cartItems", cartItems);
 		}
 
 		public async Task<List<OrderItem>> GetAll()
@@ -28,21 +29,47 @@ namespace RandBox.Client.Services
 
 			if (items == null)
 			{
-				return cartItems;
+                await _localStorage.SetItemAsync("cartItems", cartItems);
+                return cartItems;
 			}
 
+			cartItems = items;
+            return items;
+		}
+
+		public async Task Insert(OrderItem item)
+		{
+			item.OrderItemID = cartItems.Count == 0 ? 1 : cartItems.Last().OrderItemID + 1;
+			cartItems.Add(item);
 			await _localStorage.SetItemAsync("cartItems", cartItems);
-			return items;
 		}
 
-		public Task Insert(OrderItem item)
+		public async Task UpdateQty(int itemId, int qty)
 		{
-			throw new NotImplementedException();
+			var item = cartItems.FirstOrDefault(x => x.OrderItemID == itemId);
+            item!.Qty = qty;
+			await _localStorage.SetItemAsync("cartItems", cartItems);
 		}
 
-		public Task UpdateQty(int qty)
+		public async Task RemoveAll()
 		{
-			throw new NotImplementedException();
+			cartItems.Clear();
+			await _localStorage.SetItemAsync("cartItems", cartItems);
 		}
-	}
+
+        public decimal GetSubtotalPrice()
+        {
+			return Math.Round(cartItems.Sum(x => x.Product!.OriginalPrice * x.Qty), 2);
+        }
+
+        public decimal GetTotalPrice()
+        {
+            return Math.Round(cartItems.Sum(x => x.Product!.DiscountedPrice * x.Qty), 2);
+        }
+
+        public decimal GetDiscountedPrice()
+        {
+            return Math.Round(GetSubtotalPrice() - GetTotalPrice(), 2);
+        }
+    }
 }

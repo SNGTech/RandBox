@@ -110,7 +110,7 @@ namespace RandBox.Server.Controllers
 
             foreach (var order in orders) 
             {
-                decimal totalPerOrder = order.OrderItems!.Sum(x => x.Product!.DiscountedPrice * x.Qty)!.Value;
+                decimal totalPerOrder = order.OrderItems!.Sum(x => x.Product!.DiscountedPrice * x.Qty)!;
                 totalIncome += totalPerOrder;
             }
 

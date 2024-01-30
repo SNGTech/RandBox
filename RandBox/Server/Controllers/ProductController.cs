@@ -35,9 +35,11 @@ namespace RandBox.Server.Controllers
 
         // Get Product by id
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProduct(int id)
+        public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var Product = await _unitOfWork.ProductRepository.GetById(id);
+            var Product = (await _unitOfWork.ProductRepository.GetAll(
+                q => q.ProductID == id,
+                includes: q => q.Include(x => x.Category!).Include(x => x.Country!))).First();
 
             if (Product == null)
             {

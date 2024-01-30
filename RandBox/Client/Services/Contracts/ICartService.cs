@@ -6,7 +6,11 @@ namespace RandBox.Client.Services.Contracts
 	{
 		Task<List<OrderItem>> GetAll();
 		Task Insert(OrderItem item);
-		Task<string> DeleteById(int id);
-		Task UpdateQty(int qty);
+		Task RemoveItem(OrderItem item);
+		Task RemoveAll();
+		Task UpdateQty(int itemId, int qty);
+		decimal GetSubtotalPrice();
+		decimal GetTotalPrice();
+		decimal GetDiscountedPrice();
 	}
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RandBox.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class reset : Migration
+    public partial class RevertToWorkingDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -471,9 +471,9 @@ namespace RandBox.Server.Migrations
                 columns: new[] { "CategoryID", "BadgeColour", "DateTimeCreated", "Description", "Name" },
                 values: new object[,]
                 {
-                    { 1, "#78A54E", new DateTime(2024, 1, 30, 1, 29, 19, 587, DateTimeKind.Local).AddTicks(2381), "Experience local snacks and treats, all while helping to support local family owned businesses!", "Snacks" },
-                    { 2, "#D48250", new DateTime(2024, 1, 30, 1, 29, 19, 587, DateTimeKind.Local).AddTicks(2384), "Dress up as people from all over the globe! From Kimonos to Hanboks, get a fresh look every month!", "Clothing" },
-                    { 3, "#D45A50", new DateTime(2024, 1, 30, 1, 29, 19, 587, DateTimeKind.Local).AddTicks(2386), "Unleash your artistic creativity with arts and crafts from all over the world!", "Arts and Crafts" }
+                    { 1, "#78A54E", new DateTime(2024, 1, 30, 15, 14, 18, 91, DateTimeKind.Local).AddTicks(3038), "Experience local snacks and treats, all while helping to support local family owned businesses!", "Snacks" },
+                    { 2, "#D48250", new DateTime(2024, 1, 30, 15, 14, 18, 91, DateTimeKind.Local).AddTicks(3042), "Dress up as people from all over the globe! From Kimonos to Hanboks, get a fresh look every month!", "Clothing" },
+                    { 3, "#D45A50", new DateTime(2024, 1, 30, 15, 14, 18, 91, DateTimeKind.Local).AddTicks(3046), "Unleash your artistic creativity with arts and crafts from all over the world!", "Arts and Crafts" }
                 });
 
             migrationBuilder.InsertData(
@@ -481,9 +481,9 @@ namespace RandBox.Server.Migrations
                 columns: new[] { "CountryID", "BadgeColour", "DateTimeCreated", "Description", "Name" },
                 values: new object[,]
                 {
-                    { 1, "#78A54E", new DateTime(2024, 1, 30, 1, 29, 19, 707, DateTimeKind.Local).AddTicks(8067), "Bring the well-known festivities and nightlife of Germany to your own home!", "Germany" },
-                    { 2, "#D45A50", new DateTime(2024, 1, 30, 1, 29, 19, 707, DateTimeKind.Local).AddTicks(8070), "The land of the rising sun, experience the iconic cultures and long-standing traditions of Japan! ", "Japan" },
-                    { 3, "#D48250", new DateTime(2024, 1, 30, 1, 29, 19, 707, DateTimeKind.Local).AddTicks(8071), "With many diverse ethnic groups, experience the traditional tastes and cultures of the worlds largest island country.", "Indonesia" }
+                    { 1, "#78A54E", new DateTime(2024, 1, 30, 15, 14, 18, 262, DateTimeKind.Local).AddTicks(452), "Bring the well-known festivities and nightlife of Germany to your own home!", "Germany" },
+                    { 2, "#D45A50", new DateTime(2024, 1, 30, 15, 14, 18, 262, DateTimeKind.Local).AddTicks(456), "The land of the rising sun, experience the iconic cultures and long-standing traditions of Japan! ", "Japan" },
+                    { 3, "#D48250", new DateTime(2024, 1, 30, 15, 14, 18, 262, DateTimeKind.Local).AddTicks(461), "With many diverse ethnic groups, experience the traditional tastes and cultures of the worlds largest island country.", "Indonesia" }
                 });
 
             migrationBuilder.InsertData(
@@ -491,8 +491,8 @@ namespace RandBox.Server.Migrations
                 columns: new[] { "CustID", "Address", "DateOfBirth", "DateTimeCreated", "Email", "FirstName", "LastName", "PasswordHash", "PostalCode", "UnitNo" },
                 values: new object[,]
                 {
-                    { 1, "Lane Road 2", new DateTime(2005, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 30, 1, 29, 19, 529, DateTimeKind.Local).AddTicks(5090), "cout.sngtech@gmail.com", "Titus", "Lim", "AQAAAAIAAYagAAAAEPcIUFb1NDLLEIzuK4k7b8tE9Ez48crT2BuhPCEiEHphY9QSdv1tVy09jkvcPtjR7w==", "342352", "04-06" },
-                    { 2, "Hoppa Avenue 8", new DateTime(2005, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 30, 1, 29, 19, 587, DateTimeKind.Local).AddTicks(1076), "patrick_wu@gmail.com", "Patrick", "Wu", "AQAAAAIAAYagAAAAEFXjOH4C/C1+TOtMUcN/7Xz1AdgFy2M77G0NLf+KSZ94AxOw79B1TcrOmUGmyOoCzg==", "442532", "23-45" }
+                    { 1, "Lane Road 2", new DateTime(2005, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 30, 15, 14, 18, 5, DateTimeKind.Local).AddTicks(6729), "cout.sngtech@gmail.com", "Titus", "Lim", "AQAAAAIAAYagAAAAEOiEeaPa+O5adbqybGsCC+yGVZenatTUhhfJsfUMWbjw3/qnTENSoL1suPtinIKibw==", "342352", "04-06" },
+                    { 2, "Hoppa Avenue 8", new DateTime(2005, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 30, 15, 14, 18, 90, DateTimeKind.Local).AddTicks(9179), "patrick_wu@gmail.com", "Patrick", "Wu", "AQAAAAIAAYagAAAAEOyg74psV7JZzORYD/w7XL3fBauKOGDBpTWL3EW/l0g3qR/MMMxoahPiBClN9UJ+Ng==", "442532", "23-45" }
                 });
 
             migrationBuilder.InsertData(
@@ -500,8 +500,8 @@ namespace RandBox.Server.Migrations
                 columns: new[] { "StaffID", "ContactNumber", "DateOfBirth", "Email", "FirstName", "LastName", "PasswordHash" },
                 values: new object[,]
                 {
-                    { 1, "81004821", new DateTime(2005, 12, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Shan2209@gmail.com", "Shan", "Lim", "AQAAAAIAAYagAAAAEP3/8z6ubLoUlQMN6slPkhNcyLpwat4P4mndRaNgbXzeNaPsEgn8cEZc1QFgexM2fw==" },
-                    { 2, "91028765", new DateTime(2005, 2, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "AtuTriyoso@gmail.com", "Atu", "Triyoso", "AQAAAAIAAYagAAAAELMXq67KeIU5Rqg7b1GSLCbOHZN8s7o62EDwdCrANCyRo3WXyCYdjzWJWTdV0me/SA==" }
+                    { 1, "81004821", new DateTime(2005, 12, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Shan2209@gmail.com", "Shan", "Lim", "AQAAAAIAAYagAAAAEMsA/F1hclGhKulEqq4u3YzEYUrVrj6IOohgOcmq5VFr9kQ1SmghC7BxEAqu3EKmcw==" },
+                    { 2, "91028765", new DateTime(2005, 2, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "AtuTriyoso@gmail.com", "Atu", "Triyoso", "AQAAAAIAAYagAAAAEI5H2bEmtpTyip6DshDQLVvmc+Wf1YQRK2uAwanRe4E1PlEEbBTjXaTqTEzVW4bfVA==" }
                 });
 
             migrationBuilder.InsertData(
@@ -509,8 +509,8 @@ namespace RandBox.Server.Migrations
                 columns: new[] { "OrderID", "CustomerID", "DateTimeCheckout", "DeliveryStatus", "StaffID" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2024, 1, 30, 1, 29, 19, 707, DateTimeKind.Local).AddTicks(7268), true, 1 },
-                    { 2, 2, new DateTime(2024, 1, 30, 1, 29, 19, 707, DateTimeKind.Local).AddTicks(7286), false, 2 }
+                    { 1, 1, new DateTime(2024, 1, 30, 15, 14, 18, 261, DateTimeKind.Local).AddTicks(8886), true, 1 },
+                    { 2, 2, new DateTime(2024, 1, 30, 15, 14, 18, 261, DateTimeKind.Local).AddTicks(8925), false, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -559,8 +559,8 @@ namespace RandBox.Server.Migrations
                 columns: new[] { "SubscriptionPlanID", "CustomerID", "StaffID", "SubscribedDateTime", "SubscriptionCategoryID" },
                 values: new object[,]
                 {
-                    { 1, 1, null, new DateTime(2024, 1, 30, 1, 29, 19, 707, DateTimeKind.Local).AddTicks(8303), 12 },
-                    { 2, 2, null, new DateTime(2023, 11, 30, 1, 29, 19, 707, DateTimeKind.Local).AddTicks(8308), 5 }
+                    { 1, 1, null, new DateTime(2024, 1, 30, 15, 14, 18, 262, DateTimeKind.Local).AddTicks(947), 12 },
+                    { 2, 2, null, new DateTime(2023, 11, 30, 15, 14, 18, 262, DateTimeKind.Local).AddTicks(956), 5 }
                 });
 
             migrationBuilder.InsertData(

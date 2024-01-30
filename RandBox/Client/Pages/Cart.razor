@@ -1,11 +1,76 @@
-﻿@using System.ComponentModel;
-@page "/cart"
-@inject IProductService ProductService
+﻿@page "/cart"
+@inject ICartService CartService
 
-<h1 class="text-center">Your Cart</h1>
-<h6 class="text-center">4 Items</h6>
+<h1 class="title text-center">Your Cart</h1>
 
-<div style="margin-top:3rem;">
+@if (cartItems!.Count == 0)
+{
+    <h4 class="text-center mt-4">No Items in Cart. Shop at RandBox Now!</h4>
+} 
+else 
+{
+    <h6 class="info-text text-center">@cartItems!.Count @(cartItems!.Count > 1 ? "Items" : "Item")</h6>
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="edge-cell-left item-col" scope="col">Item</th>
+                <th scope="col">Price</th>
+                <th scope="col">Qty</th>
+                <th scope="col">Total</th>
+                <th class="edge-cell-right" scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in cartItems)
+            {
+                <tr class="body-row">
+                    <th class="item-col edge-cell-left" scope="row">
+                        <img src="@item.Product!.ThumbnailURL" />
+                        <div class="item-info">
+                            <h3>@item.Product.Name</h3>
+                            <p>Category: @item.Product.Category!.Name</p>
+                        </div>
+                    </th>
+                    <td classs="text-center">$@item.Product!.DiscountedPrice</td>
+                    <td classs="text-center">
+                        <div class="col d-flex justify-content-center align-items-center">
+                            <p class="btn btn-decrement m-0" @onclick=@(() => DecrementQty(item))>-</p>
+                            <p class="qty m-0">@item.Qty</p>
+                            <p class="btn btn-increment m-0" @onclick=@(() => IncrementQty(item))>+</p>
+                        </div>
+                    </td>
+                    <td>$@(item.Qty * item.Product!.DiscountedPrice)</td>
+                    <td class="edge-cell-right"><icon class="bi bi-x-lg remove-btn" @onclick=@(() => RemoveItem(item))></icon></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="container mt-5" style="margin-top:2rem; margin-bottom:2rem;">
+
+        <div class="d-flex justify-content-end">
+            <h6 style="margin-right: 7rem;">Sub Total:</h6>
+            <h6>$@CartService.GetSubtotalPrice()</h6>
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <h6 style="margin-right: 7rem;">Shipping Cost:</h6>
+            <h6>$0.00</h6>
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <h6 style="margin-right: 7rem;">Discount:</h6>
+            <h6>$@CartService.GetDiscountedPrice()</h6>
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <h6 style="margin-right: 7rem;">Grand Total:</h6>
+            <h6>$@CartService.GetTotalPrice()</h6>
+        </div>
+    </div>
+}
+
+@* <div style="margin-top:3rem;">
     <div class="d-flex justify-content-between">
         <h4>Item</h4>
         <h4>Price</h4>
@@ -23,51 +88,43 @@
         <h5>22.5</h5>
     </div>
     <hr />
-</div>
-
-
-
-<div class="container mt-5" style="margin-top:2rem; margin-bottom:2rem;">
-
-    <div class="d-flex justify-content-end">
-        <h6 style="margin-right: 7rem;">SubTotal:</h6>
-        <h6>$78.21</h6>
-    </div>
-
-    <div class="d-flex justify-content-end">
-        <h6 style="margin-right: 7rem;">Shipping Cost:</h6>
-        <h6>$5.87</h6>
-    </div>
-
-    <div class="d-flex justify-content-end">
-        <h6 style="margin-right: 7rem;">Discount:</h6>
-        <h6>$8.21</h6>
-    </div>
-
-    <div class="d-flex justify-content-end">
-        <h6 style="margin-right: 7rem;">Grand Total:</h6>
-        <h6>$75.87</h6>
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
+</div> *@
 
 @code {
-    [Parameter]
-    public int ProductId { get; set; }
-
     private Product? product;
     private Category? category;
+    private List<OrderItem>? cartItems = new List<OrderItem>();
 
     protected override async Task OnInitializedAsync()
     {
-        ProductService._httpInterceptorService.RegisterEvent();
+        cartItems = await CartService.GetAll();
+    }
+
+    protected async Task IncrementQty(OrderItem item)
+    {
+        int newQty = item.Qty + 1;
+
+        if (newQty <= 9)
+        {
+            await CartService.UpdateQty(item.OrderItemID, newQty);
+            cartItems = await CartService.GetAll();
+        }
+    }
+
+    protected async Task DecrementQty(OrderItem item)
+    {
+        int newQty = item.Qty - 1;
+
+        if (newQty > 0) 
+        {
+            await CartService.UpdateQty(item.OrderItemID, newQty);
+            cartItems = await CartService.GetAll();
+        }
+    }
+
+    protected async Task RemoveItem(OrderItem item)
+    {
+        await CartService.RemoveItem(item);
+        cartItems = await CartService.GetAll();
     }
 }
