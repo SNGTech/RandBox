@@ -73,8 +73,9 @@ else
                                 <div class="col d-flex align-items-center">
                                     <p class="dollar-prefix">$</p>
                                     <InputNumber class="randbox-form-input" @bind-Value="input!.OriginalPrice"></InputNumber>
+                                     <ValidationMessage For="@(() => input.OriginalPrice)" class="mt-1 text-danger" />
                                 </div>
-                                <ValidationMessage For="@(() => input.OriginalPrice)" class="mt-1 text-danger" />
+                               
                             </div>
 
 
@@ -85,8 +86,9 @@ else
                                 <div class="col d-flex align-items-center">
                                     <p class="dollar-prefix">$</p>
                                     <InputNumber class="randbox-form-input" @bind-Value="input!.DiscountedPrice"></InputNumber>
-                                </div>
                                     <ValidationMessage For="@(() => input.DiscountedPrice)" class="mt-1 text-danger" />
+                                </div>
+                                   
                             </div>
                         </div>
 
@@ -146,21 +148,6 @@ else
                                 </div>
                         </div>
                     </div>
-
-                        <div class="col">
-                            <div class="row mb-4">
-                                <label class="form-label">
-                                    Enter online image link
-                                </label>
-                                <div class="hero">
-                                    <InputFile accept="image.jpg,image.jpeg,image.png"></InputFile> 
-                                    <ValidationMessage For="@(() => input.ThumbnailURL)" class="mt-1 text-danger" />
-                                </div>
-                            </div>
-                        </div>
-                        
-                    
-
                         <button type="submit" class="btn btn-submit w-100 mt-2 mb-2">Confirm Changes</button>
                     </EditForm>
                 </div>
@@ -308,7 +295,9 @@ else
         public decimal OriginalPrice { get; set; }
         [Required]
         public decimal DiscountedPrice { get; set; }
+        [Required]
         public DateTime ManufacturedDate { get; set; }
+        [Required]
         public DateTime ExpiryDate { get; set; }
         [Required]
         public int? CountryID { get; set; }

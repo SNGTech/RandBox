@@ -116,7 +116,7 @@
                         </ul>
 
                         <!-- Button to confirm changes -->
-                        <button type="submit" class="btn btn-submit w-100 mt-2 mb-2">Confirm Changes</button>
+                        <button type="submit" class="btn btn-submit w-100 mt-2 mb-2" disabled="@(!orderItems!.Any())">Confirm Changes</button>
                     </EditForm>
                 </div>
             </div>

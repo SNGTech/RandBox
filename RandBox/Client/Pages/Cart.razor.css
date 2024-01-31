@@ -158,3 +158,12 @@ td {
     .remove-btn:hover {
         background-color: #1f1d21;
     }
+.btn-submit {
+    border: 2px solid #7f5af0;
+    border-radius: 10px;
+    color: #e7e7e7;
+    font-size: 1em;
+    font-weight: 700;
+    letter-spacing: 0.05rem;
+    padding: 0.5rem 0rem;
+}

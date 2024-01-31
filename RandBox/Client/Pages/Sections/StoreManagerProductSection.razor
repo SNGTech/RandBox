@@ -105,7 +105,7 @@ else
                 if (isReferenced)
                 {
                     // Handle the case where the product is referenced
-                    await JSRuntime.InvokeVoidAsync("alert", $"{product?.Name} is referenced in other entities and cannot be deleted");
+                    await JSRuntime.InvokeVoidAsync("alert", $"{product?.Name} is referenced in an order or subscription plan and cannot be deleted");
                 }
                 else
                 {

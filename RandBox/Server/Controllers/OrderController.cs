@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RandBox.Client.Pages.CustomerPages.Order;
 using RandBox.Client.Services;
 using RandBox.Server.Repositories.Contracts;
 using RandBox.Shared.Domain;

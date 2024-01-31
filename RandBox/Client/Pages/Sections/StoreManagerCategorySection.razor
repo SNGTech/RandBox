@@ -108,7 +108,7 @@ else
             if (isReferenced)
             {
                 // Handle the case where the category is referenced
-                await JSRuntime.InvokeVoidAsync("alert", $"{category?.Name} is referenced in other entities and cannot be deleted");
+                await JSRuntime.InvokeVoidAsync("alert", $"{category?.Name} is in a product or subscription category and cannot be deleted");
             }
             else
             {
