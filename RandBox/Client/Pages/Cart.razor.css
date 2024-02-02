@@ -167,3 +167,7 @@ td {
     letter-spacing: 0.05rem;
     padding: 0.5rem 0rem;
 }
+
+.grand-total {
+    font-weight: 700;
+}

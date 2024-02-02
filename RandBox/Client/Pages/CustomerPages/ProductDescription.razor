@@ -29,17 +29,18 @@
         <div style="margin-left:1.5em;">
             @if (product != null)
             {
-                <h5 style="margin-top:4rem;">@product!.Category.Name</h5>
+                <h5 style="margin-top:4rem;">@product!.Category!.Name</h5>
                 <h4 style="margin-top:1rem;">@product!.Name</h4>
                 <h2>@product!.DiscountedPrice SGD </h2>
                 <p>Price</p>
 
                 <hr />
-                <p>Status: In Stock (@product.StockNo)    Country: @product?.Country?.Name</p>
+                <p>Status: In Stock (@product.StockNo)</p>
+                <p>Country: <span style="color: @product?.Country!.BadgeColour">@product?.Country?.Name</span></p>
                 <p>@product!.Description</p>
                 <label for="quantity">Quantity:</label>
                 <input type="number" id="quantity" name="quantity" min="1" @bind="quantity" />
-                <button type="submit" class="btn btn-submit w-50 mt-2 mb-2">Add To Cart</button>
+                <button class="btn btn-submit w-50 mt-2 mb-2" @onclick="AddToCart">Add To Cart</button>
                 <hr />
             }
         </div>

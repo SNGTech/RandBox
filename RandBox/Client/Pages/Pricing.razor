@@ -1,7 +1,10 @@
 ﻿@page "/pricing"
+@inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
 @inject ICategoryService CategoryService
 @inject ISubscriptionCategoryService SubscriptionCategoryService
+@inject ICustomerService CustomerService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>randBox - Pricing</PageTitle>
 
@@ -72,8 +75,19 @@ else
         }
     }
 
-    protected void NavigateToCheckout(int id)
+    protected async Task NavigateToCheckout(int id)
     {
-        Navigation.NavigateTo($"pricing/checkout/{id}");
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        var doesCustomerExist = await CustomerService.DoesCurrentCustomerExist(authState.User.Identity?.Name!);
+
+        if (!doesCustomerExist)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Cannot susbcribe! Current Logged in Customer Does not Exist in Database");
+        }
+        else
+        {
+            Navigation.NavigateTo($"pricing/checkout/{id}");
+        }
     }
 }

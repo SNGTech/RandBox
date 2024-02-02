@@ -1,5 +1,9 @@
 ﻿@page "/cart"
+@inject IJSRuntime JSRuntime
 @inject ICartService CartService
+@inject ICustomerService CustomerService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h1 class="title text-center">Your Cart</h1>
 
@@ -63,39 +67,15 @@ else
             <h6>$@CartService.GetDiscountedPrice()</h6>
         </div>
 
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end grand-total">
             <h6 style="margin-right: 7rem;">Grand Total:</h6>
             <h6>$@CartService.GetTotalPrice()</h6>
         </div>
         <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-submit w-25" style="margin-top: 3rem;">Checkout</button>
+            <button class="btn btn-submit w-25" style="margin-top: 3rem;" @onclick="NavigateToCheckout">Checkout</button>
         </div>
-        
-      
     </div>
-   
-  
 }
-
-@* <div style="margin-top:3rem;">
-    <div class="d-flex justify-content-between">
-        <h4>Item</h4>
-        <h4>Price</h4>
-        <h4>Quantity</h4>
-        <h4>Total</h4>
-    </div>
-    <hr />
-    <div class="d-flex justify-content-between">
-        <div>
-            <h5>Ruby-coca KitKat</h5>
-            <h6>Category: Snacks</h6>
-        </div>
-        <h5>5.6</h5>
-        <h5>3</h5>
-        <h5>22.5</h5>
-    </div>
-    <hr />
-</div> *@
 
 @code {
     private Product? product;
@@ -133,5 +113,21 @@ else
     {
         await CartService.RemoveItem(item);
         cartItems = await CartService.GetAll();
+    }
+
+    protected async Task NavigateToCheckout()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        var doesCustomerExist = await CustomerService.DoesCurrentCustomerExist(authState.User.Identity?.Name!);
+
+        if (!doesCustomerExist)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Cannot checkout order! Current Logged in Customer Does not Exist in Database");
+        }
+        else
+        {
+            Navigation.NavigateTo($"cart/checkout/");
+        }
     }
 }

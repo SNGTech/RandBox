@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using RandBox.Server.Models;
 using RandBox.Server.Repositories.Contracts;
 using RandBox.Shared.Domain;
@@ -95,14 +96,37 @@ namespace RandBox.Server.Controllers
             return await _unitOfWork.CustomerRepository.GetById(id) != null;
         }
 
-        /*[Authorize(Roles = "Customer")]
-        [HttpGet("current")]
-        public async Task<ActionResult<string>> GetCurrentCustomerEmail()
+        [HttpGet("{email}")]
+        public async Task<ActionResult<bool>> GetCurrentCustomer(string email)
         {
-            ClaimsPrincipal currentUser = User;
-            var user = await _userManager.GetUserAsync(currentUser);
-            return Ok(user!.Email);
-        }*/
+            var customer = (await _unitOfWork.CustomerRepository.GetAll(q => q.Email!.Equals(email))).FirstOrDefault();
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(customer);
+        }
+
+        [HttpGet("exists/")]
+        public ActionResult<bool> EmptyCurrentCustomer(string? email)
+        {
+            return Ok(false);
+        }
+
+        [HttpGet("exists/{email}")]
+        public async Task<ActionResult<bool>> DoesCurrentCustomerExist(string? email)
+        {
+            var customer = (await _unitOfWork.CustomerRepository.GetAll(q => q.Email!.Equals(email ?? ""))).FirstOrDefault();
+
+            if (customer == null)
+            {
+                return Ok(false);
+            }
+
+            return Ok(true);
+        }
 
         [HttpGet("ReferenceExistInAnyEntity/{id:int}")]
         public async Task<ActionResult<bool>> ReferenceExistInAnyEntity(int id)

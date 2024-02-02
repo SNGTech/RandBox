@@ -159,5 +159,49 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
+
+        public async Task<Customer> GetCurrentCustomer(string email)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/Customer/{email ?? ""}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<Customer>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> DoesCurrentCustomerExist(string? email)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/Customer/exists/{email ?? ""}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<bool>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

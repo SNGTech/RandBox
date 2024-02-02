@@ -1,5 +1,79 @@
-﻿<h3>Order Checkedout</h3>
+﻿@page "/cart/checkout"
+@inject ICartService CartService
+@inject ICustomerService CustomerService
+@inject IOrderService OrderService
+@inject IOrderItemService OrderItemService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
+
+<AuthorizeView Policy="CustomerPolicy">
+    <section class="row d-flex justify-content-center align-items-center">
+        <h3>Processing Order...</h3>
+
+        @* <form class="row d-flex justify-content-center w-50" @onsubmit=Checkout id="payment-form">
+        <div id="link-authentication-element">
+        <!--Stripe.js injects the Link Element-->
+        </div>
+        <div id="address-element">
+        <!--Stripe.js injects the Address Element-->
+        </div>
+        <div id="payment-element">
+        <!--Stripe.js injects the Payment Element-->
+        </div>
+        <button class="btn btn-pay" id="submit">
+        <div class="spinner hidden" id="spinner"></div>
+        <span id="button-text">Checkout</span>
+        </button>
+        <div id="payment-message" class="hidden"></div>
+        </form> *@
+    </section>
+</AuthorizeView>
 
 @code {
 
+    protected override void OnInitialized()
+    {
+        CustomerService._httpInterceptorService.RegisterEvent();
+        OrderService._httpInterceptorService.RegisterEvent();
+        OrderItemService._httpInterceptorService.RegisterEvent();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Get current user email and map to Customer Table
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        var currentCustomer = await CustomerService.GetCurrentCustomer(authState.User.Identity?.Name!);
+
+        if (currentCustomer == null)
+        {
+            return;
+        }
+
+        // Create new order from cart
+        var newOrder = await OrderService.Insert(new Orders
+            {
+                DateTimeCheckout = DateTime.Now,
+                CustomerID = currentCustomer.CustID
+            });
+
+        var cartItems = await CartService.GetAll();
+
+        cartItems = cartItems.Select(x => new OrderItem
+        {
+            OrderID = newOrder.OrderID,
+            ProductID = x.ProductID,
+            Qty = x.Qty
+        }).ToList();
+
+        List<OrderItem> orderItems = await OrderItemService.InsertRange(cartItems);
+
+        // If list of order items returned successfully (all items added successfully), clear cart
+        if (orderItems.Count > 0)
+        {
+            await CartService.RemoveAll();
+
+            Navigation.NavigateTo("purchases");
+        }
+    }
 }
