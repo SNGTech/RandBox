@@ -107,7 +107,7 @@
                                                 <!-- Button to remove order item -->
                                                 <button type="button" class="btn btn-sm btn-danger" @onclick="(e) => RemoveOrderItem(item)">Remove</button>
                                                 <!-- Button to edit order item -->
-                                                <button type="button" class="btn btn-sm btn-warning ms-2" @onclick="(e) => EditOrderItem(item)">Edit</button>
+                                                <button type="button" class="btn btn-sm btn-warning ms-2" @onclick="(e) => UpdateOrderItem(item)">Edit</button>
                                             </div>
                                         </div>
                                     </li>
@@ -159,7 +159,7 @@
             {
                 CustomerID = null,
                 StaffID = null,
-                
+
             }; 
         SubmitCallback = EventCallback.Factory.Create(this, async () => await SubmitInAddMode());
         show = true;
@@ -308,7 +308,7 @@
         StateHasChanged();
     }
 
-    // Method to remove an order item
+ 
     private void RemoveOrderItem(OrderItemModel orderItem)
     {
         if (orderItem != null)
@@ -317,19 +317,47 @@
             StateHasChanged();
         }
     }
-   
-    // Method to edit an order item, fill in the fields for that order item and remove it from the list
-    private void EditOrderItem(OrderItemModel orderItem)
+    protected async Task UpdateOrderItem(OrderItemModel updatedOrderItemModel)
     {
-        if (orderItems != null && orderItem != null)
+        if (updatedOrderItemModel != null && products != null && input.ProductID != null && input.Quantity > 0)
         {
-            input.ProductID = orderItem.ProductID;
-            input.Quantity = orderItem.Quantity;
-            isEdit = true;
-            editedOrderItem = orderItem;
-            orderItems.Remove(orderItem);
+            var selectedProduct = products.FirstOrDefault(p => p.ProductID == input.ProductID);
+            if (selectedProduct != null)
+            {
+  
+                var orderItemToUpdate = orderItems.FirstOrDefault(oi => oi.OrderItemID == updatedOrderItemModel.OrderItemID);
+
+                if (orderItemToUpdate != null)
+                {
+                    // Update OrderItemModel properties
+                    orderItemToUpdate.ProductID = selectedProduct.ProductID;
+                    orderItemToUpdate.ProductName = selectedProduct.Name;
+                    orderItemToUpdate.Quantity = input.Quantity;
+
+                    if (!orderItemToUpdate.IsNew)
+                    {
+                        var orderItemEntityToUpdate = new OrderItem
+                            {
+                                OrderItemID = orderItemToUpdate.OrderItemID,
+                                ProductID = selectedProduct.ProductID,
+                                Qty = input.Quantity
+                            };
+
+                        await OrderItemService.Update(orderItemEntityToUpdate);
+                    }
+
+                    // Reset input values
+                    input.ProductID = null;
+                    input.Quantity = 0;
+
+                    StateHasChanged(); // Update the UI
+                }
+            }
         }
     }
+
+
+
 
     private void AddOrderItem()
     {
@@ -342,19 +370,19 @@
                     {
                         ProductID = selectedProduct.ProductID,
                         ProductName = selectedProduct.Name,
-                        Quantity = input.Quantity
+                        Quantity = input.Quantity,
+                        IsNew = true // Set the IsNew flag for new items
                     };
 
                 orderItems.Add(newOrderItem); // Add the new order item to the collection
-
-                // Reset input values
                 input.ProductID = null;
                 input.Quantity = 0;
 
-                StateHasChanged(); // Update the UI
+                StateHasChanged(); 
             }
         }
     }
+
 
     public class InputModel
     {
@@ -364,7 +392,7 @@
         [Required]
         public int? StaffID { get; set; }
         public int? ProductID { get; set; }
-        public int? Quantity { get; set; }
+        public int Quantity { get; set; }
     }
 
     // Input model for the order item entity for the list of order items that will be in each order
@@ -376,5 +404,6 @@
         public string? ProductName { get; set; }
         [Required]
         public int? Quantity { get; set; }
+        public bool IsNew { get; set; } = false;
     }
 }

@@ -1,5 +1,5 @@
 ﻿@inject ISubscriptionCategoryService SubscriptionCategoryService
-
+@inject IJSRuntime JSRuntime
 @if (planComponents == null)
 {
     <h4>> Loading Plan Categories</h4>
@@ -92,6 +92,7 @@ else
 
     protected async Task DeleteByDuration()
     {
+
         var durations = planComponents!.FindAll(x => x.Selected).Select(x => x.SubscriptionCategory!.Duration).ToList();
         foreach (var duration in durations!)
         {

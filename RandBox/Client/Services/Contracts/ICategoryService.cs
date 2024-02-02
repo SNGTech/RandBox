@@ -7,3 +7,4 @@ namespace RandBox.Client.Services.Contracts
         public Task<bool> IsCategoryReferenced(int categoryId);
     }
 }
+    

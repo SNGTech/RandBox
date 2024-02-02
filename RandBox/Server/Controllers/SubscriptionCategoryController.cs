@@ -197,6 +197,28 @@ namespace RandBox.Server.Controllers
             return Ok(subscriptionCategories);
         }
 
+        [HttpGet("ReferenceExistInAnyEntity/{id:int}")]
+        public async Task<ActionResult<bool>> ReferenceExistInAnyEntity(int id)
+        {
+            var plans = await _unitOfWork.PlanRepository.GetAll();
+
+            if (plans == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                
+                bool isReferenced = plans.Any(p=>p.SubscriptionPlanID == id);
+                if (isReferenced)
+                {
+                    return Ok(true);
+                }
+
+                return Ok(false);
+            }
+        }
+
 
     }
 }

@@ -103,7 +103,7 @@ namespace RandBox.Server.Controllers
             }
             else
             {
-                // Check if the countryId is referenced in any of the products
+                // Check if the category is referenced in any of the products
                 bool isReferenced = products.Any(p => p.CategoryID == id) || subcategories.Any(s => s.CategoryID == id);
 
                 if (isReferenced)

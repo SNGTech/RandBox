@@ -246,7 +246,28 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
+        public async Task<bool> IsSubscriptionCategoryReferenced(int subscriptioncategoryId)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/SubscriptionCategory/ReferenceExistInAnyEntity/{subscriptioncategoryId}");
 
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<bool>();
+                    return result;
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         public void Dispose() => _httpInterceptorService.DisposeEvent();
 	}
 }
