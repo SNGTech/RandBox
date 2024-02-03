@@ -73,7 +73,7 @@ else
 
 <CreateSubscriptionModal @ref="Modal" OnSuccessfulSubmit="RefreshSubscriptions" />
 <StaffAssignModal @ref="AssignmentModal" OnSuccessfulAssign="RefreshSubscriptions" />
-<DeleteModal @ref="DeleteModal" OnSuccessfulConfirm="DeleteSelectedSubscriptions" />
+<DeleteModal @ref="DeleteModal" Option="Unsubscribe" OnSuccessfulConfirm="DeleteSelectedSubscriptions" />
 
 @code {
     private List<SubscriptionPlan>? subscriptions { get; set; }

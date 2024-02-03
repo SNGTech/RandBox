@@ -77,8 +77,16 @@
 
     protected async Task SubmitAssign()
     {
-        subscription!.StaffID = input!.StaffID;
-        await SubscriptionService.Update(subscription);
+        var newSubscription = new SubscriptionPlan
+        {
+            SubscriptionPlanID = subscription!.SubscriptionPlanID,
+            SubscriptionCategoryID = subscription!.SubscriptionCategoryID,
+            SubscribedDateTime = subscription!.SubscribedDateTime,
+            CustomerID = subscription!.CustomerID,
+            StaffID = input!.StaffID,
+        };
+
+        await SubscriptionService.Update(newSubscription);
         Close();
         await OnSuccessfulAssign.InvokeAsync();
     }

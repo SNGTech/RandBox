@@ -25,7 +25,7 @@ namespace RandBox.Server.Controllers
 
         {
             var Order = await _unitOfWork.OrderRepository.GetAll(
-                includes: q => q.Include(x => x.OrderItems!)!.ThenInclude(x => x.Product).Include(x => x.Customer).Include(x =>x.Staff));
+                includes: q => q.Include(x => x.OrderItems!)!.ThenInclude(x => x.Product).Include(x => x.Customer).Include(x => x.Staff));
             if (Order == null)
             {
                 return NotFound();
@@ -52,7 +52,7 @@ namespace RandBox.Server.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteOrderById(int id)
         {
-            await _unitOfWork.OrderRepository.DeleteById(id); 
+            await _unitOfWork.OrderRepository.DeleteById(id);
             await _unitOfWork.Save();
 
             return NoContent();
@@ -92,6 +92,20 @@ namespace RandBox.Server.Controllers
                 }
             }
             return Ok(newOrder);
+        }
+
+        [HttpGet("{email}")]
+        public async Task<ActionResult<List<Orders>>> GetOrdersByEmail(string email) 
+        {
+            var orders = await _unitOfWork.OrderRepository.GetAll(q => q.Customer!.Email!.Equals(email),
+                includes: q => q.Include(x => x.OrderItems!).ThenInclude(x => x.Product!));
+
+            if (orders == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(orders);
         }
 
         [HttpGet("total")]

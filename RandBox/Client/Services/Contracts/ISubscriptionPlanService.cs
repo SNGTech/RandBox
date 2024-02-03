@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 namespace RandBox.Client.Services.Contracts
 {
     public interface ISubscriptionPlanService : IGenericService<SubscriptionPlan>
-    { 
+    {
+        public Task<List<SubscriptionPlan>> GetSubscriptionsByEmail(string email);
         public Task<List<SubscriptionPlan>> UpdateStaffToNullOnSubscriptionPlan(Staff entity);
     }
 }

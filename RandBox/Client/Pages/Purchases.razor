@@ -1,70 +1,132 @@
 ﻿@page "/purchases"
 @inject IOrderService OrderService
-@inject IOrderItemService OrderItemService
-@inject IProductService ProductService
+@inject ISubscriptionPlanService SubscriptionService
+@inject ICustomerService CustomerService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
 
-<div class="main-content-div">
-    <h3 class="section-title">
-        Subscriptions
-    </h3>
-    <div>
-        <div class="item-box col d-flex justify-content-between align-items-center">
-            <div>
-                <p class="active-until">Active until 20 Jan 2024</p>
-                <p class="item-title">1 month Mystery Box Plan</p>
-                <p class="info">Category: Animation</p>
-                <p class="info">First Subscribed on 20 Dec 2023</p>
-                <h4 class="unsubscribe-btn" @* @onclick="" *@>
-                    Unsubscribe
-                </h4>
-            </div>
-            <h3 class="price">$19.99<span>/month</span></h3>
+<AuthorizeView Policy="CustomerPolicy">
+    @if (currentCustomer == null)
+    {
+        <div class="main-content-div m-5">
+            <h4 class="warn-text">Could not load Orders and Subscriptions -</h4>
+            <h4 class="warn-text">Current Logged in Customer not found in Database!</h4>
         </div>
-        <div class="item-box col d-flex justify-content-between align-items-center">
+    }
+    else 
+    {
+        <div class="main-content-div">
+            <h3 class="section-title">
+                Subscriptions
+            </h3>
             <div>
-                <p class="active-until">Active until 20 Jan 2024</p>
-                <p class="item-title">1 month Mystery Box Plan</p>
-                <p class="info">Category: Animation</p>
-                <p class="info">First Subscribed on 20 Dec 2023</p>
-                <h4 class="unsubscribe-btn" @* @onclick="" *@>
-                    Unsubscribe
-                </h4>
+                @if (subscriptions == null)
+                {
+                    <h4 class="warn-info-text">This account has no current subscriptions</h4>
+                }
+                else 
+                {
+                    @foreach (var subscription in subscriptions)
+                    {
+                        <div class="item-box col d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="active-until">Active until @subscription.SubscribedDateTime.AddMonths(subscription.SubscriptionCategory!.Duration).ToString("dd MMM yyyy")</p>
+                                <p class="item-title">@subscription.SubscriptionCategory!.Duration month Mystery Box Plan</p>
+                                <p class="info">Category: @subscription.SubscriptionCategory!.Category!.Name</p>
+                                <p class="info">First Subscribed on @subscription.SubscribedDateTime.ToString("dd MMM yyyy")</p>
+                                <h4 class="unsubscribe-btn" @onclick=@(() => OpenUnsubscribeModal(subscription))>
+                                    Unsubscribe
+                                </h4>
+                            </div>
+                            <h3 class="price">$@subscription.SubscriptionCategory!.NewMonthlyPrice<span>/month</span></h3>
+                        </div>
+                    }
+                }
             </div>
-            <h3 class="price">$19.99<span>/month</span></h3>
-        </div>
-    </div>
 
-    <h3 class="section-title">
-        Orders
-    </h3>
-    <div>
-        <div class="item-box col d-flex justify-content-between align-items-center">
+            <h3 class="section-title">
+                Orders
+            </h3>
             <div>
-                <p class="item-title">Order #213415</p>
-                <p class="info">Purchased On: January 31, 2025</p>
+                @if (orders == null)
+                {
+                    <h4 class="warn-info-text">This account has no current orders</h4>
+                }
+                else 
+                {
+                    @foreach (var order in orders)
+                    {
+                        var totalPrice = order?.OrderItems?.Sum(item => item?.Qty * item?.Product?.DiscountedPrice ?? item?.Product?.OriginalPrice) ?? 0;
+                        <div class="item-box col d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="item-title">Order #@order!.OrderID</p>
+                                <p class="info">Purchased On: @order.DateTimeCheckout.ToString("dd MMM yyyy")</p>
+                            </div>
+                            <h3 class="price">$@totalPrice</h3>
+                        </div>
+                    }
+                }
             </div>
-            <h3 class="price">$19.99</h3>
         </div>
-        <div class="item-box col d-flex justify-content-between align-items-center">
-            <div>
-                <p class="item-title">Order #112415</p>
-                <p class="info">Purchased On: January 31, 2025</p>
-            </div>
-            <h3 class="price">$19.99</h3>
-        </div>
-    </div>
-</div>
+    }
+</AuthorizeView>
 
-
+<DeleteModal @ref="UnsubscribeModal" Option="Unsubscribe" OnSuccessfulConfirm="UnsubscribeMarkedSubscription" />
 
 @code {
     private List<Orders>? orders;
-    private List<Product>? products;
+    private List<SubscriptionPlan>? subscriptions;
+
+    private Customer? currentCustomer = new Customer();
+
+    public DeleteModal? UnsubscribeModal;
+
+    private SubscriptionPlan? markedSubscription;
 
     protected override async Task OnInitializedAsync()
     {
-        ProductService._httpInterceptorService.RegisterEvent();
-        OrderItemService._httpInterceptorService.RegisterEvent();
+        SubscriptionService._httpInterceptorService.RegisterEvent();
         OrderService._httpInterceptorService.RegisterEvent();
+        CustomerService._httpInterceptorService.RegisterEvent();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        var doesCustomerExist = await CustomerService.DoesCurrentCustomerExist(authState.User.Identity?.Name!);
+
+        if (doesCustomerExist)
+        {
+            currentCustomer = await CustomerService.GetCurrentCustomer(authState.User.Identity?.Name!);
+
+            if (currentCustomer == null)
+            {
+                return;
+            }
+
+            orders = await OrderService.GetOrdersByEmail(currentCustomer.Email!);
+            subscriptions = await SubscriptionService.GetSubscriptionsByEmail(currentCustomer.Email!);
+        }
+        else
+        {
+            currentCustomer = null;
+        }
+    }
+
+    protected void OpenUnsubscribeModal(SubscriptionPlan subscription)
+    {
+        markedSubscription = subscription;
+        UnsubscribeModal!.Open();
+    }
+
+    // Unsubscribe subscription that was clicked on
+    protected async Task UnsubscribeMarkedSubscription()
+    {
+        // Should never happen, but if it does, do nothing
+        if (markedSubscription == null)
+        {
+            return;
+        }
+
+        await SubscriptionService.DeleteById(markedSubscription!.SubscriptionPlanID);
+        Navigation.NavigateTo("purchases", true);
     }
 }

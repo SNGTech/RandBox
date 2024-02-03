@@ -8,43 +8,30 @@
 
 <h2 class="text-center">Product Description</h2>
 
-<div class="row">
-    <!-- Left side: Product Image -->
-    <div class="col-md-6">
-        @if (product != null)
-        {
-            <div class="product-card-showcase row d-flex" style="margin-top:4rem;">
-                <div class="gradient" style="margin-top:3rem;"></div>
-                <img src="@product!.ThumbnailURL" class="img-fluid" />
-            </div>
-        }
-        else
-        {
-            <p>Loading product details...</p>
-        }
-    </div>
-
-    <!-- Right side: Product Details -->
-    <div class="col-md-6">
-        <div style="margin-left:1.5em;">
-            @if (product != null)
-            {
-                <h5 style="margin-top:4rem;">@product!.Category!.Name</h5>
-                <h4 style="margin-top:1rem;">@product!.Name</h4>
-                <h2>@product!.DiscountedPrice SGD </h2>
-                <p>Price</p>
-
-                <hr />
-                <p>Status: In Stock (@product.StockNo)</p>
-                <p>Country: <span style="color: @product?.Country!.BadgeColour">@product?.Country?.Name</span></p>
-                <p>@product!.Description</p>
-                <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" name="quantity" min="1" @bind="quantity" />
-                <button class="btn btn-submit w-50 mt-2 mb-2" @onclick="AddToCart">Add To Cart</button>
-                <hr />
-            }
+<div class="details-div m-4 col d-flex justify-content-center">
+    @if (product != null)
+    {
+        <div class="product-img row">
+            <div class="gradient"></div>
+            <img src="@product!.ThumbnailURL" class="" />
         </div>
-    </div>
+        <div>
+            <h5 style="margin-top:4rem;">@product!.Category!.Name</h5>
+            <h4 style="margin-top:1rem;">@product!.Name</h4>
+            <h2>@product!.DiscountedPrice SGD </h2>
+            <div class="col d-flex">
+                <p>Price</p>
+                <hr />
+            </div>
+            <p class="stock-info">Status: In Stock (@product.StockNo)</p>
+            <p class="country-info">Country: <span style="color: @product?.Country!.BadgeColour">@product?.Country?.Name</span></p>
+            <p class="desc">@product!.Description</p>
+            <hr />
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" @bind="quantity" />
+            <button class="btn btn-submit w-100 mt-2 mb-2" @onclick="AddToCart">Add To Cart</button>
+        </div>
+    }
 </div>
 
 

@@ -1,5 +1,5 @@
 ﻿.product-card-showcase {
-	width: 14rem;
+	max-width: 14rem;
 	height: 19rem;
 	padding: 1rem;
 	border: 1px solid #E2E2E234;

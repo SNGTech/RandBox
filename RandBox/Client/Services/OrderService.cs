@@ -6,136 +6,158 @@
 
     namespace RandBox.Client.Services
     {
-        public class OrderService : IOrderService
+    public class OrderService : IOrderService
+    {
+        private readonly HttpClient _httpClient_Public;
+        private readonly HttpClient _httpClient_Private;
+
+        [Inject]
+        public HttpInterceptorService _httpInterceptorService { get; set; }
+
+        public OrderService(IHttpClientFactory clientFactory, HttpInterceptorService interceptorService)
         {
-            private readonly HttpClient _httpClient_Public;
-            private readonly HttpClient _httpClient_Private;
+            _httpClient_Public = clientFactory.CreateClient("RandBox.ServerAPI.public");
+            _httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
 
-            [Inject]
-            public HttpInterceptorService _httpInterceptorService { get; set; }
+            _httpInterceptorService = interceptorService;
+        }
 
-            public OrderService(IHttpClientFactory clientFactory, HttpInterceptorService interceptorService)
+        public async Task<string> DeleteById(int id)
+        {
+            try
             {
-                _httpClient_Public = clientFactory.CreateClient("RandBox.ServerAPI.public");
-                _httpClient_Private = clientFactory.CreateClient("RandBox.ServerAPI.private");
+                var response = await _httpClient_Public.DeleteAsync($"api/Order/{id}");
 
-                _httpInterceptorService = interceptorService;
-            }
-
-            public async Task<string> DeleteById(int id)
-            {
-                try
+                if (response.IsSuccessStatusCode)
                 {
-                    var response = await _httpClient_Public.DeleteAsync($"api/Order/{id}");
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return await response.Content.ReadAsStringAsync();
-                    }
-                    else
-                    {
-                        var message = await response.Content.ReadAsStringAsync();
-                        throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
-                    }
+                    return await response.Content.ReadAsStringAsync();
                 }
-                catch (Exception)
+                else
                 {
-                    throw;
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
                 }
             }
-
-            // Can be accessed Anonymously
-            public async Task<List<Orders>> GetAll()
+            catch (Exception)
             {
-                try
-                {
-                    var response = await _httpClient_Public.GetAsync("api/Order");
+                throw;
+            }
+        }
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        /*if (response.StatusCode == HttpStatusCode.NoContent)
-					    {
-						    return Enumerable.Empty<Order>().ToList();
-					    }*/
-                        return await response.Content.ReadFromJsonAsync<List<Orders>>();
-                    }
-                    else
-                    {
-                        var message = await response.Content.ReadAsStringAsync();
-                        throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
-                    }
-                }
-                catch (Exception)
+        // Can be accessed Anonymously
+        public async Task<List<Orders>> GetAll()
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync("api/Order");
+
+                if (response.IsSuccessStatusCode)
                 {
-                    throw;
+                    /*if (response.StatusCode == HttpStatusCode.NoContent)
+                    {
+                        return Enumerable.Empty<Order>().ToList();
+                    }*/
+                    return await response.Content.ReadFromJsonAsync<List<Orders>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
                 }
             }
-
-            public async Task<Orders> GetById(int id)
+            catch (Exception)
             {
-                try
-                {
-                    var response = await _httpClient_Public.GetAsync($"api/Order/{id}");
+                throw;
+            }
+        }
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return await response.Content.ReadFromJsonAsync<Orders>();
-                    }
-                    else
-                    {
-                        var message = await response.Content.ReadAsStringAsync();
-                        throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
-                    }
-                }
-                catch (Exception)
+        public async Task<Orders> GetById(int id)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/Order/{id}");
+
+                if (response.IsSuccessStatusCode)
                 {
-                    throw;
+                    return await response.Content.ReadFromJsonAsync<Orders>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
                 }
             }
-
-            public async Task<Orders> Insert(Orders entity)
+            catch (Exception)
             {
-                try
-                {
-                    var response = await _httpClient_Public.PostAsJsonAsync("api/Order", entity);
+                throw;
+            }
+        }
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return await response.Content.ReadFromJsonAsync<Orders>();
-                    }
-                    else
-                    {
-                        var message = await response.Content.ReadAsStringAsync();
-                        throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
-                    }
-                }
-                catch (Exception)
+        public async Task<Orders> Insert(Orders entity)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PostAsJsonAsync("api/Order", entity);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    throw;
+                    return await response.Content.ReadFromJsonAsync<Orders>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
                 }
             }
-
-            public async Task<Orders> Update(Orders entity)
+            catch (Exception)
             {
-                try
-                {
-                    var response = await _httpClient_Public.PutAsJsonAsync($"api/Order/{entity.OrderID}", entity);
+                throw;
+            }
+        }
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return await response.Content.ReadFromJsonAsync<Orders>();
-                    }
-                    else
-                    {
-                        var message = await response.Content.ReadAsStringAsync();
-                        throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
-                    }
-                }
-                catch (Exception)
+        public async Task<Orders> Update(Orders entity)
+        {
+            try
+            {
+                var response = await _httpClient_Public.PutAsJsonAsync($"api/Order/{entity.OrderID}", entity);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    throw;
+                    return await response.Content.ReadFromJsonAsync<Orders>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
                 }
             }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<Orders>> GetOrdersByEmail(string email)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/Order/{email}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<Orders>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task<List<Orders>> UpdateStaffToNullOnOrder(Staff entity)
         {
@@ -203,7 +225,6 @@
             }
         }
 
-		public void Dispose() => _httpInterceptorService.DisposeEvent();
-
+        public void Dispose() => _httpInterceptorService.DisposeEvent();
     }
 }

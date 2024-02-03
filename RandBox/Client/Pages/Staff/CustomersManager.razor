@@ -151,7 +151,7 @@ else
                 if (isReferenced)
                 {
                     // Handle the case where the customer is referenced
-                    await JSRuntime.InvokeVoidAsync("alert", $"{customer?.FirstName} has an order and cannot be deleted");
+                    await JSRuntime.InvokeVoidAsync("alert", $"{customer?.FirstName} either has an order or subscription and cannot be deleted");
                 }
                 else
                 {

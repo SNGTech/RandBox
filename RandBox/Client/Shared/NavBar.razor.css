@@ -6,6 +6,19 @@
 	background-color: transparent;
 	transition: all 500ms;
 	z-index: 100;
+	overflow: hidden;
+}
+
+.gradient-backdrop {
+	width: 12.5%;
+	height: 4rem;
+	background-color: #3615ED;
+	filter: blur(50px);
+	position: absolute;
+	top: 0px;
+	right: -70px;
+	z-index: -1;
+	opacity: 60%;
 }
 
 .scrolled {

@@ -2,6 +2,15 @@
     margin: 0rem 5rem;
 }
 
+.warn-text {
+    color: #de5252;
+}
+
+.warn-info-text {
+    color: #686868;
+    letter-spacing: 0.05rem;
+}
+
 .section-title {
     margin-top: 3rem;
     margin-bottom: 2rem;

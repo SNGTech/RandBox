@@ -53,10 +53,10 @@ else
             {
                 var order = component.Order;
                 var items = component.Order!.OrderItems;
-                var totalPrice = order?.OrderItems?.Sum(item => item?.Qty * item?.Product?.DiscountedPrice ?? 0) ?? 0;
+                var totalPrice = order?.OrderItems?.Sum(item => item?.Qty * item?.Product?.DiscountedPrice ?? item?.Product?.OriginalPrice) ?? 0;
 
                 <tr class="body-row @(component.Selected ? "selected" : "")" @onclick="@(() => SelectOrder(component))">
-                    <td class="edge-cell-left">@order.OrderID</td>
+                    <td class="edge-cell-left">@order!.OrderID</td>
                     <td>@order.DateTimeCheckout.ToString("dd.MM.yy")</td>
                     <td>$@totalPrice</td>
                     <td>@(order.Customer?.FirstName ?? "N/A")</td>

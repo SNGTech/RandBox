@@ -130,6 +130,7 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
+
         public async Task<List<SubscriptionPlan>> UpdateStaffToNullOnSubscriptionPlan(Staff entity)
         {
             try
@@ -153,6 +154,26 @@ namespace RandBox.Client.Services
         }
         public void Dispose() => _httpInterceptorService.DisposeEvent();
 
-        
+        public async Task<List<SubscriptionPlan>> GetSubscriptionsByEmail(string email)
+        {
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/SubscriptionPlan/{email}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<SubscriptionPlan>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

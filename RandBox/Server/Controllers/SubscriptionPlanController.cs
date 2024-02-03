@@ -89,6 +89,19 @@ namespace RandBox.Server.Controllers
             return NoContent();
         }
 
+        [HttpGet("{email}")]
+        public async Task<ActionResult<List<SubscriptionPlan>>> GetSubscriptionsByEmail(string email)
+        {
+            var subscriptions = await _unitOfWork.PlanRepository.GetAll(q => q.Customer!.Email!.Equals(email),
+                includes: q => q.Include(x => x.SubscriptionCategory!).ThenInclude(x => x.Category!));
+
+            if (subscriptions == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(subscriptions);
+        }
 
         [HttpPut("safe-delete/{StaffID:int}")]
         public async Task<ActionResult<IEnumerable<Subscription>>> UpdateStaffToNullOnSubscriptionPlan(int StaffID)
