@@ -96,7 +96,16 @@ else
         var durations = planComponents!.FindAll(x => x.Selected).Select(x => x.SubscriptionCategory!.Duration).ToList();
         foreach (var duration in durations!)
         {
-            await SubscriptionCategoryService.DeleteByDuration(duration);
+            bool isReferenced = await SubscriptionCategoryService.IsReferencedInSubscription(duration);
+
+            if (isReferenced)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", $"Subscription category exists in a subscription and cannot be deleted");
+            }
+            else
+            {
+                await SubscriptionCategoryService.DeleteByDuration(duration);
+            }
         }
 
         await RefreshPlanCategories();

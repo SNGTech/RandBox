@@ -308,12 +308,13 @@
         StateHasChanged();
     }
 
- 
-    private void RemoveOrderItem(OrderItemModel orderItem)
+
+    private async Task RemoveOrderItem(OrderItemModel orderItem)
     {
         if (orderItem != null)
         {
             orderItems.Remove(orderItem);
+            await OrderItemService.DeleteById(orderItem.OrderItemID);
             StateHasChanged();
         }
     }

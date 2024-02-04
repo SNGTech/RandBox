@@ -246,11 +246,11 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
-        public async Task<bool> IsSubscriptionCategoryReferenced(int subscriptioncategoryId)
+        public async Task<bool> IsReferencedInSubscription(int duration)
         {
             try
             {
-                var response = await _httpClient_Public.GetAsync($"api/SubscriptionCategory/ReferenceExistInAnyEntity/{subscriptioncategoryId}");
+                var response = await _httpClient_Public.GetAsync($"api/SubscriptionCategory/ReferenceExistInSubscription/duration/{duration}");
 
                 if (response.IsSuccessStatusCode)
                 {

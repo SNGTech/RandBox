@@ -102,17 +102,18 @@ else
         foreach (var category in categories)
         {
             try
-        {
-            bool isReferenced = await CategoryService.IsCategoryReferenced(category!.CategoryID);
+            {
+                bool isReferenced = await CategoryService.IsCategoryReferenced(category!.CategoryID);
 
-            if (isReferenced)
-            {
-                // Handle the case where the category is referenced
-                await JSRuntime.InvokeVoidAsync("alert", $"{category?.Name} is in a product or subscription category and cannot be deleted");
-            }
-            else
-            {
-                await CategoryService.DeleteById(category!.CategoryID);
+                if (isReferenced)
+                {
+                    // Handle the case where the category is referenced
+                    await JSRuntime.InvokeVoidAsync("alert", $"{category?.Name} is in a product or subscription category and cannot be deleted");
+                }
+                else
+                {
+                    await SubscriptionCategoryService.DeleteByCategoryId(category!.CategoryID);
+                    await CategoryService.DeleteById(category!.CategoryID);
             }
         }
         catch (Exception ex)

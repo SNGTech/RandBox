@@ -42,6 +42,15 @@
                     </div>
                     <div class="row mb-3">
                         <label class="form-label">
+                            Password:
+                        </label>
+                        <div>
+                            <InputText class="randbox-form-input" @bind-Value="input!.PasswordHash"></InputText>
+                            <ValidationMessage For="@(() => input.PasswordHash)" class="mt-1 text-danger" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label">
                             Date of Birth:
                         </label>
                         <div>
@@ -145,7 +154,7 @@
                 FirstName = input!.FirstName,
                 LastName = input!.LastName,
                 Email = input!.Email,
-                PasswordHash = "",
+                PasswordHash = input!.PasswordHash,
                 DateOfBirth = input!.DateOfBirth,
                 Address = input!.Address,
                 UnitNo = input!.UnitNo,

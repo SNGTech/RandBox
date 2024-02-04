@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RandBox.Server.Repositories;
 using RandBox.Server.Repositories.Contracts;
 using RandBox.Shared.Domain;
 
@@ -153,15 +154,17 @@ namespace RandBox.Server.Controllers
         public async Task<ActionResult<bool>> ReferenceExistInAnyEntity(int id)
         {
             var orderItems = await _unitOfWork.OrderItemRepository.GetAll();
+            var subItems = await _unitOfWork.SubscriptionItemRepository.GetAll(
+                includes: q => q.Include(x => x.Product!));
 
-            if (orderItems == null)
+            if (orderItems == null || subItems == null)
             {
                 return BadRequest();
             }
             else
             {
-                // Check if the productId is referenced in any of the order items
-                bool productIdReferenced = orderItems.Any(oi => oi.ProductID == id);
+                // Check if the productId is referenced in any of the order items or subscription items
+                bool productIdReferenced = (orderItems.Any(oi => oi.ProductID == id) || subItems.Any(si => si.ProductID == id));
 
                 if (productIdReferenced)
                 {
@@ -171,9 +174,6 @@ namespace RandBox.Server.Controllers
                 return Ok(false);
             }
         }
-
-
-
     }
 }
 

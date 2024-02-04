@@ -95,16 +95,18 @@ namespace RandBox.Server.Controllers
         public async Task<ActionResult<bool>> ReferenceExistInAnyEntity(int id)
         {
             var products = await _unitOfWork.ProductRepository.GetAll();
-			var subcategories = await _unitOfWork.SubscriptionCategoryRepository.GetAll();
+			var subscriptions = await _unitOfWork.PlanRepository.GetAll(
+				includes: q => q.Include(x => x.SubscriptionCategory!).ThenInclude(x => x.Category!));
+			// var subcategories = await _unitOfWork.SubscriptionCategoryRepository.GetAll();
 
-            if (products == null || subcategories == null)
+            if (products == null)
             {
                 return BadRequest();
             }
             else
             {
-                // Check if the category is referenced in any of the products
-                bool isReferenced = products.Any(p => p.CategoryID == id) || subcategories.Any(s => s.CategoryID == id);
+                // Check if the category is referenced in any of the products or subscription plans
+                bool isReferenced = products.Any(p => p.CategoryID == id) || subscriptions.Any(s => s.SubscriptionCategory!.CategoryID == id);
 
                 if (isReferenced)
                 {

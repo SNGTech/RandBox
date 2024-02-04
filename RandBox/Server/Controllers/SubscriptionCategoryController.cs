@@ -197,28 +197,24 @@ namespace RandBox.Server.Controllers
             return Ok(subscriptionCategories);
         }
 
-        [HttpGet("ReferenceExistInAnyEntity/{id:int}")]
-        public async Task<ActionResult<bool>> ReferenceExistInAnyEntity(int id)
+        [HttpGet("ReferenceExistInSubscription/duration/{duration:int}")]
+        public async Task<ActionResult<bool>> ReferenceExistInSubscription(int duration)
         {
-            var plans = await _unitOfWork.PlanRepository.GetAll();
+            var subscriptions = await _unitOfWork.PlanRepository.GetAll(
+                includes: q => q.Include(x => x.SubscriptionCategory!));
 
-            if (plans == null)
+            if (subscriptions == null)
             {
                 return BadRequest();
             }
-            else
-            {
                 
-                bool isReferenced = plans.Any(p=>p.SubscriptionPlanID == id);
-                if (isReferenced)
-                {
-                    return Ok(true);
-                }
-
-                return Ok(false);
+            bool isReferenced = subscriptions.Any(s => s.SubscriptionCategory!.Duration == duration);
+            if (isReferenced)
+            {
+                return Ok(true);
             }
+
+            return Ok(false);
         }
-
-
     }
 }
