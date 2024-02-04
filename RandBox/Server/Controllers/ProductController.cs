@@ -50,7 +50,18 @@ namespace RandBox.Server.Controllers
             return Ok(Product);
         }
 
-       
+        [HttpGet("category/{categoryId:int}")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductsByCategory(int categoryId)
+        {
+            var products = await _unitOfWork.ProductRepository.GetAll(q => q.CategoryID == categoryId,
+                includes: q => q.Include(x => x.Category!).Include(x => x.Country!));
+            if (products == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(products);
+        }
 
         [HttpPost]
         public async Task<ActionResult> AddProduct(Product Product)
@@ -135,7 +146,7 @@ namespace RandBox.Server.Controllers
             return Ok(products);
         }
 
-        [HttpPut("disable-product/{id:int}")]
+        /*[HttpPut("disable-product/{id:int}")]
         public async Task<ActionResult<IEnumerable<Product>>> DisableProduct(int id)
         {
             var product = await _unitOfWork.ProductRepository.GetById(id);
@@ -148,7 +159,7 @@ namespace RandBox.Server.Controllers
 
             await _unitOfWork.Save();
             return Ok(product);
-        }
+        }*/
 
         [HttpGet("ReferenceExistInAnyEntity/{id:int}")]
         public async Task<ActionResult<bool>> ReferenceExistInAnyEntity(int id)

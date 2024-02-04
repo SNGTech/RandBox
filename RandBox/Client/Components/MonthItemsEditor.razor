@@ -36,7 +36,7 @@
     </div>
 </div>
 
-<CreateEditSubscriptionItemModal @ref="Modal" OnSuccessfulSubmit="RefreshItems" />
+<CreateEditSubscriptionItemModal @ref="Modal" categoryId="@Subscription!.SubscriptionCategory!.CategoryID" OnSuccessfulSubmit="RefreshItems" />
 <DeleteModal @ref="DeleteModal" OnSuccessfulConfirm="DeleteSelected" />
 
 @code {

@@ -94,6 +94,29 @@ namespace RandBox.Client.Services
             }
         }
 
+        public async Task<List<Product>> GetProductsByCategory(int categoryId)
+        {
+
+            try
+            {
+                var response = await _httpClient_Public.GetAsync($"api/Product/category/{categoryId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<Product>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<Product> Insert(Product entity)
         {
             try

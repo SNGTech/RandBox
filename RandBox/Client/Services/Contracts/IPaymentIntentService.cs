@@ -2,6 +2,6 @@
 {
     public interface IPaymentIntentService
     {
-        public Task<string> CreatePaymentIntent(int planId, string email);
+        /*public Task<string> CreatePaymentIntent(int planId, string email);*/
     }
 }

@@ -16,7 +16,13 @@
 .graph-card {
     margin-top: 1rem;
     background-color: #1c1c25;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding: 1rem;
+    height: 450px;
     border-radius: 20px;
+}
+
+.graph-pie {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -30,8 +30,8 @@
                                 <div class="col d-flex align-items-center">
                                     <p class="dollar-prefix">$</p>
                                     <InputNumber class="randbox-form-input" @bind-Value="input!.BaseMonthlyPrice"></InputNumber>
-                                    <ValidationMessage For="@(() => input.BaseMonthlyPrice)" class="mt-1 text-danger" />
                                 </div>
+                                <ValidationMessage For="@(() => input.BaseMonthlyPrice)" class="mt-1 text-danger" />
                             </div>
                         </div>
                     </div>
@@ -68,13 +68,9 @@
                                                 <div class="col d-flex align-items-center">
                                                     <p class="dollar-prefix">$</p>
                                                     <InputNumber class="randbox-form-input" @bind-Value="adjustedCategoryPrice!.AdjustedPrice"></InputNumber>
-                                                    <ValidationMessage For="@(() => adjustedCategoryPrice.AdjustedPrice)" class="mt-1 text-danger" />
                                                 </div>
-                                               
+                                                <ValidationMessage For="@(() => adjustedCategoryPrice.AdjustedPrice)" class="mt-1 text-danger" />
                                             </div>
-                                        }
-                                        else
-                                        {
                                         }
                                     </div>
                                 </div>

@@ -36,7 +36,9 @@ namespace RandBox.Server.Controllers
         {
             var subscription = (await _unitOfWork.PlanRepository.GetAll(
                 q => q.SubscriptionPlanID == id,
-                includes: q => q.Include(x => x.SubscriptionCategory).Include(x => x.Customer).Include(x => x.Staff)!
+                includes: q => q.Include(x => x.SubscriptionCategory)
+                .ThenInclude(x => x!.Category!)
+                .Include(x => x.Customer).Include(x => x.Staff)!
                 .Include(x => x.SubscriptionItems!))).First();
 
             if (subscription == null)

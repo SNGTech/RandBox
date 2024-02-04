@@ -10,10 +10,10 @@ else
 {
     <div>
         <h2 class="stock-title">Stock Alerts</h2>
-        <h3 class="stock-alert"><i class="bi bi-exclamation-triangle-fill" /> You have some items with low and/or no stock!</h3>
+        <h3 class="stock-alert"><i class="bi bi-exclamation-triangle-fill" /> You may have some items with low and/or no stock!</h3>
 
         <div class="product-carousel">
-            <ul class="list-unstyled col d-flex justify-content-start">
+            <ul class="list-unstyled col d-flex justify-content-start flex-wrap">
                 @foreach (var product in products!)
                 {
                     if (product.StockNo < 300)
@@ -26,7 +26,7 @@ else
 
         <div class="title-bar col d-flex justify-content-start align-items-center">
             <h2 class="page-title">Store Management</h2>
-            <select class="store-section-dropdown" @onchange="SelectedStoreSectionChanged">
+            <select class="store-section-dropdown dropdown randbox-form-input" @onchange="SelectedStoreSectionChanged">
                 <option value="" disabled>Select Store Section...</option>
                 <option value="@StoreSection.Products">Products</option>
                 <option value="@StoreSection.Categories">Categories</option>

@@ -225,27 +225,6 @@ namespace RandBox.Client.Services
             }
         }
     
-        public async Task<List<SubscriptionCategory>> UpdateCategoryToNullOnSubscriptionCategory(Category entity)
-        {
-            try
-            {
-                var response = await _httpClient_Public.PutAsJsonAsync($"api/SubscriptionCategory/safe-delete-category/{entity.CategoryID}", entity);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadFromJsonAsync<List<SubscriptionCategory>>();
-                }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
         public async Task<bool> IsReferencedInSubscription(int duration)
         {
             try

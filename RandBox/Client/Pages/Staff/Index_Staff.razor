@@ -39,8 +39,8 @@ else {
             </div>
             <div class="col">
                 <h3 class="mb-2 graph-title">Breakdown Count of Subscriptions Per Duration</h3>
-                <div class="graph-card">
-                    <MudChart ChartType="ChartType.Pie" InputData="@countSeries" @bind-SelectedIndex="pieIndex" InputLabels="@durationLabels" Width="100%" Height="350px" />
+                <div class="graph-card graph-pie">
+                    <MudChart ChartType="ChartType.Pie" InputData="@countSeries" @bind-SelectedIndex="pieIndex" InputLabels="@durationLabels" Width="100%" Height="300px" />
                 </div>
             </div>
         </div>

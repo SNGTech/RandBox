@@ -17,6 +17,5 @@ namespace RandBox.Client.Services.Contracts
         public Task<string> DeleteByCategoryId(int categoryId);
         public Task<bool> IsReferencedInSubscription(int duration);
         public Task<List<int>> GetAllDurations();
-        public Task<List<SubscriptionCategory>> UpdateCategoryToNullOnSubscriptionCategory(Category entity);
     }
 }

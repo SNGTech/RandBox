@@ -41,7 +41,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ISubscriptionPlanService, SubscriptionPlanService>();
 builder.Services.AddScoped<ISubscriptionCategoryService, SubscriptionCategoryService>();
-builder.Services.AddScoped<IPaymentIntentService, PaymentIntentService>();
+//builder.Services.AddScoped<IPaymentIntentService, PaymentIntentService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<ISubscriptionItemService, SubscriptionItemService>();

@@ -61,7 +61,7 @@ else
                     <td class="additional-info collapsible @(component.Selected ? "expand" : "")">
                         <div class="col d-flex justify-content-between">
                             <p>Subscription Duration: <span>@subscription.SubscriptionCategory.Duration month@(subscription.SubscriptionCategory.Duration > 1 ? "s" : "")</span></p>
-                            <p>No. of Days Till End of Subscription: <span>@(HasEnded(endDate) ? "Ended" : (endDate - DateTime.Now).Days) days</span></p>
+                            <p>No. of Days Till End of Subscription: <span>@(HasEnded(endDate) ? "Ended" : (endDate - DateTime.Now).Days + " days")</span></p>
                             <p>Monthly Payment: <span>$@subscription.SubscriptionCategory.NewMonthlyPrice</span></p>
                         </div>
                     </td>

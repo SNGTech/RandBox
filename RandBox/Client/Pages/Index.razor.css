@@ -4,11 +4,11 @@
 
 .gradient-backdrop {
 	width: 50%;
-	height: 30rem;
+	height: 20%;
 	background-color: #3615ED;
 	filter: blur(250px);
 	position: absolute;
-	top: 325px;
+	top: 5%;
 	z-index: -1;
 	opacity: 70%;
 }

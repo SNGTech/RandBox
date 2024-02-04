@@ -8,7 +8,7 @@ namespace RandBox.Client.Services
     // Should only use private client
     public class PaymentIntentService : IPaymentIntentService
     {
-        private readonly HttpClient _httpClient_Public;
+        /*private readonly HttpClient _httpClient_Public;
         private readonly HttpClient _httpClient_Private;
 
         public PaymentIntentService(IHttpClientFactory clientFactory)
@@ -25,10 +25,10 @@ namespace RandBox.Client.Services
                 var response = await _httpClient_Public.PostAsJsonAsync("api/payment-intent", body);
                 if (response.IsSuccessStatusCode)
                 {
-                    /*if (response.StatusCode == HttpStatusCode.NoContent)
+                    *//*if (response.StatusCode == HttpStatusCode.NoContent)
                     {
                         return "{}";
-                    }*/
+                    }*//*
                     return await response.Content.ReadAsStringAsync();
                 }
                 else
@@ -41,6 +41,6 @@ namespace RandBox.Client.Services
             {
                 throw;
             }
-        }
+        }*/
     }
 }

@@ -22,13 +22,12 @@
                     <EditForm Model="@input" OnValidSubmit="@SubmitCallback" FormName="@($"OrderForm")">
                         <DataAnnotationsValidator />
 
-
                         <!-- Customer dropdown -->
                         <div class="row mb-3">
                             <label class="form-label">Customer</label>
                             <div>
                                 <InputSelect class="dropdown randbox-form-input" @bind-Value="input.CustomerID">
-                                    <option value="" disabled>Select Customer</option>
+                                    <option value="" disabled selected>Select Customer</option>
                                     @if (customers != null)
                                     {
                                         foreach (var customer in customers!)
@@ -46,7 +45,7 @@
                             <label class="form-label">Staff</label>
                             <div>
                                 <InputSelect class="dropdown randbox-form-input" @bind-Value="input.StaffID">
-                                    <option value="" disabled>Select Staff</option>
+                                    <option value="" disabled selected>Select Staff</option>
                                     @if (staffs != null)
                                     {
                                         foreach (var staff in staffs!)
@@ -158,8 +157,7 @@
         input = new InputModel
             {
                 CustomerID = null,
-                StaffID = null,
-
+                StaffID = null
             }; 
         SubmitCallback = EventCallback.Factory.Create(this, async () => await SubmitInAddMode());
         show = true;
@@ -183,7 +181,7 @@
             {
                 ProductID = item.ProductID,
                 OrderItemID = item.OrderItemID,
-                ProductName = item.Product.Name,
+                ProductName = item.Product!.Name,
                 Quantity = item.Qty
             }).ToList();
 

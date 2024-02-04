@@ -1,4 +1,4 @@
-﻿@inject IProductService ProductSerivce
+﻿@inject IProductService ProductService
 @inject ISubscriptionItemService SubscriptionItemService
 
 @if (productComponents == null)
@@ -57,6 +57,8 @@ else
 
 @code {
     [Parameter]
+    public int categoryId { get; set; }
+    [Parameter]
     public EventCallback OnSuccessfulSubmit { get; set; }
 
     private EventCallback SubmitCallback { get; set; }
@@ -74,15 +76,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        ProductSerivce._httpInterceptorService.RegisterEvent();
+        ProductService._httpInterceptorService.RegisterEvent();
         SubscriptionItemService._httpInterceptorService.RegisterEvent();
 
-        var products = await ProductSerivce.GetAll();
+        // Filter and show only category products
+        var products = await ProductService.GetProductsByCategory(categoryId);
         productComponents = products.Select(x => new ProductComponent
-        {
-            Product = x,
-            Selected = false
-        }).ToList();
+            {
+                Product = x,
+                Selected = false
+            }).ToList();
     }
 
     //set all product componenets selected attribute to false
@@ -189,7 +192,7 @@ else
         await OnSuccessfulSubmit.InvokeAsync();
     }
 
-    //make a product component so that product entity can be selected or deselected
+    // Make a product component so that product entity can be selected or deselected
     protected class ProductComponent
     {
         public Product? Product { get; set; }
