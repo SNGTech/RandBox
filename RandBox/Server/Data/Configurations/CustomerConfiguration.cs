@@ -37,8 +37,21 @@ namespace RandBox.Server.Data.Configurations
                     UnitNo = "23-45",
                     PostalCode = "442532",
                     DateTimeCreated = DateTime.Now
+                },
+                new Customer
+                {
+                    CustID = 3,
+                    FirstName = "Kelyn",
+                    LastName = "Neo",
+                    Email = "e@gmail.com",
+                    PasswordHash = hasher.HashPassword(null, "R0bl@x758024"),
+                    DateOfBirth = new DateTime(2005, 4, 13),
+                    Address = "Hoppa Avenue 8",
+                    UnitNo = "23-45",
+                    PostalCode = "442532",
+                    DateTimeCreated = DateTime.Now
                 }
-			);
+            );
 		}
 	}
 }
