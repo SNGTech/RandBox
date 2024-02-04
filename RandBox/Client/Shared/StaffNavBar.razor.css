@@ -52,12 +52,6 @@ li {
 	letter-spacing: 0.1rem;
 }
 
-a {
-	color: var(--randbox-primary-colour);
-	text-decoration-line: none;
-	cursor: pointer;
-}
-
 .profile h4 {
 	font-size: 1.2em;
 	font-weight: 500;
@@ -71,6 +65,7 @@ a {
 	margin: 0;
 	opacity: 0%;
 	color: #e6e6e6;
+	border-radius: 10px;
 	transition-property: opacity, background-color;
 	transition-duration: 50ms;
 	transition-timing-function: ease-in-out
@@ -87,3 +82,14 @@ a {
 	.logout-dropdown:hover {
 		background-color: #808080;
 	}
+
+li:has(> .staff-navlink) {
+	transition: background-color 200ms ease;
+	background-color: transparent;
+	border-radius: 10px;
+}
+
+li:has(> .staff-navlink.active) {
+	opacity: 100%;
+	background-color: #1d1b1e;
+}

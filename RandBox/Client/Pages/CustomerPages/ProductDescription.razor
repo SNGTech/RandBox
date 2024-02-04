@@ -6,9 +6,13 @@
 @inject ICartService CartService
 @inject NavigationManager Navigation
 
-<h2 class="text-center">Product Description</h2>
+<div class="col d-flex justify-content-between align-items-center mx-5 mb-5 flex-grow-0">
+    <i class="close-btn bi bi-chevron-left" @onclick=Close> Back</i>
+    <h2>Product Description</h2>
+    <i class="close-btn inactive bi bi-chevron-left"> Back</i>
+</div>
 
-<div class="details-div m-4 col d-flex justify-content-center">
+<div class="details-div m-5 col d-flex justify-content-center">
     @if (product != null)
     {
         <div class="product-img row">
@@ -16,20 +20,22 @@
             <img src="@product!.ThumbnailURL" class="" />
         </div>
         <div>
-            <h5 style="margin-top:4rem;">@product!.Category!.Name</h5>
+            <h5 class="category-text">@product!.Category!.Name</h5>
             <h4 style="margin-top:1rem;">@product!.Name</h4>
-            <h2>@product!.DiscountedPrice SGD </h2>
-            <div class="col d-flex">
-                <p>Price</p>
-                <hr />
+            <h2 class="price">$@product!.DiscountedPrice <span>SGD</span> </h2>
+            <div class="col d-flex align-items-center mb-4 gap-x-4">
+                <p class="m-0 price-label">Price</p>
+                <hr class="divider"/>
             </div>
-            <p class="stock-info">Status: In Stock (@product.StockNo)</p>
-            <p class="country-info">Country: <span style="color: @product?.Country!.BadgeColour">@product?.Country?.Name</span></p>
+            <p class="info-text">Status : <span class="@(product.StockNo> 0 ? "in-stock" : "out-of-stock")">@(product.StockNo > 0 ? $"In Stock ({product.StockNo})" : "Out of Stock")</span></p>
+            <p class="info-text">Country: <span class="country-text" style="color: @product?.Country!.BadgeColour">@product?.Country?.Name</span></p>
             <p class="desc">@product!.Description</p>
             <hr />
-            <label for="quantity">Quantity:</label>
-            <input type="number" id="quantity" name="quantity" min="1" @bind="quantity" />
-            <button class="btn btn-submit w-100 mt-2 mb-2" @onclick="AddToCart">Add To Cart</button>
+            <div class="d-flex col align-items-center gap-x-3">
+                <label for="quantity">Quantity: </label>
+                <input class="randbox-form-input" type="number" id="quantity" name="quantity" min="1" @bind="quantity" />
+            </div>
+            <button class="btn btn-submit w-100 mt-4 mb-2" @onclick="AddToCart">Add To Cart</button>
         </div>
     }
 </div>
@@ -90,6 +96,11 @@
 
     protected async Task AddToCart()
     {
+        if (quantity <= 0 || quantity >= 10)
+        {
+            return;
+        }
+
         var orderItem = new OrderItem
         {
             OrderID = null,
@@ -103,6 +114,12 @@
         Navigation.NavigateTo("/cart");
     }
 
+    protected void Close()
+    {
+        Navigation.NavigateTo("products");
+    }
+
+    // OLD Cart system (obselete)
     /*protected async Task AddToCart(int quantity)
     {
         var message = $"Added {quantity} {product!.Name}(s) to the cart.";

@@ -80,4 +80,13 @@ a {
 	color: var(--randbox-primary-colour);
 	text-decoration-line: none;
 	cursor: pointer;
+	transform: scale(1.0);
+	transition-property: transform;
+	transition-duration: 200ms;
+	transition-timing-function: ease;
 }
+
+a:hover {
+	transform: scale(1.1);
+}
+

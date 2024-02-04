@@ -9,24 +9,24 @@
 	<div class="d-inline-block">
 		<nav>
 			<ul class="m-0">
-				<li><a href="">Home</a></li>
-				<li><a href="products">Products</a></li>
-				<li><a href="pricing">Pricing</a></li>
+				<li><NavLink class="navbar-option" href="" Match=NavLinkMatch.All>Home</NavLink></li>
+				<li><NavLink class="navbar-option" href="products">Products</NavLink></li>
+				<li><NavLink class="navbar-option" href="pricing">Pricing</NavLink></li>
 			</ul>
 			<AuthorizeView>
 				<NotAuthorized>
 					<div class="gradient-backdrop"></div>
 					<ul class="m-0 px-0">
-						<li><a href="authentication/login">Log In</a></li>
+						<li><NavLink class="navbar-option" href="authentication/login">Log In</NavLink></li>
 					</ul>
 					@* <div class="register-spotlight"></div> *@
 					<a class="btn btn-register" href="authentication/register">Register Here</a>
 				</NotAuthorized>
 				<Authorized>
 					<ul class="m-0 px-0">
-						<li><a href="cart">Cart</a></li>
-						<li><a href="purchases">Purchases</a></li>
-						<li><a @onclick="Logout">Logout</a></li>
+						<li><NavLink class="navbar-option" href="cart">Cart</NavLink></li>
+						<li><NavLink class="navbar-option" href="purchases">Purchases</NavLink></li>
+						<li><NavLink class="navbar-option" @onclick="Logout">Logout</NavLink></li>
 					</ul>
 					<a><img src="images/pfp.png" class="rounded-circle" height="40"/></a>
 				</Authorized>

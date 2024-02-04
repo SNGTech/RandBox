@@ -28,7 +28,7 @@ li {
     border: 1px solid #94949433;
     border-radius: 15px;
     background-color: #16151a;
-    min-width: 52rem;
+    min-width: 50rem;
     padding: 0.2rem 0.6rem 0.2rem 2.8rem;
     color: #949494;
     font-family: Inter, sans-serif;
@@ -49,7 +49,8 @@ li {
 }
 
 .filter-box {
-    width: 28rem;
+    min-width: 15rem;
+    max-width: 15rem;
     padding: 1.5rem;
     border: 1px solid #94949433;
     border-radius: 15px;

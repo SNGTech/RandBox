@@ -134,3 +134,57 @@ a, .btn-link {
     max-height: 100vh;
     overflow-y: auto;
 }
+
+.navbar-option {
+    position: relative;
+    display: inline-block;
+    color: var(--randbox-primary-colour);
+    text-decoration-line: none;
+    cursor: pointer;
+    transform: scale(1.0);
+    transition-property: transform, color;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+}
+
+.navbar-option:hover {
+    color: #2cb67d;
+    transform: scale(1.1);
+}
+
+    .navbar-option::after {
+        display: block;
+        content: '';
+        height: 2px;
+        width: 100%;
+        background: #2CB67D;
+        position: absolute;
+        left: 0;
+        bottom: 19px;
+        transform: scaleX(0);
+        transition: transform 200ms ease;
+    }
+
+    .navbar-option:hover::after {
+        transform: scaleX(1);
+    }
+
+    .navbar-option.active::after {
+        transform: scaleX(1);
+    }
+
+.staff-navlink {
+    display: inline-block;
+    color: var(--randbox-primary-colour);
+    text-decoration-line: none;
+    cursor: pointer;
+    transform: scale(1.0);
+    transition-property: transform, color;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+}
+
+    .staff-navlink:hover {
+        color: #2cb67d;
+        transform: scale(1.1);
+    }
