@@ -15,9 +15,9 @@ namespace RandBox.Server.Data.Configurations
                 new Staff
                 {
                     StaffID = 1,
-                    FirstName = "Shan",
+                    FirstName = "Bob",
                     LastName = "Lim",
-                    Email = "Shan2209@gmail.com",
+                    Email = "test@randbox.sg",
                     PasswordHash = hasher.HashPassword(null, "Password123"),
                     DateOfBirth = new DateTime(2005, 12, 27),
                     ContactNumber = "81004821"
@@ -28,22 +28,10 @@ namespace RandBox.Server.Data.Configurations
                     StaffID = 2,
                     FirstName = "Atu",
                     LastName = "Triyoso",
-                    Email = "AtuTriyoso@gmail.com",
+                    Email = "atutriyoso@randbox.sg",
                     PasswordHash = hasher.HashPassword(null, "Password123"),
                     DateOfBirth = new DateTime(2005, 2, 27),
                     ContactNumber ="91028765"
-                    
-                },
-
-                new Staff
-                {
-                    StaffID = 3,
-                    FirstName = "Wei",
-                    LastName = "Hanh",
-                    Email = "yahoo@randbox.sg",
-                    PasswordHash = hasher.HashPassword(null, "R0bl@x758024"),
-                    DateOfBirth = new DateTime(2005, 12, 27),
-                    ContactNumber = "81004812"
                 }
             );
         }

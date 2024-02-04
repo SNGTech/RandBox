@@ -14,7 +14,7 @@ namespace RandBox.Server.Data.Configurations
                     SubscriptionItemID = 1,
                     Qty = 1,
                     MonthOfYear = 12,
-                    ProductID = 4,
+                    ProductID = 16,
                     SubscriptionPlanID = 1
                 },
                 new SubscriptionItem
@@ -22,7 +22,7 @@ namespace RandBox.Server.Data.Configurations
                     SubscriptionItemID = 2,
                     Qty = 1,
                     MonthOfYear = 12,
-                    ProductID = 2,
+                    ProductID = 12,
                     SubscriptionPlanID = 1
                 },
                 new SubscriptionItem
@@ -30,7 +30,7 @@ namespace RandBox.Server.Data.Configurations
                     SubscriptionItemID = 3,
                     Qty = 1,
                     MonthOfYear = 11,
-                    ProductID = 3,
+                    ProductID = 7,
                     SubscriptionPlanID = 2
                 },
                 new SubscriptionItem
@@ -38,7 +38,7 @@ namespace RandBox.Server.Data.Configurations
                     SubscriptionItemID = 4,
                     Qty = 1,
                     MonthOfYear = 1,
-                    ProductID = 2,
+                    ProductID = 10,
                     SubscriptionPlanID = 2
                 }
             );

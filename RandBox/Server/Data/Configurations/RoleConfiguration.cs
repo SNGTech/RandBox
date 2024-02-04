@@ -17,12 +17,6 @@ namespace RandBox.Server.Data.Configurations
                 },
                 new IdentityRole
                 {
-                    Id = "71741074-bd54-43f9-b837-c0c34c71905e",
-                    Name = "Staff-Guest",
-                    NormalizedName = "STAFF-GUEST",
-                },
-                new IdentityRole
-                {
                     Id = "910da4f5-6826-419b-b66a-eb995b68bd15",
                     Name = "Staff",
                     NormalizedName = "STAFF",

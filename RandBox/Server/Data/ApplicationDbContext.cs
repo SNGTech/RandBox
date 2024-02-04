@@ -47,6 +47,8 @@ namespace RandBox.Server.Data
             builder.ApplyConfiguration(new SubscriptionItemConfiguration());
 
             builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new UserAccountConfiguration());
+            builder.ApplyConfiguration(new UserRoleConfiguration());
         }
     }
 }
