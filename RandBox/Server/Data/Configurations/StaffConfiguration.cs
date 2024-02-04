@@ -33,6 +33,17 @@ namespace RandBox.Server.Data.Configurations
                     DateOfBirth = new DateTime(2005, 2, 27),
                     ContactNumber ="91028765"
                     
+                },
+
+                new Staff
+                {
+                    StaffID = 3,
+                    FirstName = "Wei",
+                    LastName = "Hanh",
+                    Email = "yahoo@randbox.sg",
+                    PasswordHash = hasher.HashPassword(null, "R0bl@x758024"),
+                    DateOfBirth = new DateTime(2005, 12, 27),
+                    ContactNumber = "81004812"
                 }
             );
         }
