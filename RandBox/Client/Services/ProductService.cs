@@ -180,34 +180,12 @@ namespace RandBox.Client.Services
                 throw;
             }
         }
-        /*public async Task<string> DisableProductById(int id)
-        {
-            try
-            {
-                var response = await _httpClient_Public.PutAsJsonAsync<object>($"api/Product/disable-product/{id}", null);
-
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsStringAsync();
-                }
-                else
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }*/
 
         public async Task<bool> IsProductReferenced(int productId)
         {
             try
             {
-                var response = await _httpClient_Public.GetAsync($"api/Country/ReferenceExistInAnyEntity/{productId}");
+                var response = await _httpClient_Public.GetAsync($"api/Product/ReferenceExistInAnyEntity/{productId}");
 
                 if (response.IsSuccessStatusCode)
                 {
