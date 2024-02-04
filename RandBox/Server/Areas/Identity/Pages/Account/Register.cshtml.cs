@@ -38,7 +38,7 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        private readonly IStripeCustomerService _stripeCustomerService;
+        //private readonly IStripeCustomerService _stripeCustomerService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -46,8 +46,7 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager,
-            IStripeCustomerService stripeCustomerService)
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -56,8 +55,6 @@ namespace RandBox.Server.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
-
-            _stripeCustomerService = stripeCustomerService;
         }
 
         /// <summary>

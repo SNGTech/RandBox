@@ -47,10 +47,10 @@ System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 
-StripeConfiguration.ApiKey = "sk_test_51OPpJqKZqzi7Rqy6Q0lSWfKkH5qofg04MVGZxsD7DuYsNx0l3HOec4LqVFBFpNKRNEvqWiz0rx5guKunALmZNlnZ00XhJKPzX5";
+/*StripeConfiguration.ApiKey = "sk_test_51OPpJqKZqzi7Rqy6Q0lSWfKkH5qofg04MVGZxsD7DuYsNx0l3HOec4LqVFBFpNKRNEvqWiz0rx5guKunALmZNlnZ00XhJKPzX5";*/
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<IStripeCustomerService, StripeCustomerService>();
+/*builder.Services.AddTransient<IStripeCustomerService, StripeCustomerService>();*/
 
 builder.Services.AddAuthorizationCore(options =>
 {
