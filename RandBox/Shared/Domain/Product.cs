@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace RandBox.Shared.Domain
 {
@@ -17,12 +20,13 @@ namespace RandBox.Shared.Domain
         [Column(TypeName = "decimal(5,2)")]
         public decimal DiscountedPrice { get; set; }
         
-        public DateTime ManufacturedDate { get; set; }
-        public DateTime ExpiryDate { get; set; }
+        public DateTime? ManufacturedDate { get; set; }
+        public DateTime? ExpiryDate { get; set; }
         public int? CountryID { get; set; }
         public virtual Country? Country { get; set; }
         public int? CategoryID { get; set; }
         public virtual Category? Category { get; set; }
 
+ 
     }
 }
