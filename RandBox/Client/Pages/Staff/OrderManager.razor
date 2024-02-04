@@ -15,7 +15,7 @@ else
         <h3 class="m-0">Orders</h3>
         <div class="position-relative">
             <i class="bi bi-search search-icon position-absolute" />
-            <input class="search-box" placeholder="Search Order ID">
+            <input class="search-box" placeholder="Search Order ID" @oninput="FilterOrders">
         </div>
     </div>
 
@@ -101,6 +101,8 @@ else
     private CreateEditOrderModal? Modal;
     private DeleteModal? DeleteModal;
 
+    private List<Orders>? orders { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         OrderService._httpInterceptorService.RegisterEvent();
@@ -108,6 +110,20 @@ else
         CustomerService._httpInterceptorService.RegisterEvent();
 
         await RefreshOrders();
+    }
+
+    private void FilterOrders(ChangeEventArgs e)
+    {
+        string? search = e.Value!.ToString();
+        if (search != null && search != "")
+        {
+            var filtered = orders!.FindAll(x => x.OrderID.ToString().StartsWith(search!));
+            OrderComponents = MapOrderToComponent(filtered);
+        }
+        else
+        {
+            OrderComponents = MapOrderToComponent(orders!);
+        }
     }
 
     protected void SelectOrder(OrderComponent component)
@@ -184,9 +200,18 @@ else
         await RefreshOrders();
     }
 
+    private List<OrderComponent> MapOrderToComponent(List<Orders> orders)
+    {
+        return orders.Select(x => new OrderComponent
+            {
+                Order = x,
+                Selected = false
+            }).ToList();
+    }
+
     protected async Task RefreshOrders()
     {
-        var orders = await OrderService.GetAll();
+        orders = await OrderService.GetAll();
         if (orders == null)
         {
             OrderComponents = null;
