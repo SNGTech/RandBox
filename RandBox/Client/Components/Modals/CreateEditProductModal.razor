@@ -65,33 +65,30 @@ else
                             </div>
                         </div>
 
-
                         <div class="row mb-4">
                             <div class="col">
                                 <label class="form-label">
                                     Original Price
                                 </label>
-                                <div class="col d-flex align-items-center">
+                                <div>
                                     <p class="dollar-prefix">$</p>
                                     <InputNumber class="randbox-form-input" @bind-Value="input!.OriginalPrice"></InputNumber>
-                                     <ValidationMessage For="@(() => input.OriginalPrice)" class="mt-1 text-danger" />
+                                    <ValidationMessage For="@(() => input.OriginalPrice)" class="mt-1 text-danger" />
                                 </div>
-                               
                             </div>
-
 
                             <div class="col">
                                 <label class="form-label">
                                     Discounted Price
                                 </label>
-                                <div class="col d-flex align-items-center">
+                                <div>
                                     <p class="dollar-prefix">$</p>
                                     <InputNumber class="randbox-form-input" @bind-Value="input!.DiscountedPrice"></InputNumber>
                                     <ValidationMessage For="@(() => input.DiscountedPrice)" class="mt-1 text-danger" />
                                 </div>
-                                   
                             </div>
                         </div>
+
 
                         <div class="row mb-4">
                             <label class="form-label">
@@ -239,48 +236,62 @@ else
 
     protected async Task SubmitInAddMode()
     {
-        var Product = new Product
-            {
-                ProductID = input!.ProductID,
-                Name = input!.Name,
-                Description = input!.Description,
-                ThumbnailURL = input!.ThumbnailURL,
-                StockNo = input!.StockNo,
-                OriginalPrice = input!.OriginalPrice,
-                DiscountedPrice = input!.DiscountedPrice,
-                ManufacturedDate = input!.ManufacturedDate,
-                ExpiryDate = input!.ExpiryDate,
-                CountryID = input!.CountryID,
-                CategoryID = input!.CategoryID
-            };
-        var addedProduct = await ProductService.Insert(Product);
+        var context = new EditContext(input!);
+        var isValid = context.Validate();
+        if (isValid)
+        {
+            var Product = new Product
+                {
+                    ProductID = input!.ProductID,
+                    Name = input!.Name,
+                    Description = input!.Description,
+                    ThumbnailURL = input!.ThumbnailURL,
+                    StockNo = input!.StockNo,
+                    OriginalPrice = input!.OriginalPrice,
+                    DiscountedPrice = input!.DiscountedPrice,
+                    ManufacturedDate = input!.ManufacturedDate,
+                    ExpiryDate = input!.ExpiryDate,
+                    CountryID = input!.CountryID,
+                    CategoryID = input!.CategoryID
+                };
+            await ProductService.Insert(Product);
+        }
+       
         Close();
         await OnSuccessfulSubmit.InvokeAsync();
     }
 
     protected async Task SubmitInEditMode()
     {
-        var Product = new Product
-            {
-                ProductID = input!.ProductID,
-                Name = input!.Name,
-                Description = input!.Description,
-                ThumbnailURL = input!.ThumbnailURL,
-                StockNo = input!.StockNo,
-                OriginalPrice = input!.OriginalPrice,
-                DiscountedPrice = input!.DiscountedPrice,
-                ManufacturedDate = input!.ManufacturedDate,
-                ExpiryDate = input!.ExpiryDate,
-                CountryID = input!.CountryID,
-                CategoryID = input!.CategoryID
-                
-            };
-        await ProductService.Update(Product);
+        var context = new EditContext(input!);
+        var isValid = context.Validate();
+        if (isValid)
+        {
+            var Product = new Product
+                {
+                    ProductID = input!.ProductID,
+                    Name = input!.Name,
+                    Description = input!.Description,
+                    ThumbnailURL = input!.ThumbnailURL,
+                    StockNo = input!.StockNo,
+                    OriginalPrice = input!.OriginalPrice,
+                    DiscountedPrice = input!.DiscountedPrice,
+                    ManufacturedDate = input!.ManufacturedDate,
+                    ExpiryDate = input!.ExpiryDate,
+                    CountryID = input!.CountryID,
+                    CategoryID = input!.CategoryID
+
+                };
+            await ProductService.Update(Product);
+            
+        }
+       
         Close();
         await OnSuccessfulSubmit.InvokeAsync();
+        
     }
 
-    public class InputModel
+    public class InputModel: IValidatableObject
     {
             
         public int ProductID { get; set; }
@@ -297,12 +308,26 @@ else
         [Required]
         public decimal DiscountedPrice { get; set; }
         [Required]
-        public DateTime ManufacturedDate { get; set; }
+        public DateTime? ManufacturedDate { get; set; }
         [Required]
-        public DateTime ExpiryDate { get; set; }
+        public DateTime? ExpiryDate { get; set; }
         [Required]
         public int? CountryID { get; set; }
         [Required]
         public int? CategoryID { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (ManufacturedDate >= ExpiryDate)
+            {
+            yield return new ValidationResult("Expiry date must be greater than Manufactured date", new[] { "ExpiryDate" });
+            }
+
+            if (DiscountedPrice >= OriginalPrice)
+            {
+                yield return new ValidationResult("Discounted price must be less than the original price", new[] { "DiscountedPrice" });
+            }
+        }
     }
 }
+    
