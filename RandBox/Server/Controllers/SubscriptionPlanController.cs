@@ -120,6 +120,32 @@ namespace RandBox.Server.Controllers
             await _unitOfWork.Save();
             return Ok(plans);
         }
+
+        [HttpGet("countByDuration")]
+        public async Task<ActionResult<IEnumerable<decimal>>> GetSubscriptionCountByDuration()
+        {
+            var subscriptions = await _unitOfWork.PlanRepository.GetAll(
+                includes: q => q.Include(x => x.SubscriptionCategory!));
+            var subscriptionCategories = await _unitOfWork.SubscriptionCategoryRepository.GetAll();
+
+            if (subscriptions == null || subscriptionCategories == null)
+            {
+                return BadRequest();
+            }
+
+            List<decimal> countByDuration = new List<decimal>();
+
+            var durations = subscriptionCategories.Select(x => x.Duration).Distinct();
+
+            foreach (var duration in durations) 
+            {
+                decimal count = subscriptions.Select(x => x.SubscriptionCategory!).Where(x => x.Duration == duration).Count();
+                countByDuration.Add(count);
+            }
+
+            return Ok(countByDuration);
+        }
+
         protected async Task<bool> SubscriptionExists(int id)
         {
             return await _unitOfWork.PlanRepository.GetById(id) != null;

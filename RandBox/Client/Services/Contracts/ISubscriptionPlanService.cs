@@ -8,5 +8,6 @@ namespace RandBox.Client.Services.Contracts
     {
         public Task<List<SubscriptionPlan>> GetSubscriptionsByEmail(string email);
         public Task<List<SubscriptionPlan>> UpdateStaffToNullOnSubscriptionPlan(Staff entity);
+        public Task<List<decimal>> GetSubscriptionCountByDuration();
     }
 }

@@ -84,6 +84,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        CustomerService._httpInterceptorService.RegisterEvent();
+
         cartItems = await CartService.GetAll();
     }
 

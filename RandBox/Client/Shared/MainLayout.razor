@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" />
 <div class="page">
     <main>
         <AuthorizeView Policy="UserOrCustomerPolicy">
@@ -33,3 +34,7 @@
         </AuthorizeView>
     </main>
 </div>
+
+@code {
+    private bool _isDarkMode = true;
+}

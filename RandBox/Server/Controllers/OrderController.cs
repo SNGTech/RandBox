@@ -110,7 +110,6 @@ namespace RandBox.Server.Controllers
 
         [HttpGet("total")]
         public async Task<ActionResult<decimal>> GetTotalIncome()
-
         {
             var orders = await _unitOfWork.OrderRepository.GetAll(
                 includes: q => q.Include(x => x.OrderItems!)!.ThenInclude(x => x.Product!));
@@ -174,6 +173,31 @@ namespace RandBox.Server.Controllers
                 }
             }
             return Ok(order);
+        }
+
+        [HttpGet("salesMonthly")]
+        public async Task<ActionResult<List<decimal>>> GetOrderSalesMonthly()
+        {
+            var orders = await _unitOfWork.OrderRepository.GetAll(
+                includes: q => q.Include(x => x.OrderItems!)!.ThenInclude(x => x.Product!));
+            if (orders == null)
+            {
+                return NotFound();
+            }
+
+            List<decimal> monthlySales = new List<decimal>();
+
+            for (int i = 1; i <= 12; i++)
+            {
+                decimal monthSales = 0m;
+                foreach (var order in orders.Where(x => x.DateTimeCheckout.Month == i))
+                {
+                    monthSales += order.OrderItems!.Sum(x => x.Product!.DiscountedPrice * x.Qty)!;
+                }
+                monthlySales.Add(monthSales);
+            }
+
+            return Ok(monthlySales);
         }
     }
 }

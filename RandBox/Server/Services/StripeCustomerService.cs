@@ -6,7 +6,7 @@ namespace RandBox.Server.Services
 {
     public class StripeCustomerService : IStripeCustomerService
     {
-        public StripeCustomerService() { }
+        /*public StripeCustomerService() { }
 
         public async Task CreateCustomerAsync(ApplicationUser user)
         {
@@ -24,6 +24,6 @@ namespace RandBox.Server.Services
             };
 
             await service.CreateAsync(options);
-        }
+        }*/
     }
 }

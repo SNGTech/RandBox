@@ -2,6 +2,7 @@
 @inject ICustomerService CustomerService
 @inject IOrderService OrderService
 @inject ISubscriptionPlanService SubscriptionService
+@inject ISubscriptionCategoryService SubscriptionCategoryService
 @attribute [Authorize(Policy = "StaffPolicy")]
 
 @if (customers == null || subscriptions == null || orders == null)
@@ -10,7 +11,7 @@
 }
 else {
     <section class="">
-        <h4 class="mb-4">Welcome Staff</h4>
+        <h4 class="mb-6">Welcome Staff</h4>
 
         <div class="col d-flex justify-content-between">
             <div class="subContainer text-center">
@@ -28,6 +29,21 @@ else {
                 <div class="info-number">$@totalIncome</div>
             </div>
         </div>
+
+        <div class="row mt-6">
+            <div class="col">
+                <h3 class="mb-2 graph-title">Product Sales Over Time</h3>
+                <div class="graph-card">
+                    <MudChart ChartType="ChartType.Line" ChartSeries="@salesSeries" @bind-SelectedIndex="lineIndex" XAxisLabels="@monthLabels" Width="100%" Height="350px" ChartOptions="@lineOptions" />
+                </div>
+            </div>
+            <div class="col">
+                <h3 class="mb-2 graph-title">Breakdown Count of Subscriptions Per Duration</h3>
+                <div class="graph-card">
+                    <MudChart ChartType="ChartType.Pie" InputData="@countSeries" @bind-SelectedIndex="pieIndex" InputLabels="@durationLabels" Width="100%" Height="350px" />
+                </div>
+            </div>
+        </div>
     </section>
 }
 
@@ -38,11 +54,23 @@ else {
 
     private decimal totalIncome = 0M;
 
+    // Data Point Vars
+    private int lineIndex = -1;
+    private ChartOptions lineOptions = new ChartOptions();
+    private List<ChartSeries> salesSeries = new List<ChartSeries>();
+    private string[] monthLabels = new string[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
+    // Pie Chart Vars
+    private int pieIndex = -1;
+    private double[] countSeries = new double[] { };
+    private string[] durationLabels = new string[] { };
+
     protected override async Task OnInitializedAsync()
     {
         CustomerService._httpInterceptorService.RegisterEvent();
         OrderService._httpInterceptorService.RegisterEvent();
         SubscriptionService._httpInterceptorService.RegisterEvent();
+        SubscriptionCategoryService._httpInterceptorService.RegisterEvent();
 
         customers = await CustomerService.GetAll();
         orders = await OrderService.GetAll();
@@ -50,6 +78,23 @@ else {
 
         decimal totalFromOrders = await OrderService.GetTotalIncomeFromOrders();
         decimal totalFromSubscriptions = 0M;
-        totalIncome = totalFromOrders + totalFromSubscriptions; 
+        totalIncome = totalFromOrders + totalFromSubscriptions;
+
+        // Initialise graph data
+
+        // Sales Data
+        lineOptions.LineStrokeWidth = 3;
+        var monthSales = await OrderService.GetOrderSalesMonthly();
+        salesSeries.Add(new ChartSeries()
+        {
+            Name = "Sales (SGD)",
+            Data = monthSales.Select(x => Decimal.ToDouble(x)).ToArray()
+        });
+
+        // Pie Chart Data
+        var durations = await SubscriptionCategoryService.GetAllDurations();
+        var durationCounts = await SubscriptionService.GetSubscriptionCountByDuration();
+        durationLabels = durations.Select(x => x.ToString() + " " + (x > 1 ? "months" : "month")).ToArray();
+        countSeries = durationCounts.Select(x => Decimal.ToDouble(x)).ToArray();
     }
 }

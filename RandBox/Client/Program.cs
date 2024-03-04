@@ -6,6 +6,7 @@ using RandBox.Client;
 using RandBox.Client.Services;
 using RandBox.Client.Services.Contracts;
 using RandBox.Shared.Domain;
+using MudBlazor.Services;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -32,6 +33,7 @@ builder.Services.AddHttpClient("RandBox.ServerAPI.public", (sp,
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("RandBox.ServerAPI.private"));
 
+builder.Services.AddMudServices();
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<HttpInterceptorService>();

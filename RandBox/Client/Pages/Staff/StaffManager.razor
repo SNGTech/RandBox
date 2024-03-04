@@ -74,6 +74,9 @@ else
     protected override async Task OnInitializedAsync()
     {
         StaffService._httpInterceptorService.RegisterEvent();
+        OrderService._httpInterceptorService.RegisterEvent();
+        PlanService._httpInterceptorService.RegisterEvent();
+
         orders = await OrderService.GetAll();
         await RefreshStaff();
     }

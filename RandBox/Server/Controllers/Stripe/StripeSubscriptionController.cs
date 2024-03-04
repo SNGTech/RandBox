@@ -11,7 +11,7 @@ namespace RandBox.Server.Controllers.Stripe
     [Route("stripe-api/subscription")]
     public class StripeSubscriptionController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        /*private readonly IUnitOfWork _unitOfWork;
 
         public StripeSubscriptionController(IUnitOfWork unitOfWork)
         {
@@ -96,6 +96,6 @@ namespace RandBox.Server.Controllers.Stripe
             public string? PlanID { get; set;}
             [JsonProperty("priceId")]
             public string? PriceId { get; set; }
-        }
+        }*/
     }
 }

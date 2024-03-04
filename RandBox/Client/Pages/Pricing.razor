@@ -60,6 +60,7 @@ else
     {
         CategoryService._httpInterceptorService.RegisterEvent();
         SubscriptionCategoryService._httpInterceptorService.RegisterEvent();
+        CustomerService._httpInterceptorService.RegisterEvent();
 
         categories = await CategoryService.GetAll();
         subscriptionCategories = await SubscriptionCategoryService.GetAllByProductCategoryId(productCategoryId);

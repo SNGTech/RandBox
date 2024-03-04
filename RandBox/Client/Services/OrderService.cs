@@ -225,6 +225,29 @@
             }
         }
 
+        public async Task<List<decimal>> GetOrderSalesMonthly()
+        {
+            try
+            { 
+                var response = await _httpClient_Public.GetAsync($"api/Order/salesMonthly");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<decimal>>();
+                }
+                else
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP Status : {response.StatusCode} - {message}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public void Dispose() => _httpInterceptorService.DisposeEvent();
+
     }
 }

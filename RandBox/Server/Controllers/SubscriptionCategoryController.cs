@@ -197,6 +197,21 @@ namespace RandBox.Server.Controllers
             return Ok(subscriptionCategories);
         }
 
+        [HttpGet("durationAll")]
+        public async Task<ActionResult<List<int>>> GetAllDurations()
+        {
+            var subscriptionCategories = await _unitOfWork.SubscriptionCategoryRepository.GetAll();
+
+            if (subscriptionCategories == null)
+            {
+                return NotFound();
+            }
+
+            var durations = subscriptionCategories.Select(x => x.Duration).Distinct();
+
+            return Ok(durations);
+        }
+
         [HttpGet("ReferenceExistInSubscription/duration/{duration:int}")]
         public async Task<ActionResult<bool>> ReferenceExistInSubscription(int duration)
         {

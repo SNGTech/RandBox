@@ -33,6 +33,12 @@
     [Parameter]
     public int cat_id { get; set; }
 
+    protected override void OnInitialized()
+    {
+        SubscriptionService._httpInterceptorService.RegisterEvent();
+        CustomerService._httpInterceptorService.RegisterEvent();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         /*var email = "test.sngtech@gmail.com";

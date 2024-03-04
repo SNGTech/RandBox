@@ -10,7 +10,7 @@ namespace RandBox.Server.Controllers.Stripe
     public class PaymentIntentController : ControllerBase
     {
 
-        public PaymentIntentController() 
+        /*public PaymentIntentController() 
         {
 
         }
@@ -63,6 +63,6 @@ namespace RandBox.Server.Controllers.Stripe
             public int Id { get; set; }
             [JsonProperty("cust_email")]
             public string? CustEmail { get; set; }
-        }
+        }*/
     }
 }
